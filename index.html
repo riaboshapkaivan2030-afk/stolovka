@@ -175,6 +175,7 @@ button{cursor:pointer}
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+
         .quick-nav{position:fixed;right:18px;bottom:18px;z-index:80;display:flex;flex-direction:column;gap:8px}
         .quick-nav button{width:44px;height:44px;border:1px solid var(--line);background:var(--paper);
           color:var(--ink);border-radius:14px;box-shadow:0 10px 26px rgba(66,49,34,.12);
@@ -216,46 +217,1010 @@ button{cursor:pointer}
         .import-label{display:inline-flex;align-items:center;gap:7px}
         .import-label input{display:none}
         @media(max-width:760px){.quick-nav{right:10px;bottom:12px}}
+
 .budget-combos{display:grid;gap:9px;margin-top:12px}.budget-combo{display:grid;grid-template-columns:150px 1fr auto;gap:10px;align-items:center;text-align:left;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);cursor:pointer}.budget-combo:hover{border-color:var(--accent);transform:translateY(-1px)}.budget-combo span{color:var(--muted);font-size:.8rem}.budget-combo b{font-size:.9rem}.budget-combo em{font-style:normal;font-weight:900;color:var(--accent-2);white-space:nowrap}@media(max-width:700px){.budget-combo{grid-template-columns:1fr}.budget-combo em{justify-self:start}}</style>
 <style>
-:root{--font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-body{font-family:var(--font)!important}
-body:not(.dark){--bg:#fff;--paper:#fff;--ink:#111318;--muted:#56606d;--line:#e0e5eb;--accent:#111318;--accent-2:#303640;background:#fff!important;color:#111318!important}
-body:not(.dark)::before,body:not(.dark)::after{display:none!important}
-body:not(.dark) .topbar,body:not(.dark) .hero,body:not(.dark) .card,body:not(.dark) .dish-card,body:not(.dark) .rating-box,body:not(.dark) .review,body:not(.dark) .chart-box,body:not(.dark) .random-result,body:not(.dark) .admin-table-wrap,body:not(.dark) .status{background:#fff!important;color:#111318!important;border-color:#e0e5eb!important;box-shadow:0 10px 28px rgba(17,19,24,.06)!important}
-body:not(.dark) h1,body:not(.dark) h2,body:not(.dark) h3,body:not(.dark) h4,body:not(.dark) h5,body:not(.dark) h6,body:not(.dark) p,body:not(.dark) span,body:not(.dark) div,body:not(.dark) label,body:not(.dark) strong,body:not(.dark) small,body:not(.dark) td,body:not(.dark) th{color:#111318!important}
-body:not(.dark) .muted,body:not(.dark) .review-head,body:not(.dark) .search-status,body:not(.dark) .brand p,body:not(.dark) .section-subtitle{color:#56606d!important}
-body:not(.dark) input,body:not(.dark) select,body:not(.dark) textarea,body:not(.dark) .field,body:not(.dark) .review-textarea{background:#fff!important;color:#111318!important;border-color:#d7dde5!important}
-body:not(.dark) input::placeholder,body:not(.dark) textarea::placeholder{color:#89929e!important}
-body:not(.dark) .action,body:not(.dark) .open-btn,body:not(.dark) .action.primary{background:#111318!important;color:#fff!important;border-color:#111318!important}
-body:not(.dark) .action *,body:not(.dark) .open-btn *,body:not(.dark) .action.primary *{color:#fff!important}
-body:not(.dark) .badge,body:not(.dark) .category,body:not(.dark) .chip{background:#f0f2f5!important;color:#303640!important;border-color:#dfe4ea!important}
-body:not(.dark) .theme-toggle{background:#fff!important;color:#111318!important;border-color:#d7dde5!important}
-body:not(.dark) .catalog,body:not(.dark) .cards-grid{background-image:linear-gradient(rgba(17,19,24,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(17,19,24,.025) 1px,transparent 1px)!important;background-size:30px 30px!important}
-body.dark{--bg:#070a12;--paper:#111827;--ink:#fff;--muted:#c7d0df;--line:#344155;--accent:#9b8cff;--accent-2:#c5bcff;background:radial-gradient(650px 420px at 5% 0%,rgba(125,92,255,.3),transparent 65%),radial-gradient(600px 430px at 100% 10%,rgba(41,210,177,.24),transparent 65%),radial-gradient(650px 500px at 70% 100%,rgba(255,93,160,.15),transparent 65%),linear-gradient(135deg,#080b14,#0b1220 48%,#090d18)!important;color:#fff!important}
-body.dark::before{width:520px!important;height:520px!important;right:-170px!important;top:8%!important;background:radial-gradient(circle at 35% 35%,rgba(155,140,255,.34),transparent 34%),radial-gradient(circle at 70% 70%,rgba(98,224,189,.2),transparent 30%)!important;filter:blur(5px)!important}
-body.dark::after{width:480px!important;height:480px!important;left:-190px!important;bottom:-70px!important;background:radial-gradient(circle at 55% 45%,rgba(255,100,174,.2),transparent 34%),radial-gradient(circle at 35% 70%,rgba(78,133,255,.18),transparent 32%)!important;filter:blur(5px)!important}
-body.dark .catalog,body.dark .cards-grid{background-image:linear-gradient(rgba(155,140,255,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(98,224,189,.055) 1px,transparent 1px)!important;background-size:30px 30px!important}
-body.dark .topbar,body.dark .hero,body.dark .card,body.dark .dish-card,body.dark .rating-box,body.dark .review,body.dark .chart-box,body.dark .random-result,body.dark .admin-table-wrap,body.dark .status{background:rgba(15,23,38,.86)!important;color:#fff!important;border-color:#354257!important;box-shadow:0 14px 38px rgba(0,0,0,.3)!important;backdrop-filter:blur(14px)}
-body.dark h1,body.dark h2,body.dark h3,body.dark h4,body.dark h5,body.dark h6,body.dark p,body.dark span,body.dark div,body.dark label,body.dark strong,body.dark small,body.dark td,body.dark th{color:#fff!important}
-body.dark .muted,body.dark .review-head,body.dark .search-status,body.dark .brand p,body.dark .section-subtitle{color:#c7d0df!important}
-body.dark input,body.dark select,body.dark textarea,body.dark .field,body.dark .review-textarea{background:#0b1320!important;color:#fff!important;border-color:#3a485d!important}
-body.dark input::placeholder,body.dark textarea::placeholder{color:#8f9caf!important}
-body.dark .action,body.dark .open-btn,body.dark .action.primary{background:linear-gradient(135deg,#8e7dff,#6f5cf2)!important;color:#fff!important;border-color:#9b8cff!important;box-shadow:0 8px 24px rgba(126,103,255,.25)!important}
-body.dark .action *,body.dark .open-btn *,body.dark .action.primary *{color:#fff!important}
-body.dark .badge,body.dark .category,body.dark .chip{background:#1b2739!important;color:#e7ebff!important;border-color:#35445a!important}
-body.dark .theme-toggle{background:#121c2b!important;color:#fff!important;border-color:#39485d!important}
-.tabs .tab-btn{font-family:var(--font)!important;font-weight:800!important;min-height:46px;white-space:nowrap}
-body.dark .tabs .tab-btn{background:#151e2d!important;color:#e9edff!important;border-color:#3b4a61!important}
-body.dark .tabs .tab-btn.active{background:linear-gradient(135deg,#9585ff,#7060ed)!important;color:#fff!important;border-color:#a99cff!important}
-body:not(.dark) .tabs .tab-btn{background:#fff!important;color:#303640!important;border-color:#dce1e7!important}
-body:not(.dark) .tabs .tab-btn.active{background:#111318!important;color:#fff!important;border-color:#111318!important}
-.hero-art{position:relative!important;overflow:hidden!important;min-height:190px!important;border:1px solid rgba(255,255,255,.12)!important;background:radial-gradient(circle at 25% 30%,rgba(255,255,255,.24),transparent 19%),radial-gradient(circle at 75% 75%,rgba(114,91,255,.3),transparent 26%),radial-gradient(circle at 75% 18%,rgba(63,222,191,.22),transparent 24%),linear-gradient(135deg,#18264b,#28346c 45%,#172e45)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 18px 42px rgba(23,33,68,.28)!important}
-.hero-art::before{content:""!important;position:absolute!important;inset:0!important;background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px)!important;background-size:28px 28px!important}
-body:not(.dark) .hero-art{border-color:#dce4ee!important;background:radial-gradient(circle at 24% 25%,rgba(255,255,255,.95),transparent 18%),radial-gradient(circle at 78% 72%,rgba(116,92,255,.16),transparent 28%),radial-gradient(circle at 78% 18%,rgba(47,190,159,.15),transparent 25%),linear-gradient(135deg,#eef3ff,#eaf8f5 52%,#f5efff)!important}
-body:not(.dark) .hero-art::before{background-image:linear-gradient(rgba(30,40,60,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,40,60,.045) 1px,transparent 1px)!important}
-@media(max-width:700px){.container{width:calc(100% - 16px)!important}.tabs{flex-wrap:nowrap!important;overflow-x:auto!important;scrollbar-width:none!important}.tabs::-webkit-scrollbar{display:none}.tabs .tab-btn{flex:0 0 auto!important}.hero,.card,.dish-card,.rating-box{border-radius:18px!important}}
+body:not(.dark){--bg:#f4f7fb;--paper:#fff;--ink:#172033;--muted:#667085;--line:#e5eaf2;--accent:#6c5ce7;--accent-2:#5142c7;--mint:#16a085;--gold:#f59e0b;--shadow:0 14px 35px rgba(30,41,59,.08);background-color:#f4f7fb;background-image:linear-gradient(rgba(108,92,231,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(108,92,231,.055) 1px,transparent 1px),radial-gradient(circle at 12% 8%,rgba(124,92,231,.14),transparent 22%),radial-gradient(circle at 88% 18%,rgba(20,184,166,.12),transparent 20%),radial-gradient(circle at 52% 100%,rgba(245,158,11,.10),transparent 24%);background-size:28px 28px,28px 28px,auto,auto,auto}
+body:not(.dark)::before{width:420px;height:420px;right:-150px;top:18%;background:radial-gradient(circle,rgba(108,92,231,.13),transparent 68%);filter:none}
+body:not(.dark)::after{width:380px;height:380px;left:-160px;bottom:0;background:radial-gradient(circle,rgba(20,184,166,.10),transparent 68%);filter:none}
+body:not(.dark) .topbar{background:rgba(255,255,255,.88);border-color:#e1e7f0;box-shadow:0 10px 30px rgba(30,41,59,.07)}
+body:not(.dark) .brand-icon{background:linear-gradient(135deg,#eeeaff,#dff8f3);box-shadow:0 8px 18px rgba(108,92,231,.12)}
+body:not(.dark) .hero{background:radial-gradient(circle at 80% 20%,rgba(108,92,231,.13),transparent 28%),linear-gradient(135deg,#fff,#f4f1ff 58%,#eafaf7);border-color:#e0e5ef;box-shadow:0 18px 45px rgba(30,41,59,.09)}
+body:not(.dark) .hero-art{background:linear-gradient(145deg,#6c5ce7,#16a085)}
+body:not(.dark) .tab-btn{background:rgba(255,255,255,.82);color:#667085;border-color:#e2e7ef}
+body:not(.dark) .tab-btn:hover{color:#172033;border-color:#cdd5e1}
+body:not(.dark) .tab-btn.active{background:#172033;color:#fff;border-color:#172033}
+body:not(.dark) .card,body:not(.dark) .tool-card,body:not(.dark) .detail,body:not(.dark) .chart-box,body:not(.dark) .dish-card{background:rgba(255,255,255,.94);border-color:#e3e8f0}
+body:not(.dark) .dish-card{box-shadow:0 12px 28px rgba(30,41,59,.07)}
+body:not(.dark) .dish-card:hover{border-color:#cfc7ff;box-shadow:0 20px 42px rgba(108,92,231,.13)}
+body:not(.dark) .dish-price{color:#5142c7}
+body:not(.dark) .open-btn{background:#172033}
+body:not(.dark) .open-btn:hover{background:#5142c7}
+body:not(.dark) .badge{background:rgba(255,255,255,.94);color:#5142c7;border-color:#ddd7ff}
+body:not(.dark) .icon-bubble{background:#eeeaff}
+body:not(.dark) .controls input,body:not(.dark) .controls select,body:not(.dark) .field,body:not(.dark) .review-textarea{border-color:#dfe5ee;background:#fff}
+body:not(.dark) .controls input:focus,body:not(.dark) .controls select:focus,body:not(.dark) .field:focus{border-color:#8b7cf0;box-shadow:0 0 0 4px rgba(108,92,231,.11)}
+body:not(.dark) .random-result{background:#f0edff;border:1px solid #dfd9ff}
+body:not(.dark) .smart-chip{background:#eeeaff;color:#5142c7}
+body:not(.dark) .favorites-empty{background:rgba(255,255,255,.92);border-color:#d7ddea}
+body:not(.dark) .quick-nav button{background:#fff;border-color:#e0e6ef}
+body:not(.dark) .status{background:#f8fafc}
+body:not(.dark) .toast{background:#172033}
+@media(max-width:760px){body:not(.dark){background-size:22px 22px,22px 22px,auto,auto,auto}}
 </style>
+<style>html,body:not(.dark){--bg:#fff;--paper:#fff;--ink:#171a1f;--muted:#5f6670;--line:#e5e8ec;--accent:#171a1f;--accent-2:#30343b;--mint:#3d806f;--gold:#d59a18;--shadow:0 10px 30px rgba(20,25,30,.07)}body:not(.dark){background:#fff!important;color:#171a1f!important}body:not(.dark)::before,body:not(.dark)::after{display:none!important}body:not(.dark) .topbar{background:rgba(255,255,255,.97)!important;border:1px solid #e5e8ec!important;box-shadow:0 8px 24px rgba(20,25,30,.06)!important}body:not(.dark) .hero{background:#f7f8fa!important;border:1px solid #e5e8ec!important;color:#171a1f!important;box-shadow:none!important}body:not(.dark) .hero h2,body:not(.dark) .hero h3,body:not(.dark) .hero p,body:not(.dark) .brand h1,body:not(.dark) .brand p,body:not(.dark) .section-title,body:not(.dark) .section-subtitle,body:not(.dark) .card,body:not(.dark) .dish-card,body:not(.dark) .dish-card h3,body:not(.dark) .dish-card p,body:not(.dark) .review,body:not(.dark) .review-body,body:not(.dark) .rating-box{color:#171a1f!important}body:not(.dark) .muted,body:not(.dark) .card small,body:not(.dark) .dish-card small,body:not(.dark) .review-head,body:not(.dark) .status,body:not(.dark) .search-status{color:#5f6670!important}body:not(.dark) .card,body:not(.dark) .dish-card,body:not(.dark) .rating-box,body:not(.dark) .review,body:not(.dark) .chart-box,body:not(.dark) .random-result,body:not(.dark) .admin-table-wrap{background:#fff!important;border-color:#e5e8ec!important;box-shadow:0 8px 24px rgba(20,25,30,.05)!important}body:not(.dark) .field,body:not(.dark) .review-textarea,body:not(.dark) input,body:not(.dark) select,body:not(.dark) textarea{background:#fff!important;color:#171a1f!important;border-color:#dfe3e8!important}body:not(.dark) .field::placeholder,body:not(.dark) input::placeholder,body:not(.dark) textarea::placeholder{color:#8a919b!important}body:not(.dark) .action,body:not(.dark) .open-btn{background:#171a1f!important;color:#fff!important;border-color:#171a1f!important}body:not(.dark) .action:hover,body:not(.dark) .open-btn:hover{background:#30343b!important;color:#fff!important}body:not(.dark) .theme-toggle{background:#fff!important;color:#171a1f!important;border-color:#dfe3e8!important}body:not(.dark) .badge,body:not(.dark) .category,body:not(.dark) .chip{background:#f1f3f5!important;color:#30343b!important;border-color:#e1e5e9!important}body:not(.dark) .price{color:#171a1f!important}body:not(.dark) .brand-icon{background:#f1f3f5!important;color:#171a1f!important}body:not(.dark) .catalog,body:not(.dark) .cards-grid{background-image:linear-gradient(rgba(20,25,30,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(20,25,30,.025) 1px,transparent 1px);background-size:32px 32px;border-radius:24px}@media(max-width:700px){body:not(.dark) .topbar{border-radius:18px!important;padding:13px 14px!important}body:not(.dark) .container{width:calc(100% - 18px)!important;margin-top:10px!important}body:not(.dark) .hero,body:not(.dark) .card,body:not(.dark) .dish-card{border-radius:18px!important}}</style><style>
+/* FINAL LIGHT THEME OVERRIDE */
+body:not(.dark){
+  background:#fff!important;
+  color:#16181c!important;
+  --bg:#fff;
+  --paper:#fff;
+  --ink:#16181c;
+  --muted:#626a74;
+  --line:#e4e7eb;
+  --accent:#16181c;
+  --accent-2:#30343a;
+  --mint:#3f806f;
+  --gold:#d29a1a;
+}
+body:not(.dark) .container,
+body:not(.dark) main,
+body:not(.dark) section,
+body:not(.dark) article,
+body:not(.dark) .card,
+body:not(.dark) .tool-card,
+body:not(.dark) .detail,
+body:not(.dark) .dish-card,
+body:not(.dark) .rating-box,
+body:not(.dark) .review,
+body:not(.dark) .hero,
+body:not(.dark) .topbar{
+  color:#16181c!important;
+}
+body:not(.dark) h1,
+body:not(.dark) h2,
+body:not(.dark) h3,
+body:not(.dark) h4,
+body:not(.dark) h5,
+body:not(.dark) p,
+body:not(.dark) span,
+body:not(.dark) label,
+body:not(.dark) strong,
+body:not(.dark) small,
+body:not(.dark) li,
+body:not(.dark) .section-head,
+body:not(.dark) .section-head *,
+body:not(.dark) .hero *,
+body:not(.dark) .brand *{
+  color:#16181c!important;
+}
+body:not(.dark) p,
+body:not(.dark) small,
+body:not(.dark) .muted,
+body:not(.dark) .detail-desc,
+body:not(.dark) .dish-short,
+body:not(.dark) .review-head,
+body:not(.dark) .section-head p,
+body:not(.dark) .footer-note,
+body:not(.dark) .search-status{
+  color:#626a74!important;
+}
+body:not(.dark) .topbar,
+body:not(.dark) .card,
+body:not(.dark) .tool-card,
+body:not(.dark) .detail,
+body:not(.dark) .chart-box,
+body:not(.dark) .dish-card,
+body:not(.dark) .review,
+body:not(.dark) .rating-box,
+body:not(.dark) .favorites-empty{
+  background:#fff!important;
+  border-color:#e4e7eb!important;
+}
+body:not(.dark) .hero{
+  background:#f8f9fa!important;
+  border-color:#e4e7eb!important;
+}
+body:not(.dark) .tab-btn{
+  background:#fff!important;
+  color:#30343a!important;
+  border-color:#e0e3e7!important;
+}
+body:not(.dark) .tab-btn.active{
+  background:#16181c!important;
+  color:#fff!important;
+  border-color:#16181c!important;
+}
+body:not(.dark) .tab-btn.active *{
+  color:#fff!important;
+}
+body:not(.dark) .action,
+body:not(.dark) .open-btn,
+body:not(.dark) .action.primary{
+  background:#16181c!important;
+  color:#fff!important;
+  border-color:#16181c!important;
+}
+body:not(.dark) .action *,
+body:not(.dark) .open-btn *,
+body:not(.dark) .action.primary *{
+  color:#fff!important;
+}
+body:not(.dark) input,
+body:not(.dark) select,
+body:not(.dark) textarea,
+body:not(.dark) .field,
+body:not(.dark) .review-textarea{
+  background:#fff!important;
+  color:#16181c!important;
+  border-color:#dfe3e7!important;
+}
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{
+  color:#8a919a!important;
+}
+body:not(.dark) .badge,
+body:not(.dark) .category,
+body:not(.dark) .chip,
+body:not(.dark) .smart-chip{
+  background:#f1f3f5!important;
+  color:#30343a!important;
+  border-color:#e1e4e8!important;
+}
+body:not(.dark) .dish-price,
+body:not(.dark) .price{
+  color:#16181c!important;
+}
+body:not(.dark) .theme-toggle{
+  background:#fff!important;
+  color:#16181c!important;
+  border-color:#dfe3e7!important;
+}
+body:not(.dark) .theme-toggle *{
+  color:#16181c!important;
+}
+body:not(.dark) .brand-icon{
+  background:#f1f3f5!important;
+  color:#16181c!important;
+}
+body:not(.dark) .star-btn{
+  color:#c8cdd3!important;
+}
+body:not(.dark) .star-btn.active{
+  color:#d29a1a!important;
+}
+body:not(.dark) .photo-credit,
+body:not(.dark) .toast{
+  color:#fff!important;
+}
+body:not(.dark) .photo-credit *{
+  color:#fff!important;
+}
+body:not(.dark)::before,
+body:not(.dark)::after{
+  display:none!important;
+}
+</style><style id="stolovka-theme-redesign">
+
+/* ===== ПОЛНОСТЬЮ ПЕРЕДЕЛАННЫЕ ТЕМЫ ===== */
+
+:root{
+  --font-main: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+body{
+  font-family:var(--font-main) !important;
+  letter-spacing:-.01em;
+}
+
+/* ---------- СВЕТЛАЯ ТЕМА ---------- */
+body:not(.dark){
+  --bg:#ffffff !important;
+  --paper:#ffffff !important;
+  --ink:#111318 !important;
+  --muted:#59616c !important;
+  --line:#e2e6eb !important;
+  --accent:#111318 !important;
+  --accent-2:#292e35 !important;
+  --mint:#347967 !important;
+  --gold:#c68d12 !important;
+  --shadow:0 10px 28px rgba(17,19,24,.07) !important;
+
+  background:#fff !important;
+  color:#111318 !important;
+}
+
+body:not(.dark)::before,
+body:not(.dark)::after{
+  display:none !important;
+}
+
+/* ВСЕ основные контейнеры */
+body:not(.dark) .topbar,
+body:not(.dark) .hero,
+body:not(.dark) .card,
+body:not(.dark) .dish-card,
+body:not(.dark) .rating-box,
+body:not(.dark) .review,
+body:not(.dark) .chart-box,
+body:not(.dark) .random-result,
+body:not(.dark) .admin-table-wrap,
+body:not(.dark) .status{
+  background:#fff !important;
+  color:#111318 !important;
+  border-color:#e2e6eb !important;
+}
+
+/* гарантированно тёмный текст */
+body:not(.dark) *,
+body:not(.dark) h1,
+body:not(.dark) h2,
+body:not(.dark) h3,
+body:not(.dark) h4,
+body:not(.dark) h5,
+body:not(.dark) h6,
+body:not(.dark) p,
+body:not(.dark) span,
+body:not(.dark) div,
+body:not(.dark) label,
+body:not(.dark) strong,
+body:not(.dark) small,
+body:not(.dark) td,
+body:not(.dark) th{
+  color:#111318;
+}
+
+/* вторичный текст */
+body:not(.dark) .muted,
+body:not(.dark) .review-head,
+body:not(.dark) .search-status,
+body:not(.dark) .brand p,
+body:not(.dark) .section-subtitle{
+  color:#59616c !important;
+}
+
+/* поля */
+body:not(.dark) input,
+body:not(.dark) select,
+body:not(.dark) textarea,
+body:not(.dark) .field,
+body:not(.dark) .review-textarea{
+  background:#fff !important;
+  color:#111318 !important;
+  border:1px solid #d9dee5 !important;
+}
+
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{
+  color:#8b939e !important;
+}
+
+/* кнопки */
+body:not(.dark) button.action,
+body:not(.dark) button.open-btn,
+body:not(.dark) .action.primary{
+  background:#111318 !important;
+  color:#fff !important;
+  border-color:#111318 !important;
+}
+
+body:not(.dark) button.action *,
+body:not(.dark) button.open-btn *,
+body:not(.dark) .action.primary *{
+  color:#fff !important;
+}
+
+body:not(.dark) .theme-toggle{
+  background:#fff !important;
+  color:#111318 !important;
+  border:1px solid #d9dee5 !important;
+}
+
+body:not(.dark) .theme-toggle *{
+  color:#111318 !important;
+}
+
+/* бейджи и категории */
+body:not(.dark) .badge,
+body:not(.dark) .category,
+body:not(.dark) .chip{
+  background:#f0f2f5 !important;
+  color:#292e35 !important;
+  border-color:#e0e4e9 !important;
+}
+
+body:not(.dark) .badge *,
+body:not(.dark) .category *,
+body:not(.dark) .chip *{
+  color:#292e35 !important;
+}
+
+/* цены и акценты */
+body:not(.dark) .price,
+body:not(.dark) .price strong{
+  color:#111318 !important;
+}
+
+/* звёзды */
+body:not(.dark) .star-btn{
+  color:#b8bec6 !important;
+}
+body:not(.dark) .star-btn.active,
+body:not(.dark) .stars{
+  color:#c68d12 !important;
+}
+
+/* сетка */
+body:not(.dark) .catalog,
+body:not(.dark) .cards-grid{
+  background-image:
+    linear-gradient(rgba(17,19,24,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(17,19,24,.025) 1px,transparent 1px) !important;
+  background-size:32px 32px !important;
+}
+
+
+/* ---------- ТЁМНАЯ ТЕМА ---------- */
+body.dark{
+  --bg:#070b12 !important;
+  --paper:#101722 !important;
+  --ink:#f4f7fb !important;
+  --muted:#aeb8c5 !important;
+  --line:#263241 !important;
+  --accent:#8b7cff !important;
+  --accent-2:#b5aaff !important;
+  --mint:#55d6b2 !important;
+  --gold:#ffd166 !important;
+  --shadow:0 16px 45px rgba(0,0,0,.38) !important;
+
+  background:
+    radial-gradient(circle at 12% 8%,rgba(139,124,255,.18),transparent 25%),
+    radial-gradient(circle at 88% 18%,rgba(85,214,178,.13),transparent 23%),
+    radial-gradient(circle at 55% 100%,rgba(255,209,102,.08),transparent 25%),
+    #070b12 !important;
+  color:#f4f7fb !important;
+}
+
+/* светящиеся пятна */
+body.dark::before,
+body.dark::after{
+  display:block !important;
+  content:"" !important;
+  position:fixed !important;
+  z-index:-1 !important;
+  pointer-events:none !important;
+  filter:blur(2px) !important;
+}
+
+body.dark::before{
+  width:420px !important;
+  height:420px !important;
+  right:-150px !important;
+  top:18% !important;
+  border-radius:50% !important;
+  background:radial-gradient(circle,rgba(139,124,255,.24),rgba(139,124,255,0) 68%) !important;
+}
+
+body.dark::after{
+  width:360px !important;
+  height:360px !important;
+  left:-130px !important;
+  bottom:5% !important;
+  border-radius:50% !important;
+  background:radial-gradient(circle,rgba(85,214,178,.18),rgba(85,214,178,0) 68%) !important;
+}
+
+/* современная сетка */
+body.dark .catalog,
+body.dark .cards-grid{
+  background-image:
+    linear-gradient(rgba(139,124,255,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(85,214,178,.045) 1px,transparent 1px) !important;
+  background-size:32px 32px !important;
+  border-radius:24px !important;
+}
+
+/* карточки */
+body.dark .topbar,
+body.dark .hero,
+body.dark .card,
+body.dark .dish-card,
+body.dark .rating-box,
+body.dark .review,
+body.dark .chart-box,
+body.dark .random-result,
+body.dark .admin-table-wrap,
+body.dark .status{
+  background:rgba(16,23,34,.88) !important;
+  color:#f4f7fb !important;
+  border-color:#263241 !important;
+}
+
+/* тёмная тема — читаемый светлый текст */
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6,
+body.dark p,
+body.dark span,
+body.dark div,
+body.dark label,
+body.dark strong,
+body.dark small,
+body.dark td,
+body.dark th{
+  color:#f4f7fb;
+}
+
+body.dark .muted,
+body.dark .review-head,
+body.dark .search-status,
+body.dark .brand p,
+body.dark .section-subtitle{
+  color:#aeb8c5 !important;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea,
+body.dark .field,
+body.dark .review-textarea{
+  background:#0c131d !important;
+  color:#f4f7fb !important;
+  border-color:#2b3949 !important;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+  color:#758293 !important;
+}
+
+/* неоновые, но аккуратные акценты */
+body.dark button.action,
+body.dark button.open-btn,
+body.dark .action.primary{
+  background:#8b7cff !important;
+  color:#fff !important;
+  border-color:#8b7cff !important;
+  box-shadow:0 7px 22px rgba(139,124,255,.20) !important;
+}
+
+body.dark .theme-toggle{
+  background:#101722 !important;
+  color:#f4f7fb !important;
+  border-color:#2b3949 !important;
+}
+
+body.dark .badge,
+body.dark .category,
+body.dark .chip{
+  background:#182230 !important;
+  color:#d8def0 !important;
+  border-color:#2a3848 !important;
+}
+
+/* ---------- ШРИФТЫ ---------- */
+.brand h1,
+.hero h2,
+.hero h3,
+.section-title{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+  font-weight:800 !important;
+  letter-spacing:-.035em !important;
+}
+
+button,
+input,
+select,
+textarea{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+}
+
+/* мобильный — тот же дизайн, не отдельная тема */
+@media(max-width:700px){
+  body{
+    font-size:15px !important;
+  }
+
+  .container{
+    width:calc(100% - 16px) !important;
+    margin-top:8px !important;
+  }
+
+  .topbar{
+    border-radius:18px !important;
+  }
+
+  .hero,
+  .card,
+  .dish-card,
+  .rating-box{
+    border-radius:18px !important;
+  }
+
+  body.dark .catalog,
+  body.dark .cards-grid,
+  body:not(.dark) .catalog,
+  body:not(.dark) .cards-grid{
+    background-size:26px 26px !important;
+  }
+}
+
+</style>
+<style id="stolovka-final-theme">
+
+/* ===== ФИНАЛЬНЫЙ ДИЗАЙН: ЯРКИЙ ФОН + МАКСИМАЛЬНАЯ ЧИТАЕМОСТЬ ===== */
+
+body{
+  font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif !important;
+}
+
+/* ---------- DARK ---------- */
+body.dark{
+  --bg:#070a12 !important;
+  --paper:#111827 !important;
+  --ink:#ffffff !important;
+  --muted:#c7d0df !important;
+  --line:#344155 !important;
+  --accent:#9b8cff !important;
+  --accent-2:#c5bcff !important;
+  --mint:#62e0bd !important;
+  --gold:#ffd76a !important;
+
+  background:
+    radial-gradient(650px 420px at 5% 0%,rgba(125,92,255,.30),transparent 65%),
+    radial-gradient(600px 430px at 100% 10%,rgba(41,210,177,.24),transparent 65%),
+    radial-gradient(650px 500px at 70% 100%,rgba(255,93,160,.15),transparent 65%),
+    linear-gradient(135deg,#080b14 0%,#0b1220 48%,#090d18 100%) !important;
+  color:#fff !important;
+}
+
+/* постоянный цветной фон */
+body.dark::before{
+  width:520px !important;
+  height:520px !important;
+  right:-170px !important;
+  top:8% !important;
+  background:
+    radial-gradient(circle at 35% 35%,rgba(155,140,255,.34),transparent 34%),
+    radial-gradient(circle at 70% 70%,rgba(98,224,189,.20),transparent 30%) !important;
+  filter:blur(5px) !important;
+}
+
+body.dark::after{
+  width:480px !important;
+  height:480px !important;
+  left:-190px !important;
+  bottom:-70px !important;
+  background:
+    radial-gradient(circle at 55% 45%,rgba(255,100,174,.20),transparent 34%),
+    radial-gradient(circle at 35% 70%,rgba(78,133,255,.18),transparent 32%) !important;
+  filter:blur(5px) !important;
+}
+
+/* сетка поверх красивого фона */
+body.dark .catalog,
+body.dark .cards-grid{
+  background-image:
+    linear-gradient(rgba(155,140,255,.075) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(98,224,189,.055) 1px,transparent 1px) !important;
+  background-size:30px 30px !important;
+}
+
+/* стеклянные панели */
+body.dark .topbar,
+body.dark .hero,
+body.dark .card,
+body.dark .dish-card,
+body.dark .rating-box,
+body.dark .review,
+body.dark .chart-box,
+body.dark .random-result,
+body.dark .admin-table-wrap,
+body.dark .status{
+  background:rgba(15,23,38,.86) !important;
+  color:#fff !important;
+  border-color:#354257 !important;
+  box-shadow:0 14px 38px rgba(0,0,0,.30) !important;
+  backdrop-filter:blur(14px);
+}
+
+/* ВСЯ типографика тёмной темы */
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6,
+body.dark p,
+body.dark span,
+body.dark div,
+body.dark label,
+body.dark strong,
+body.dark small,
+body.dark td,
+body.dark th,
+body.dark .brand h1,
+body.dark .hero h2,
+body.dark .hero h3{
+  color:#ffffff !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.18);
+}
+
+body.dark .muted,
+body.dark .review-head,
+body.dark .search-status,
+body.dark .brand p,
+body.dark .section-subtitle{
+  color:#c7d0df !important;
+}
+
+/* поля — никакого белого текста на сером */
+body.dark input,
+body.dark select,
+body.dark textarea,
+body.dark .field,
+body.dark .review-textarea{
+  background:#0b1320 !important;
+  color:#ffffff !important;
+  border-color:#3a485d !important;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+  color:#8f9caf !important;
+}
+
+/* кнопки */
+body.dark .action,
+body.dark .open-btn,
+body.dark .action.primary{
+  background:linear-gradient(135deg,#8e7dff,#6f5cf2) !important;
+  color:#ffffff !important;
+  border-color:#9b8cff !important;
+  box-shadow:0 8px 24px rgba(126,103,255,.25) !important;
+}
+
+body.dark .action *,
+body.dark .open-btn *,
+body.dark .action.primary *{
+  color:#ffffff !important;
+}
+
+body.dark .badge,
+body.dark .category,
+body.dark .chip{
+  background:#1b2739 !important;
+  color:#e7ebff !important;
+  border-color:#35445a !important;
+}
+
+body.dark .price,
+body.dark .price strong{
+  color:#ffffff !important;
+}
+
+body.dark .theme-toggle{
+  background:#121c2b !important;
+  color:#fff !important;
+  border-color:#39485d !important;
+}
+
+/* ---------- LIGHT ---------- */
+body:not(.dark){
+  --bg:#ffffff !important;
+  --paper:#ffffff !important;
+  --ink:#111318 !important;
+  --muted:#56606d !important;
+  --line:#e0e5eb !important;
+  --accent:#111318 !important;
+  --accent-2:#303640 !important;
+
+  background:
+    radial-gradient(600px 400px at -5% -5%,rgba(104,91,255,.07),transparent 65%),
+    radial-gradient(600px 400px at 105% 15%,rgba(35,183,150,.06),transparent 65%),
+    #ffffff !important;
+  color:#111318 !important;
+}
+
+body:not(.dark)::before,
+body:not(.dark)::after{
+  display:none !important;
+}
+
+body:not(.dark) .catalog,
+body:not(.dark) .cards-grid{
+  background-image:
+    linear-gradient(rgba(17,19,24,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(17,19,24,.025) 1px,transparent 1px) !important;
+  background-size:30px 30px !important;
+}
+
+body:not(.dark) .topbar,
+body:not(.dark) .hero,
+body:not(.dark) .card,
+body:not(.dark) .dish-card,
+body:not(.dark) .rating-box,
+body:not(.dark) .review,
+body:not(.dark) .chart-box,
+body:not(.dark) .random-result,
+body:not(.dark) .admin-table-wrap,
+body:not(.dark) .status{
+  background:#ffffff !important;
+  color:#111318 !important;
+  border-color:#e0e5eb !important;
+  box-shadow:0 10px 28px rgba(17,19,24,.06) !important;
+}
+
+body:not(.dark) h1,
+body:not(.dark) h2,
+body:not(.dark) h3,
+body:not(.dark) h4,
+body:not(.dark) h5,
+body:not(.dark) h6,
+body:not(.dark) p,
+body:not(.dark) span,
+body:not(.dark) div,
+body:not(.dark) label,
+body:not(.dark) strong,
+body:not(.dark) small,
+body:not(.dark) td,
+body:not(.dark) th{
+  color:#111318 !important;
+}
+
+body:not(.dark) .muted,
+body:not(.dark) .review-head,
+body:not(.dark) .search-status,
+body:not(.dark) .brand p,
+body:not(.dark) .section-subtitle{
+  color:#56606d !important;
+}
+
+body:not(.dark) input,
+body:not(.dark) select,
+body:not(.dark) textarea,
+body:not(.dark) .field,
+body:not(.dark) .review-textarea{
+  background:#fff !important;
+  color:#111318 !important;
+  border-color:#d7dde5 !important;
+}
+
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{
+  color:#89929e !important;
+}
+
+body:not(.dark) .action,
+body:not(.dark) .open-btn,
+body:not(.dark) .action.primary{
+  background:#111318 !important;
+  color:#fff !important;
+  border-color:#111318 !important;
+}
+
+body:not(.dark) .action *,
+body:not(.dark) .open-btn *,
+body:not(.dark) .action.primary *{
+  color:#fff !important;
+}
+
+body:not(.dark) .badge,
+body:not(.dark) .category,
+body:not(.dark) .chip{
+  background:#f0f2f5 !important;
+  color:#303640 !important;
+  border-color:#dfe4ea !important;
+}
+
+body:not(.dark) .theme-toggle{
+  background:#fff !important;
+  color:#111318 !important;
+  border-color:#d7dde5 !important;
+}
+
+/* новый шрифт для заголовков */
+.brand h1,
+.hero h2,
+.hero h3,
+.section-title{
+  font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif !important;
+  font-weight:900 !important;
+  letter-spacing:-.04em !important;
+}
+
+/* мобильный */
+@media(max-width:700px){
+  .container{width:calc(100% - 16px) !important}
+  .topbar{border-radius:18px !important}
+  .hero,.card,.dish-card,.rating-box{border-radius:18px !important}
+}
+
+</style>
+<style id="stolovka-modern-polish">
+
+/* ===== ФИНАЛЬНАЯ ПОЛИРОВКА: НАВИГАЦИЯ + HERO ===== */
+
+/* Навигация: текст всегда контрастный */
+.tabs .tab-btn{
+  font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif !important;
+  font-weight:800 !important;
+  letter-spacing:-.015em !important;
+  min-height:46px;
+}
+
+body.dark .tabs .tab-btn{
+  background:#151e2d !important;
+  color:#e9edff !important;
+  border-color:#3b4a61 !important;
+  box-shadow:0 7px 18px rgba(0,0,0,.20) !important;
+}
+
+body.dark .tabs .tab-btn:hover{
+  background:#202c41 !important;
+  color:#ffffff !important;
+  border-color:#7d6cff !important;
+}
+
+body.dark .tabs .tab-btn.active{
+  background:linear-gradient(135deg,#9585ff,#7060ed) !important;
+  color:#ffffff !important;
+  border-color:#a99cff !important;
+  box-shadow:0 8px 24px rgba(126,103,255,.30) !important;
+}
+
+body:not(.dark) .tabs .tab-btn{
+  background:#ffffff !important;
+  color:#303640 !important;
+  border-color:#dce1e7 !important;
+}
+
+body:not(.dark) .tabs .tab-btn:hover{
+  background:#f3f5f7 !important;
+  color:#111318 !important;
+}
+
+body:not(.dark) .tabs .tab-btn.active{
+  background:#111318 !important;
+  color:#ffffff !important;
+  border-color:#111318 !important;
+  box-shadow:0 8px 20px rgba(17,19,24,.12) !important;
+}
+
+/* Новый фон блока с тарелкой — не пустой зелёный */
+.hero-art{
+  position:relative !important;
+  overflow:hidden !important;
+  min-height:190px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  background:
+    radial-gradient(circle at 25% 30%,rgba(255,255,255,.24),transparent 19%),
+    radial-gradient(circle at 75% 75%,rgba(114,91,255,.30),transparent 26%),
+    radial-gradient(circle at 75% 18%,rgba(63,222,191,.22),transparent 24%),
+    linear-gradient(135deg,#18264b 0%,#28346c 45%,#172e45 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 18px 42px rgba(23,33,68,.28) !important;
+}
+
+/* современная сетка внутри hero */
+.hero-art::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  background-image:
+    linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px) !important;
+  background-size:28px 28px !important;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 95%) !important;
+}
+
+/* цветные световые кольца */
+.hero-art::after{
+  content:"" !important;
+  position:absolute !important;
+  width:150px !important;
+  height:150px !important;
+  left:12% !important;
+  top:14% !important;
+  border-radius:50% !important;
+  background:
+    radial-gradient(circle,rgba(255,255,255,.70) 0 4%,rgba(139,124,255,.22) 22%,transparent 66%) !important;
+  filter:blur(2px) !important;
+  box-shadow:
+    180px 75px 0 -40px rgba(85,214,178,.20),
+    260px -30px 0 -55px rgba(255,110,174,.20) !important;
+}
+
+/* тарелка поверх декора */
+.hero-art{
+  isolation:isolate;
+}
+.hero-art{
+  font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif !important;
+}
+.hero-art{
+  text-shadow:0 8px 25px rgba(0,0,0,.22) !important;
+}
+
+/* Светлая версия hero */
+body:not(.dark) .hero-art{
+  border-color:#dce4ee !important;
+  background:
+    radial-gradient(circle at 24% 25%,rgba(255,255,255,.95),transparent 18%),
+    radial-gradient(circle at 78% 72%,rgba(116,92,255,.16),transparent 28%),
+    radial-gradient(circle at 78% 18%,rgba(47,190,159,.15),transparent 25%),
+    linear-gradient(135deg,#eef3ff 0%,#eaf8f5 52%,#f5efff 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 16px 36px rgba(65,75,110,.12) !important;
+}
+
+body:not(.dark) .hero-art::before{
+  background-image:
+    linear-gradient(rgba(30,40,60,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,40,60,.045) 1px,transparent 1px) !important;
+}
+
+body:not(.dark) .hero-art::after{
+  background:
+    radial-gradient(circle,rgba(255,255,255,.95) 0 4%,rgba(125,104,255,.12) 23%,transparent 66%) !important;
+}
+
+/* мобильная навигация */
+@media(max-width:700px){
+  .tabs{
+    flex-wrap:nowrap !important;
+    overflow-x:auto !important;
+    padding-bottom:4px !important;
+    scrollbar-width:none !important;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs .tab-btn{
+    flex:0 0 auto !important;
+    white-space:nowrap !important;
+  }
+}
+
+</style>
+
+<style id="full-dark-background-fix">
+body.dark{
+  background:
+    radial-gradient(circle at 15% 10%,rgba(139,124,255,.28),transparent 32%),
+    radial-gradient(circle at 85% 18%,rgba(85,214,178,.22),transparent 30%),
+    radial-gradient(circle at 50% 90%,rgba(255,100,170,.16),transparent 34%),
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+    #070b12 !important;
+  background-size:
+    auto,
+    auto,
+    auto,
+    32px 32px,
+    32px 32px,
+    auto !important;
+  color:#fff !important;
+}
+
+body.dark .hero-art::before{
+  display:none !important;
+}
+
+body.dark .topbar,
+body.dark .hero,
+body.dark .card,
+body.dark .dish-card,
+body.dark .review,
+body.dark .rating-box{
+  background:rgba(15,23,38,.86) !important;
+  backdrop-filter:blur(14px);
+}
+</style>
+
 </head>
 <body>
 <div class="container">
@@ -269,6 +1234,7 @@ body:not(.dark) .hero-art::before{background-image:linear-gradient(rgba(30,40,60
       <button class="theme-toggle" id="themeToggle" type="button" title="Включить тёмную тему" aria-label="Включить тёмную тему">🌙</button>
     </div>
   </header>
+
   <nav class="tabs" id="tabs">
     <button class="tab-btn active" data-tab="home">Главная</button>
     <button class="tab-btn" data-tab="catalog">Каталог</button>
@@ -276,6 +1242,7 @@ body:not(.dark) .hero-art::before{background-image:linear-gradient(rgba(30,40,60
     <button class="tab-btn" data-tab="favorites">Избранное</button>
     <button class="tab-btn" data-tab="features">Фишки</button>
   </nav>
+
   <main>
     <section id="home" class="panel active">
       <div class="hero">
@@ -289,6 +1256,7 @@ body:not(.dark) .hero-art::before{background-image:linear-gradient(rgba(30,40,60
       <div class="section-head"><div><h3>🍽️ Рекомендуем сегодня</h3><p>Подборка блюд из меню столовой.</p></div></div>
       <div class="catalog-grid" id="homePopular"></div>
     </section>
+
     <section id="catalog" class="panel">
       <div class="section-head"><div><h3>Каталог</h3><p>Результаты обновятся, когда вы сделаете короткую паузу во вводе.</p></div></div>
       <div class="controls">
@@ -306,6 +1274,7 @@ body:not(.dark) .hero-art::before{background-image:linear-gradient(rgba(30,40,60
       <div class="catalog-grid" id="catalogGrid"></div>
       <div id="detailMount"></div>
     </section>
+
     <section id="today" class="panel">
       <div class="hero">
         <div><span class="kicker">О ПРОЕКТЕ</span><h2>Школьное меню без лишнего</h2><p>«Столовка» помогает быстро узнать состав блюд, пищевую ценность и актуальное меню. Сайт создан для просмотра — без заказов и покупок.</p></div>
@@ -320,10 +1289,12 @@ body:not(.dark) .hero-art::before{background-image:linear-gradient(rgba(30,40,60
       </div>
       <div class="card" style="margin-top:16px"><h3>Важно</h3><p>Меню публикуется ответственным сотрудником. Уточняйте фактическое наличие блюд в столовой.</p></div>
     </section>
+
     <section id="favorites" class="panel">
       <div class="section-head"><div><h3>Избранное <span class="fav-star">★</span></h3><p>Сохраняется в браузере этого компьютера.</p></div></div>
       <div class="catalog-grid" id="favoritesGrid"></div>
     </section>
+
     <section id="features" class="panel">
       <div class="hero">
         <div>
@@ -333,6 +1304,7 @@ body:not(.dark) .hero-art::before{background-image:linear-gradient(rgba(30,40,60
         </div>
         <div class="hero-art">✨</div>
       </div>
+
       <div class="tools-grid">
         <article class="tool-card">
           <div class="icon-bubble">🎲</div>
@@ -341,6 +1313,7 @@ body:not(.dark) .hero-art::before{background-image:linear-gradient(rgba(30,40,60
           <button class="action primary" id="randomBtn" style="margin-top:14px">Выбрать блюдо</button>
           <div class="random-result" id="randomResult"></div>
         </article>
+
         <article class="tool-card">
           <div class="icon-bubble">💰</div>
           <h3>Что взять по бюджету?</h3>
@@ -353,11 +1326,14 @@ body:not(.dark) .hero-art::before{background-image:linear-gradient(rgba(30,40,60
         </article>
       </div>
     </section>
+
     <section id="admin" class="panel">
       <div class="section-head"><div><h3>Управление меню</h3><p>Панель сотрудника вынесена на отдельную страницу.</p></div></div>
       <div class="admin-note">Для сотрудника используется отдельная админ-панель. Обычные посетители сайта не видят кнопку управления.</div>
     </section>
+
   </main>
+
   <div class="footer-note">Столовка лицея • информационный сайт для обучающихся • изображения блюд иллюстративные</div>
 </div>
 <div class="quick-nav">
@@ -365,8 +1341,10 @@ body:not(.dark) .hero-art::before{background-image:linear-gradient(rgba(30,40,60
   <button id="toCatalog" title="К каталогу">⌂</button>
 </div>
 <div class="toast" id="toast"></div>
+
 <script>
 const database = [
+
             {                id: 1, name: "Борщ с говядиной", price: 56,
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzBmNzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzIyZDNlZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42yPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JHQvtGA0Ykg0YEg0LPQvtCy0Y/QtNC40L3QvtC5PC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgyIj5DeWJlckNhbnRlZW4g4oCiINC/0YDQvtGB0LzQvtGC0YAg0YbQtdC9PC90ZXh0Pjwvc3ZnPg==",
                 b: 7, j: 9, u: 14, kcal: 165,
@@ -630,7 +1608,9 @@ const database = [
               fact: "Это информационная карточка: официальная цена отсутствует, поэтому сайт её не выдумывает.",
               history: []
             }
+
 ];
+
 // ===== ПОДКЛЮЧЕНИЕ К ОБЩЕЙ БАЗЕ МЕНЮ =====
 // 1) Создай проект Supabase.
 // 2) Вставь сюда Project URL и anon key из Project Settings -> API.
@@ -642,10 +1622,12 @@ const supabaseClient = supabaseConfigured ? window.supabase.createClient(SUPABAS
 const publicMenuTable = 'menu_items';
 const publicReviewsTable = 'reviews';
 const reviewsRemoteEnabled = Boolean(supabaseClient);
+
 const editableFields=['name','price','category','b','j','u','kcal','desc'];
 const allowedCategories=new Set(['soup','porridge','main','garnish','breakfast','salad','dessert','bakery','drink']);
 const menuStorageKey='stolovkaMenuOverrides';
 const remoteMenuIds=new Set();
+
 function readJsonStorage(key,fallback){
   try{
     const value=JSON.parse(localStorage.getItem(key)||'null');
@@ -654,9 +1636,11 @@ function readJsonStorage(key,fallback){
     return fallback;
   }
 }
+
 function copyDish(d){
   return {...d,history:Array.isArray(d.history)?[...d.history]:[]};
 }
+
 function normalizeMenuPatch(raw,original){
   const patch={};
   const name=String(raw?.name??original.name).trim();
@@ -675,6 +1659,7 @@ function normalizeMenuPatch(raw,original){
   }
   return patch;
 }
+
 function applyMenuOverrides(payload){
   const entries=Array.isArray(payload)?payload:(payload&&Array.isArray(payload.dishes)?payload.dishes:[]);
   const byId=new Map(entries.map(item=>[Number(item?.id),item]));
@@ -683,8 +1668,10 @@ function applyMenuOverrides(payload){
     if(item)Object.assign(dish,normalizeMenuPatch(item,dish));
   }
 }
+
 const defaultDatabase=database.map(copyDish);
 applyMenuOverrides(readJsonStorage(menuStorageKey,[]));
+
 const categoryImages={
   soup:'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80',
   porridge:'https://images.unsplash.com/photo-1517673132405-a56a62b18caf?auto=format&fit=crop&w=900&q=80',
@@ -698,6 +1685,7 @@ const categoryImages={
 };
 const dishPhotoMap={};
 function dishImage(d){return dishPhotoMap[d.id]||categoryImages[d.category]||d.img;}
+
 const favoriteIds=readJsonStorage('stolovkaFavorites',[]);
 const state={selectedId:null, favorites:new Set(Array.isArray(favoriteIds)?favoriteIds.map(Number).filter(Number.isFinite):[]), chart:null, searchTimer:null};
 const $ = (s,r=document)=>r.querySelector(s);
@@ -705,6 +1693,7 @@ const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 const els={tabs:$('#tabs'),search:$('#search'),category:$('#category'),catalog:$('#catalogGrid'),
   popular:$('#homePopular'),detail:$('#detailMount'),fav:$('#favoritesGrid'),toast:$('#toast'),
   searchStatus:$('#searchStatus'),themeToggle:$('#themeToggle'),adminRows:$('#adminRows'),adminStatus:$('#adminStatus')};
+
 const themeKey='stolovkaTheme';
 function applyTheme(theme){
   const dark=theme==='dark';
@@ -722,17 +1711,22 @@ function toggleTheme(){
 }
 applyTheme(localStorage.getItem(themeKey)||
   (window.matchMedia?.('(prefers-color-scheme: dark)').matches?'dark':'light'));
+
 function showToast(text){
   els.toast.textContent=text;els.toast.classList.add('show');
   clearTimeout(showToast.t);showToast.t=setTimeout(()=>els.toast.classList.remove('show'),2200);
 }
 function saveFavorites(){localStorage.setItem('stolovkaFavorites',JSON.stringify([...state.favorites]));}
+
 function switchTab(id){
   $$('.panel').forEach(p=>p.classList.toggle('active',p.id===id));
   $$('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
   if(id==='favorites') renderFavorites();
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
+
+
 const searchSynonyms = {
   // Напитки / разговорные запросы
   "сушняк":["напиток","напитки","компот","чай","сок","вода","газировка","газированная вода"],
@@ -747,6 +1741,7 @@ const searchSynonyms = {
   "чайок":["чай","напиток"],
   "чаек":["чай","напиток"],
   "сокик":["сок","напиток"],
+
   // Блюда
   "котлетка":["котлета","котлеты"],
   "котлетки":["котлета","котлеты"],
@@ -765,6 +1760,7 @@ const searchSynonyms = {
   "сухофрукт":["компот из сухофруктов","сухофрукты","компот"],
   "сухофрукты":["компот из сухофруктов","сухофрукты","компот"]
 };
+
 // Запросы, которые означают целую категорию.
 // Например, «сушняк» должен показывать напитки, а не только искать это слово в названии.
 const searchCategoryIntents = {
@@ -782,6 +1778,7 @@ const searchCategoryIntents = {
   "супы":"soup",
   "супчик":"soup"
 };
+
 function normalizeText(s){
   return String(s||"")
     .toLowerCase()
@@ -791,6 +1788,7 @@ function normalizeText(s){
     .replace(/\s+/g," ")
     .trim();
 }
+
 function editDistance(a,b){
   if(a===b)return 0;
   if(!a)return b.length;
@@ -809,6 +1807,7 @@ function editDistance(a,b){
   }
   return prev[b.length];
 }
+
 function fuzzySimilar(a,b){
   a=normalizeText(a); b=normalizeText(b);
   if(!a||!b)return false;
@@ -817,6 +1816,7 @@ function fuzzySimilar(a,b){
   const maxDistance=Math.max(1,Math.floor(Math.max(a.length,b.length)*0.30));
   return editDistance(a,b)<=maxDistance;
 }
+
 function wordVariants(word){
   const w=normalizeText(word);
   const variants=new Set([w]);
@@ -830,14 +1830,17 @@ function wordVariants(word){
   });
   return [...variants].filter(Boolean);
 }
+
 function searchScore(d,q){
   const query=normalizeText(q);
   if(!query)return 1;
+
   const name=normalizeText(d.name);
   const desc=normalizeText(d.desc);
   const category=normalizeText(d.category);
   const custom=(d.aliases||[]).map(normalizeText);
   const all=[name,desc,category,...custom];
+
   // Категориальный запрос имеет приоритет над обычным совпадением.
   const intent=searchCategoryIntents[query];
   if(intent){
@@ -846,14 +1849,17 @@ function searchScore(d,q){
     if(semantic.some(s=>name.includes(normalizeText(s))||desc.includes(normalizeText(s))))return 105;
     return 0;
   }
+
   // Прямое совпадение.
   if(all.some(x=>x.includes(query)))return 100;
+
   // Семантический словарь.
   const semantic=searchSynonyms[query]||[];
   if(semantic.some(s=>{
     const n=normalizeText(s);
     return all.some(x=>x.includes(n));
   }))return 95;
+
   // Несколько слов + формы слов.
   const words=query.split(/\s+/).filter(Boolean);
   let matched=0;
@@ -866,11 +1872,13 @@ function searchScore(d,q){
     const ratio=matched/words.length;
     return ratio>=1?90:Math.round(60*ratio);
   }
+
   // Опечатки: сравниваем и с названиями, и со всеми известными понятиями.
   const candidates=[
     name,...custom,...Object.keys(searchSynonyms),
     ...Object.values(searchSynonyms).flat()
   ].map(normalizeText);
+
   let best=0;
   for(const candidate of candidates){
     const parts=candidate.split(/\s+/);
@@ -881,6 +1889,7 @@ function searchScore(d,q){
   }
   return best;
 }
+
 function renderCard(d,fromFavorites=false){
   const hot='';
   const remove=fromFavorites&&state.favorites.has(d.id)?`<button class="favorite-remove" title="Удалить из избранного" data-remove-fav="${d.id}">×</button>`:'';
@@ -894,6 +1903,7 @@ function renderCard(d,fromFavorites=false){
     </div>
   </article>`;
 }
+
 function renderCatalog(){
   const q=normalizeText(els.search.value||"");
   const cat=els.category.value;
@@ -902,11 +1912,13 @@ function renderCatalog(){
     .filter(x=>(!q||x.score>0)&&(cat==="all"||x.d.category===cat))
     .sort((a,b)=>b.score-a.score)
     .map(x=>x.d);
+
   els.catalog.innerHTML=items.length
     ?items.map(renderCard).join("")
     :'<div class="favorites-empty">Ничего не найдено. Попробуй «сушняк», «газява», «котлетка» или другое слово.</div>';
   return items.length;
 }
+
 function renderPopular(){
   els.popular.innerHTML=database.slice(0,3).map(renderCard).join('');
 }
@@ -914,6 +1926,7 @@ function renderFavorites(){
   const list=database.filter(d=>state.favorites.has(d.id));
   els.fav.innerHTML=list.length?list.map(d=>renderCard(d,true)).join(''):'<div class="favorites-empty">Пока ничего нет ⭐<br>Открой блюдо и нажми «В избранное».</div>';
 }
+
 function menuData(){
   return database.map(d=>{
     const item={id:d.id};
@@ -921,6 +1934,7 @@ function menuData(){
     return item;
   });
 }
+
 function renderAdmin(){
   if(!els.adminRows)return;
   const categories=[...allowedCategories];
@@ -936,11 +1950,13 @@ function renderAdmin(){
     <td><textarea class="desc-input" data-admin-field="desc" maxlength="500">${escapeHtml(d.desc)}</textarea></td>
   </tr>`).join('');
 }
+
 function setAdminLoggedIn(loggedIn){
   const loginBox=$('#adminLoginBox'), panel=$('#adminPanel');
   if(loginBox)loginBox.hidden=loggedIn;
   if(panel)panel.hidden=!loggedIn;
 }
+
 async function loadRemoteMenu(){
   if(!supabaseClient){
     if(els.adminStatus)els.adminStatus.textContent='Supabase ещё не настроен: сайт работает с исходными данными.';
@@ -962,6 +1978,7 @@ async function loadRemoteMenu(){
     if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
   }
 }
+
 async function refreshAdminAuth(){
   if(!supabaseClient){setAdminLoggedIn(false);return;}
   const {data}=await supabaseClient.auth.getSession();
@@ -969,6 +1986,7 @@ async function refreshAdminAuth(){
   const {data:isAdmin,error}=await supabaseClient.rpc('is_menu_admin');
   setAdminLoggedIn(Boolean(!error && isAdmin));
 }
+
 async function adminLogin(){
   if(!supabaseClient){
     $('#adminAuthStatus').textContent='Сначала укажи SUPABASE_URL и SUPABASE_ANON_KEY в файле.';
@@ -991,6 +2009,7 @@ async function adminLogin(){
   await loadRemoteMenu();
   renderAdmin();
 }
+
 async function saveAdminChanges(){
   if(!supabaseClient){showToast('Supabase не настроен');return;}
   const {data:{session}}=await supabaseClient.auth.getSession();
@@ -1017,16 +2036,20 @@ async function saveAdminChanges(){
   if(els.adminStatus)els.adminStatus.textContent='Опубликовано для всех посетителей.';
   showToast('Меню опубликовано');
 }
+
 async function resetMenuChanges(){
   await loadRemoteMenu();
   renderAdmin();
   if(els.adminStatus)els.adminStatus.textContent='Загружены данные из общей базы.';
   showToast('Данные обновлены');
 }
+
 async function logoutAdmin(){
   if(supabaseClient)await supabaseClient.auth.signOut();
     showToast('Вы вышли из админки');
 }
+
+
 function getReviewUserId(){
   let id=localStorage.getItem("stolovkaReviewUserId");
   if(!id){
@@ -1036,49 +2059,44 @@ function getReviewUserId(){
   }
   return id;
 }
+
 function ratingKey(id){return `stolovkaRating_${id}`;}
+
 function getRatings(id){
   try{
     const list=JSON.parse(localStorage.getItem(ratingKey(id))||"[]");
     return Array.isArray(list)?list:[];
   }catch{return [];}
 }
+
 function saveLocalRatings(id,list){
   try{localStorage.setItem(ratingKey(id),JSON.stringify(list));}catch{}
 }
+
 function ratingAverage(list){
   const valid=list.filter(r=>Number.isFinite(Number(r.stars))&&Number(r.stars)>=1&&Number(r.stars)<=5);
   return valid.length?valid.reduce((s,r)=>s+Number(r.stars),0)/valid.length:0;
 }
+
 function starsView(value){
   const n=Math.round(value);
   return Array.from({length:5},(_,i)=>`<span style="color:${i<n?'var(--gold)':'#c9bba5'}">★</span>`).join("");
 }
+
 function starsInteractive(id,value=0){
   return `<div class="stars" data-starbox="${id}" data-value="${value}">${Array.from({length:5},(_,i)=>`<button class="star-btn ${i<value?'active':''}" type="button" data-star="${i+1}" data-star-id="${id}" aria-label="${i+1} звёзд">★</button>`).join("")}</div>`;
 }
+
 function escapeHtml(value){
   return String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 }
+
 function reviewName(){return localStorage.getItem('stolovkaReviewName')||'';}
 const prohibitedReviewStems=['хуй','хуе','хуя','пизд','еба','ебл','бля','сука','гандон','долбоеб','дебил','идиот','мраз','урод','шлюх','наци','расист'];
-function normalizeReviewText(text){
-  return String(text||'').toLowerCase()
-    .replace(/[сc]/g,'с').replace(/[уuy]/g,'у').replace(/[хx]/g,'х')
-    .replace(/[аa]/g,'а').replace(/[еe]/g,'е').replace(/[оo0]/g,'о')
-    .replace(/[рp]/g,'р').replace(/[кk]/g,'к').replace(/[мm]/g,'м')
-    .replace(/[тt]/g,'т').replace(/[вb]/g,'в').replace(/[з3]/g,'з')
-    .replace(/4/g,'ч').replace(/@/g,'а').replace(/\$/g,'с')
-    .replace(/[^a-zа-яё0-9]+/gi,'');
-}
-const prohibitedReviewPatterns=[/хуй/i,/хуе/i,/хуя/i,/пизд/i,/еба/i,/ебл/i,/бля/i,/сука/i,/гандон/i,/долбоеб/i,/дебил/i,/идиот/i,/мраз/i,/урод/i,/шлюх/i,/наци/i,/расист/i];
-function containsProhibitedLanguage(text){
-  const raw=String(text||'').toLowerCase();
-  const normalized=normalizeReviewText(text);
-  return prohibitedReviewPatterns.some(rx=>rx.test(raw)||rx.test(normalized));
-}
 function reviewWords(text){return String(text||'').match(/[A-Za-zА-Яа-яЁё0-9-]+/g)||[];}
+function containsProhibitedLanguage(text){return reviewWords(text).map(normalizeText).some(word=>prohibitedReviewStems.some(stem=>word.startsWith(stem)));}
 function getUserReviewForDish(id){return getRatings(id).find(r=>r.userId===getReviewUserId())||null;}
+
 function ratingMarkup(d,list){
   const avg=ratingAverage(list), recent=list.slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,10), mine=getUserReviewForDish(d.id);
   const formHtml=`<div class="review-form">
@@ -1089,10 +2107,12 @@ function ratingMarkup(d,list){
   </div>`;
   return `<div class="rating-summary"><strong>Отзывы о блюде</strong><span class="rating-value">${avg?avg.toFixed(1):"—"}</span><span>${starsView(avg)}</span><span style="color:var(--muted)">${list.length} отзывов</span></div>${formHtml}<div class="review-list">${recent.length?recent.map(r=>`<div class="review"><div class="review-head"><strong>${escapeHtml(r.author||'Гость')}</strong><span>${starsView(r.stars)} · ${new Date(r.date).toLocaleDateString("ru-RU")}</span></div><div class="review-body">${escapeHtml(r.text||"Без комментария")}</div>${r.userId===getReviewUserId()?`<div class="review-actions"><button class="review-action" type="button" data-edit-rating="${d.id}">Изменить</button><button class="review-action" type="button" data-delete-rating="${d.id}">Удалить</button></div>`:''}</div>`).join(""):"<div style='color:var(--muted);margin-top:10px'>Отзывов пока нет — оставьте первый.</div>"}</div>`;
 }
+
 function renderRatingBox(d){
   const list=getRatings(d.id);
   return `<div class="rating-box" data-rating-mount="${d.id}">${ratingMarkup(d,list)}</div>`;
 }
+
 async function loadRemoteRatings(id){
   if(!reviewsRemoteEnabled)return;
   const {data,error}=await supabaseClient.from(publicReviewsTable).select('id,dish_id,user_id,author,stars,text,created_at').eq('dish_id',id).order('created_at',{ascending:false}).limit(50);
@@ -1102,6 +2122,7 @@ async function loadRemoteRatings(id){
   const d=database.find(x=>x.id===id), mount=document.querySelector(`[data-rating-mount="${id}"]`);
   if(d&&mount)mount.innerHTML=ratingMarkup(d,list);
 }
+
 async function submitRating(id){
   const box=document.querySelector(`[data-starbox="${id}"]`), stars=Number(box?.dataset.value||0), author=document.getElementById('reviewName')?.value.trim()||'', text=document.getElementById("reviewText")?.value.trim()||"";
   if(!stars){showToast("Сначала выбери звёзды ⭐");return;}
@@ -1119,14 +2140,17 @@ async function submitRating(id){
   renderDetail(id,{scroll:false});
   showToast('Отзыв опубликован для всех устройств ⭐');
 }
+
 async function deleteRating(id){
   const userId=getReviewUserId();
   if(reviewsRemoteEnabled){const {error}=await supabaseClient.from(publicReviewsTable).delete().eq('dish_id',id).eq('user_id',userId);if(error){showToast('Не удалось удалить отзыв');return;}}
   const list=getRatings(id).filter(r=>r.userId!==userId);saveLocalRatings(id,list);renderDetail(id,{scroll:false});showToast('Отзыв удалён');
 }
+
 function priceHistory(d){
   return Array.isArray(d.history)?d.history:[];
 }
+
 function renderDetail(id,{scroll=true}={}){
   const d=database.find(x=>x.id===id);if(!d)return;
   state.selectedId=id;
@@ -1176,7 +2200,9 @@ function renderDetail(id,{scroll=true}={}){
       y:{ticks:{color:'#8b8378'},grid:{color:'rgba(125,119,110,.10)'}}}}
     });
   }
+
   loadRemoteRatings(id);}
+
 function toggleFavorite(id){
   if(state.favorites.has(id)) state.favorites.delete(id);else state.favorites.add(id);
   saveFavorites();
@@ -1185,6 +2211,7 @@ function toggleFavorite(id){
   if(button) button.textContent=state.favorites.has(id)?'★ В избранном':'☆ В избранное';
   showToast(state.favorites.has(id)?'Добавлено в избранное ⭐':'Удалено из избранного');
 }
+
 function renderBudget(){
   const amount=Number($("#budgetInput")?.value||0);
   const box=$("#budgetResult");
@@ -1255,12 +2282,14 @@ function renderToday(){
   const next=times.find(t=>t>minutes);
   $('#nextMeal').textContent=next?`Следующее окно примерно через ${next-minutes} мин.`:'Питание на сегодня уже завершилось.';
 }
+
 function randomDish(){
   const d=database[Math.floor(Math.random()*database.length)];
   const box=$('#randomResult');
   box.innerHTML=`<strong>${d.name}</strong><br><span style="color:var(--muted)">${d.price==null?'Цена не опубликована':d.price+' ₽'} • ${d.kcal} ккал</span><br><button class="action primary" style="margin-top:10px" data-random-open="${d.id}">Открыть блюдо</button>`;
   box.classList.add('show');
 }
+
 els.tabs.addEventListener('click',e=>{
   const btn=e.target.closest('[data-tab]');if(btn)switchTab(btn.dataset.tab);
 });
@@ -1271,6 +2300,7 @@ document.addEventListener('click',e=>{
   if(go){switchTab(go.dataset.go);if(go.dataset.go==='features')setTimeout(randomDish,280);return;}
   const fav=e.target.closest('[data-fav]');
   if(fav){e.stopPropagation();toggleFavorite(Number(fav.dataset.fav));return;}
+
   const removeFav=e.target.closest('[data-remove-fav]');
   if(removeFav){e.stopPropagation();toggleFavorite(Number(removeFav.dataset.removeFav));return;}
   const star=e.target.closest('[data-star-id]');
@@ -1290,6 +2320,7 @@ document.addEventListener('click',e=>{
   }
   const deleteRatingButton=e.target.closest('[data-delete-rating]');
   if(deleteRatingButton){e.stopPropagation();deleteRating(Number(deleteRatingButton.dataset.deleteRating));return;}
+
   const close=e.target.closest('[data-close-detail]');
   if(close){els.detail.innerHTML='';state.selectedId=null;return;}
   const ro=e.target.closest('[data-random-open]');
@@ -1319,6 +2350,7 @@ els.category.addEventListener('change',runSearch);
 $('#randomBtn').addEventListener('click',randomDish);
 $('#budgetBtn').addEventListener('click',renderBudget);
 els.themeToggle.addEventListener('click',toggleTheme);
+
 renderCatalog();renderPopular();renderFavorites();renderToday();
 loadRemoteMenu();
 $("#toTop").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
