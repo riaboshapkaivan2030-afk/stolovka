@@ -400,7 +400,793 @@ body:not(.dark)::before,
 body:not(.dark)::after{
   display:none!important;
 }
-</style></head>
+</style><style id="stolovka-theme-redesign">
+
+/* ===== ПОЛНОСТЬЮ ПЕРЕДЕЛАННЫЕ ТЕМЫ ===== */
+
+:root{
+  --font-main: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+body{
+  font-family:var(--font-main) !important;
+  letter-spacing:-.01em;
+}
+
+/* ---------- СВЕТЛАЯ ТЕМА ---------- */
+body:not(.dark){
+  --bg:#ffffff !important;
+  --paper:#ffffff !important;
+  --ink:#111318 !important;
+  --muted:#59616c !important;
+  --line:#e2e6eb !important;
+  --accent:#111318 !important;
+  --accent-2:#292e35 !important;
+  --mint:#347967 !important;
+  --gold:#c68d12 !important;
+  --shadow:0 10px 28px rgba(17,19,24,.07) !important;
+
+  background:#fff !important;
+  color:#111318 !important;
+}
+
+body:not(.dark)::before,
+body:not(.dark)::after{
+  display:none !important;
+}
+
+/* ВСЕ основные контейнеры */
+body:not(.dark) .topbar,
+body:not(.dark) .hero,
+body:not(.dark) .card,
+body:not(.dark) .dish-card,
+body:not(.dark) .rating-box,
+body:not(.dark) .review,
+body:not(.dark) .chart-box,
+body:not(.dark) .random-result,
+body:not(.dark) .admin-table-wrap,
+body:not(.dark) .status{
+  background:#fff !important;
+  color:#111318 !important;
+  border-color:#e2e6eb !important;
+}
+
+/* гарантированно тёмный текст */
+body:not(.dark) *,
+body:not(.dark) h1,
+body:not(.dark) h2,
+body:not(.dark) h3,
+body:not(.dark) h4,
+body:not(.dark) h5,
+body:not(.dark) h6,
+body:not(.dark) p,
+body:not(.dark) span,
+body:not(.dark) div,
+body:not(.dark) label,
+body:not(.dark) strong,
+body:not(.dark) small,
+body:not(.dark) td,
+body:not(.dark) th{
+  color:#111318;
+}
+
+/* вторичный текст */
+body:not(.dark) .muted,
+body:not(.dark) .review-head,
+body:not(.dark) .search-status,
+body:not(.dark) .brand p,
+body:not(.dark) .section-subtitle{
+  color:#59616c !important;
+}
+
+/* поля */
+body:not(.dark) input,
+body:not(.dark) select,
+body:not(.dark) textarea,
+body:not(.dark) .field,
+body:not(.dark) .review-textarea{
+  background:#fff !important;
+  color:#111318 !important;
+  border:1px solid #d9dee5 !important;
+}
+
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{
+  color:#8b939e !important;
+}
+
+/* кнопки */
+body:not(.dark) button.action,
+body:not(.dark) button.open-btn,
+body:not(.dark) .action.primary{
+  background:#111318 !important;
+  color:#fff !important;
+  border-color:#111318 !important;
+}
+
+body:not(.dark) button.action *,
+body:not(.dark) button.open-btn *,
+body:not(.dark) .action.primary *{
+  color:#fff !important;
+}
+
+body:not(.dark) .theme-toggle{
+  background:#fff !important;
+  color:#111318 !important;
+  border:1px solid #d9dee5 !important;
+}
+
+body:not(.dark) .theme-toggle *{
+  color:#111318 !important;
+}
+
+/* бейджи и категории */
+body:not(.dark) .badge,
+body:not(.dark) .category,
+body:not(.dark) .chip{
+  background:#f0f2f5 !important;
+  color:#292e35 !important;
+  border-color:#e0e4e9 !important;
+}
+
+body:not(.dark) .badge *,
+body:not(.dark) .category *,
+body:not(.dark) .chip *{
+  color:#292e35 !important;
+}
+
+/* цены и акценты */
+body:not(.dark) .price,
+body:not(.dark) .price strong{
+  color:#111318 !important;
+}
+
+/* звёзды */
+body:not(.dark) .star-btn{
+  color:#b8bec6 !important;
+}
+body:not(.dark) .star-btn.active,
+body:not(.dark) .stars{
+  color:#c68d12 !important;
+}
+
+/* сетка */
+body:not(.dark) .catalog,
+body:not(.dark) .cards-grid{
+  background-image:
+    linear-gradient(rgba(17,19,24,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(17,19,24,.025) 1px,transparent 1px) !important;
+  background-size:32px 32px !important;
+}
+
+
+/* ---------- ТЁМНАЯ ТЕМА ---------- */
+body.dark{
+  --bg:#070b12 !important;
+  --paper:#101722 !important;
+  --ink:#f4f7fb !important;
+  --muted:#aeb8c5 !important;
+  --line:#263241 !important;
+  --accent:#8b7cff !important;
+  --accent-2:#b5aaff !important;
+  --mint:#55d6b2 !important;
+  --gold:#ffd166 !important;
+  --shadow:0 16px 45px rgba(0,0,0,.38) !important;
+
+  background:
+    radial-gradient(circle at 12% 8%,rgba(139,124,255,.18),transparent 25%),
+    radial-gradient(circle at 88% 18%,rgba(85,214,178,.13),transparent 23%),
+    radial-gradient(circle at 55% 100%,rgba(255,209,102,.08),transparent 25%),
+    #070b12 !important;
+  color:#f4f7fb !important;
+}
+
+/* светящиеся пятна */
+body.dark::before,
+body.dark::after{
+  display:block !important;
+  content:"" !important;
+  position:fixed !important;
+  z-index:-1 !important;
+  pointer-events:none !important;
+  filter:blur(2px) !important;
+}
+
+body.dark::before{
+  width:420px !important;
+  height:420px !important;
+  right:-150px !important;
+  top:18% !important;
+  border-radius:50% !important;
+  background:radial-gradient(circle,rgba(139,124,255,.24),rgba(139,124,255,0) 68%) !important;
+}
+
+body.dark::after{
+  width:360px !important;
+  height:360px !important;
+  left:-130px !important;
+  bottom:5% !important;
+  border-radius:50% !important;
+  background:radial-gradient(circle,rgba(85,214,178,.18),rgba(85,214,178,0) 68%) !important;
+}
+
+/* современная сетка */
+body.dark .catalog,
+body.dark .cards-grid{
+  background-image:
+    linear-gradient(rgba(139,124,255,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(85,214,178,.045) 1px,transparent 1px) !important;
+  background-size:32px 32px !important;
+  border-radius:24px !important;
+}
+
+/* карточки */
+body.dark .topbar,
+body.dark .hero,
+body.dark .card,
+body.dark .dish-card,
+body.dark .rating-box,
+body.dark .review,
+body.dark .chart-box,
+body.dark .random-result,
+body.dark .admin-table-wrap,
+body.dark .status{
+  background:rgba(16,23,34,.88) !important;
+  color:#f4f7fb !important;
+  border-color:#263241 !important;
+}
+
+/* тёмная тема — читаемый светлый текст */
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6,
+body.dark p,
+body.dark span,
+body.dark div,
+body.dark label,
+body.dark strong,
+body.dark small,
+body.dark td,
+body.dark th{
+  color:#f4f7fb;
+}
+
+body.dark .muted,
+body.dark .review-head,
+body.dark .search-status,
+body.dark .brand p,
+body.dark .section-subtitle{
+  color:#aeb8c5 !important;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea,
+body.dark .field,
+body.dark .review-textarea{
+  background:#0c131d !important;
+  color:#f4f7fb !important;
+  border-color:#2b3949 !important;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+  color:#758293 !important;
+}
+
+/* неоновые, но аккуратные акценты */
+body.dark button.action,
+body.dark button.open-btn,
+body.dark .action.primary{
+  background:#8b7cff !important;
+  color:#fff !important;
+  border-color:#8b7cff !important;
+  box-shadow:0 7px 22px rgba(139,124,255,.20) !important;
+}
+
+body.dark .theme-toggle{
+  background:#101722 !important;
+  color:#f4f7fb !important;
+  border-color:#2b3949 !important;
+}
+
+body.dark .badge,
+body.dark .category,
+body.dark .chip{
+  background:#182230 !important;
+  color:#d8def0 !important;
+  border-color:#2a3848 !important;
+}
+
+/* ---------- ШРИФТЫ ---------- */
+.brand h1,
+.hero h2,
+.hero h3,
+.section-title{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+  font-weight:800 !important;
+  letter-spacing:-.035em !important;
+}
+
+button,
+input,
+select,
+textarea{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif !important;
+}
+
+/* мобильный — тот же дизайн, не отдельная тема */
+@media(max-width:700px){
+  body{
+    font-size:15px !important;
+  }
+
+  .container{
+    width:calc(100% - 16px) !important;
+    margin-top:8px !important;
+  }
+
+  .topbar{
+    border-radius:18px !important;
+  }
+
+  .hero,
+  .card,
+  .dish-card,
+  .rating-box{
+    border-radius:18px !important;
+  }
+
+  body.dark .catalog,
+  body.dark .cards-grid,
+  body:not(.dark) .catalog,
+  body:not(.dark) .cards-grid{
+    background-size:26px 26px !important;
+  }
+}
+
+</style>
+<style id="stolovka-final-theme">
+
+/* ===== ФИНАЛЬНЫЙ ДИЗАЙН: ЯРКИЙ ФОН + МАКСИМАЛЬНАЯ ЧИТАЕМОСТЬ ===== */
+
+body{
+  font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif !important;
+}
+
+/* ---------- DARK ---------- */
+body.dark{
+  --bg:#070a12 !important;
+  --paper:#111827 !important;
+  --ink:#ffffff !important;
+  --muted:#c7d0df !important;
+  --line:#344155 !important;
+  --accent:#9b8cff !important;
+  --accent-2:#c5bcff !important;
+  --mint:#62e0bd !important;
+  --gold:#ffd76a !important;
+
+  background:
+    radial-gradient(650px 420px at 5% 0%,rgba(125,92,255,.30),transparent 65%),
+    radial-gradient(600px 430px at 100% 10%,rgba(41,210,177,.24),transparent 65%),
+    radial-gradient(650px 500px at 70% 100%,rgba(255,93,160,.15),transparent 65%),
+    linear-gradient(135deg,#080b14 0%,#0b1220 48%,#090d18 100%) !important;
+  color:#fff !important;
+}
+
+/* постоянный цветной фон */
+body.dark::before{
+  width:520px !important;
+  height:520px !important;
+  right:-170px !important;
+  top:8% !important;
+  background:
+    radial-gradient(circle at 35% 35%,rgba(155,140,255,.34),transparent 34%),
+    radial-gradient(circle at 70% 70%,rgba(98,224,189,.20),transparent 30%) !important;
+  filter:blur(5px) !important;
+}
+
+body.dark::after{
+  width:480px !important;
+  height:480px !important;
+  left:-190px !important;
+  bottom:-70px !important;
+  background:
+    radial-gradient(circle at 55% 45%,rgba(255,100,174,.20),transparent 34%),
+    radial-gradient(circle at 35% 70%,rgba(78,133,255,.18),transparent 32%) !important;
+  filter:blur(5px) !important;
+}
+
+/* сетка поверх красивого фона */
+body.dark .catalog,
+body.dark .cards-grid{
+  background-image:
+    linear-gradient(rgba(155,140,255,.075) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(98,224,189,.055) 1px,transparent 1px) !important;
+  background-size:30px 30px !important;
+}
+
+/* стеклянные панели */
+body.dark .topbar,
+body.dark .hero,
+body.dark .card,
+body.dark .dish-card,
+body.dark .rating-box,
+body.dark .review,
+body.dark .chart-box,
+body.dark .random-result,
+body.dark .admin-table-wrap,
+body.dark .status{
+  background:rgba(15,23,38,.86) !important;
+  color:#fff !important;
+  border-color:#354257 !important;
+  box-shadow:0 14px 38px rgba(0,0,0,.30) !important;
+  backdrop-filter:blur(14px);
+}
+
+/* ВСЯ типографика тёмной темы */
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6,
+body.dark p,
+body.dark span,
+body.dark div,
+body.dark label,
+body.dark strong,
+body.dark small,
+body.dark td,
+body.dark th,
+body.dark .brand h1,
+body.dark .hero h2,
+body.dark .hero h3{
+  color:#ffffff !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.18);
+}
+
+body.dark .muted,
+body.dark .review-head,
+body.dark .search-status,
+body.dark .brand p,
+body.dark .section-subtitle{
+  color:#c7d0df !important;
+}
+
+/* поля — никакого белого текста на сером */
+body.dark input,
+body.dark select,
+body.dark textarea,
+body.dark .field,
+body.dark .review-textarea{
+  background:#0b1320 !important;
+  color:#ffffff !important;
+  border-color:#3a485d !important;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+  color:#8f9caf !important;
+}
+
+/* кнопки */
+body.dark .action,
+body.dark .open-btn,
+body.dark .action.primary{
+  background:linear-gradient(135deg,#8e7dff,#6f5cf2) !important;
+  color:#ffffff !important;
+  border-color:#9b8cff !important;
+  box-shadow:0 8px 24px rgba(126,103,255,.25) !important;
+}
+
+body.dark .action *,
+body.dark .open-btn *,
+body.dark .action.primary *{
+  color:#ffffff !important;
+}
+
+body.dark .badge,
+body.dark .category,
+body.dark .chip{
+  background:#1b2739 !important;
+  color:#e7ebff !important;
+  border-color:#35445a !important;
+}
+
+body.dark .price,
+body.dark .price strong{
+  color:#ffffff !important;
+}
+
+body.dark .theme-toggle{
+  background:#121c2b !important;
+  color:#fff !important;
+  border-color:#39485d !important;
+}
+
+/* ---------- LIGHT ---------- */
+body:not(.dark){
+  --bg:#ffffff !important;
+  --paper:#ffffff !important;
+  --ink:#111318 !important;
+  --muted:#56606d !important;
+  --line:#e0e5eb !important;
+  --accent:#111318 !important;
+  --accent-2:#303640 !important;
+
+  background:
+    radial-gradient(600px 400px at -5% -5%,rgba(104,91,255,.07),transparent 65%),
+    radial-gradient(600px 400px at 105% 15%,rgba(35,183,150,.06),transparent 65%),
+    #ffffff !important;
+  color:#111318 !important;
+}
+
+body:not(.dark)::before,
+body:not(.dark)::after{
+  display:none !important;
+}
+
+body:not(.dark) .catalog,
+body:not(.dark) .cards-grid{
+  background-image:
+    linear-gradient(rgba(17,19,24,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(17,19,24,.025) 1px,transparent 1px) !important;
+  background-size:30px 30px !important;
+}
+
+body:not(.dark) .topbar,
+body:not(.dark) .hero,
+body:not(.dark) .card,
+body:not(.dark) .dish-card,
+body:not(.dark) .rating-box,
+body:not(.dark) .review,
+body:not(.dark) .chart-box,
+body:not(.dark) .random-result,
+body:not(.dark) .admin-table-wrap,
+body:not(.dark) .status{
+  background:#ffffff !important;
+  color:#111318 !important;
+  border-color:#e0e5eb !important;
+  box-shadow:0 10px 28px rgba(17,19,24,.06) !important;
+}
+
+body:not(.dark) h1,
+body:not(.dark) h2,
+body:not(.dark) h3,
+body:not(.dark) h4,
+body:not(.dark) h5,
+body:not(.dark) h6,
+body:not(.dark) p,
+body:not(.dark) span,
+body:not(.dark) div,
+body:not(.dark) label,
+body:not(.dark) strong,
+body:not(.dark) small,
+body:not(.dark) td,
+body:not(.dark) th{
+  color:#111318 !important;
+}
+
+body:not(.dark) .muted,
+body:not(.dark) .review-head,
+body:not(.dark) .search-status,
+body:not(.dark) .brand p,
+body:not(.dark) .section-subtitle{
+  color:#56606d !important;
+}
+
+body:not(.dark) input,
+body:not(.dark) select,
+body:not(.dark) textarea,
+body:not(.dark) .field,
+body:not(.dark) .review-textarea{
+  background:#fff !important;
+  color:#111318 !important;
+  border-color:#d7dde5 !important;
+}
+
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{
+  color:#89929e !important;
+}
+
+body:not(.dark) .action,
+body:not(.dark) .open-btn,
+body:not(.dark) .action.primary{
+  background:#111318 !important;
+  color:#fff !important;
+  border-color:#111318 !important;
+}
+
+body:not(.dark) .action *,
+body:not(.dark) .open-btn *,
+body:not(.dark) .action.primary *{
+  color:#fff !important;
+}
+
+body:not(.dark) .badge,
+body:not(.dark) .category,
+body:not(.dark) .chip{
+  background:#f0f2f5 !important;
+  color:#303640 !important;
+  border-color:#dfe4ea !important;
+}
+
+body:not(.dark) .theme-toggle{
+  background:#fff !important;
+  color:#111318 !important;
+  border-color:#d7dde5 !important;
+}
+
+/* новый шрифт для заголовков */
+.brand h1,
+.hero h2,
+.hero h3,
+.section-title{
+  font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif !important;
+  font-weight:900 !important;
+  letter-spacing:-.04em !important;
+}
+
+/* мобильный */
+@media(max-width:700px){
+  .container{width:calc(100% - 16px) !important}
+  .topbar{border-radius:18px !important}
+  .hero,.card,.dish-card,.rating-box{border-radius:18px !important}
+}
+
+</style>
+<style id="stolovka-modern-polish">
+
+/* ===== ФИНАЛЬНАЯ ПОЛИРОВКА: НАВИГАЦИЯ + HERO ===== */
+
+/* Навигация: текст всегда контрастный */
+.tabs .tab-btn{
+  font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif !important;
+  font-weight:800 !important;
+  letter-spacing:-.015em !important;
+  min-height:46px;
+}
+
+body.dark .tabs .tab-btn{
+  background:#151e2d !important;
+  color:#e9edff !important;
+  border-color:#3b4a61 !important;
+  box-shadow:0 7px 18px rgba(0,0,0,.20) !important;
+}
+
+body.dark .tabs .tab-btn:hover{
+  background:#202c41 !important;
+  color:#ffffff !important;
+  border-color:#7d6cff !important;
+}
+
+body.dark .tabs .tab-btn.active{
+  background:linear-gradient(135deg,#9585ff,#7060ed) !important;
+  color:#ffffff !important;
+  border-color:#a99cff !important;
+  box-shadow:0 8px 24px rgba(126,103,255,.30) !important;
+}
+
+body:not(.dark) .tabs .tab-btn{
+  background:#ffffff !important;
+  color:#303640 !important;
+  border-color:#dce1e7 !important;
+}
+
+body:not(.dark) .tabs .tab-btn:hover{
+  background:#f3f5f7 !important;
+  color:#111318 !important;
+}
+
+body:not(.dark) .tabs .tab-btn.active{
+  background:#111318 !important;
+  color:#ffffff !important;
+  border-color:#111318 !important;
+  box-shadow:0 8px 20px rgba(17,19,24,.12) !important;
+}
+
+/* Новый фон блока с тарелкой — не пустой зелёный */
+.hero-art{
+  position:relative !important;
+  overflow:hidden !important;
+  min-height:190px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  background:
+    radial-gradient(circle at 25% 30%,rgba(255,255,255,.24),transparent 19%),
+    radial-gradient(circle at 75% 75%,rgba(114,91,255,.30),transparent 26%),
+    radial-gradient(circle at 75% 18%,rgba(63,222,191,.22),transparent 24%),
+    linear-gradient(135deg,#18264b 0%,#28346c 45%,#172e45 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 18px 42px rgba(23,33,68,.28) !important;
+}
+
+/* современная сетка внутри hero */
+.hero-art::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  background-image:
+    linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px) !important;
+  background-size:28px 28px !important;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 95%) !important;
+}
+
+/* цветные световые кольца */
+.hero-art::after{
+  content:"" !important;
+  position:absolute !important;
+  width:150px !important;
+  height:150px !important;
+  left:12% !important;
+  top:14% !important;
+  border-radius:50% !important;
+  background:
+    radial-gradient(circle,rgba(255,255,255,.70) 0 4%,rgba(139,124,255,.22) 22%,transparent 66%) !important;
+  filter:blur(2px) !important;
+  box-shadow:
+    180px 75px 0 -40px rgba(85,214,178,.20),
+    260px -30px 0 -55px rgba(255,110,174,.20) !important;
+}
+
+/* тарелка поверх декора */
+.hero-art{
+  isolation:isolate;
+}
+.hero-art{
+  font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif !important;
+}
+.hero-art{
+  text-shadow:0 8px 25px rgba(0,0,0,.22) !important;
+}
+
+/* Светлая версия hero */
+body:not(.dark) .hero-art{
+  border-color:#dce4ee !important;
+  background:
+    radial-gradient(circle at 24% 25%,rgba(255,255,255,.95),transparent 18%),
+    radial-gradient(circle at 78% 72%,rgba(116,92,255,.16),transparent 28%),
+    radial-gradient(circle at 78% 18%,rgba(47,190,159,.15),transparent 25%),
+    linear-gradient(135deg,#eef3ff 0%,#eaf8f5 52%,#f5efff 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 16px 36px rgba(65,75,110,.12) !important;
+}
+
+body:not(.dark) .hero-art::before{
+  background-image:
+    linear-gradient(rgba(30,40,60,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,40,60,.045) 1px,transparent 1px) !important;
+}
+
+body:not(.dark) .hero-art::after{
+  background:
+    radial-gradient(circle,rgba(255,255,255,.95) 0 4%,rgba(125,104,255,.12) 23%,transparent 66%) !important;
+}
+
+/* мобильная навигация */
+@media(max-width:700px){
+  .tabs{
+    flex-wrap:nowrap !important;
+    overflow-x:auto !important;
+    padding-bottom:4px !important;
+    scrollbar-width:none !important;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs .tab-btn{
+    flex:0 0 auto !important;
+    white-space:nowrap !important;
+  }
+}
+
+</style>
+</head>
 <body>
 <div class="container">
   <header class="topbar">
