@@ -3,10 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#fffaf2">
 <title>Столовка</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+function getBudgetCombo(sum){
+ const groups=[
+  {max:100,names:['Компот из сухофруктов','Макароны с сыром']},
+  {max:150,names:['Котлета куриная','Картофельное пюре','Компот из сухофруктов']},
+  {max:200,names:['Гуляш из говядины','Гречка отварная','Компот из сухофруктов']}
+ ];
+ let combo=groups.find(x=>sum<=x.max)||groups[2];
+ let found=combo.names.map(n=>database.find(d=>d.name===n)).filter(Boolean);
+ return found.reduce((a,b)=>a+b.price,0)<=sum?found:[];
+}
+</script>
 <style>
 :root{
   --bg:#fffdf9;--paper:#ffffff;--ink:#17201d;--muted:#51605a;
@@ -204,120 +214,6 @@ button{cursor:pointer}
         @media(max-width:760px){.quick-nav{right:10px;bottom:12px}}
 
 </style>
-
-<style id="clean-final-theme">
-:root{
- --bg:#ffffff;
- --paper:#ffffff;
- --ink:#101318;
- --muted:#5b6470;
- --line:#e5e7eb;
- --accent:#111827;
- --shadow:0 18px 45px rgba(15,23,42,.08);
-}
-
-body.dark{
- --bg:#070b16;
- --paper:#101827;
- --ink:#f8fafc;
- --muted:#cbd5e1;
- --line:#263449;
- --accent:#8b7cff;
- --shadow:0 18px 50px rgba(0,0,0,.35);
-}
-
-body{
- background:var(--bg)!important;
- color:var(--ink)!important;
- font-family:"Inter","Segoe UI",system-ui,sans-serif!important;
-}
-
-body.dark{
- background:
- radial-gradient(circle at 15% 15%,rgba(139,124,255,.25),transparent 30%),
- radial-gradient(circle at 85% 20%,rgba(56,220,180,.20),transparent 28%),
- radial-gradient(circle at 50% 90%,rgba(255,90,160,.14),transparent 32%),
- linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
- linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
- #070b16!important;
- background-size:auto,auto,auto,32px 32px,32px 32px,auto!important;
-}
-
-body:not(.dark){
- background:
- radial-gradient(circle at 10% 5%,rgba(120,100,255,.06),transparent 30%),
- #fff!important;
-}
-
-.topbar,.hero,.card,.dish-card,.review,.chart-box,.random-result,
-.admin-box,.modal,.menu-item{
- background:var(--paper)!important;
- color:var(--ink)!important;
- border-color:var(--line)!important;
- box-shadow:var(--shadow);
-}
-
-body.dark .topbar,
-body.dark .hero,
-body.dark .card,
-body.dark .dish-card,
-body.dark .review,
-body.dark .chart-box,
-body.dark .random-result,
-body.dark .admin-box{
- background:rgba(16,24,39,.86)!important;
- backdrop-filter:blur(14px);
-}
-
-h1,h2,h3,h4,h5,h6,p,span,label,div,strong,td,th{
- color:var(--ink);
-}
-
-body.dark h1,body.dark h2,body.dark h3,
-body.dark h4,body.dark h5,body.dark h6,
-body.dark p,body.dark span,
-body.dark label,body.dark div,
-body.dark strong,body.dark td,body.dark th{
- color:#f8fafc!important;
-}
-
-button,.action,.open-btn{
- font-family:"Inter","Segoe UI",system-ui,sans-serif!important;
- font-weight:700!important;
-}
-
-input,textarea,select{
- background:var(--paper)!important;
- color:var(--ink)!important;
- border-color:var(--line)!important;
-}
-
-body.dark input,
-body.dark textarea,
-body.dark select{
- background:#0b1220!important;
- color:#fff!important;
-}
-
-.hero-art{
- background:
- radial-gradient(circle at 25% 25%,rgba(255,255,255,.35),transparent 20%),
- radial-gradient(circle at 80% 70%,rgba(139,124,255,.35),transparent 28%),
- linear-gradient(135deg,#172554,#0f766e)!important;
-}
-
-body.dark .hero-art{
- background:
- radial-gradient(circle at 25% 25%,rgba(255,255,255,.18),transparent 20%),
- radial-gradient(circle at 80% 70%,rgba(139,124,255,.45),transparent 30%),
- linear-gradient(135deg,#111827,#1e293b)!important;
-}
-
-@media(max-width:700px){
- .container{width:calc(100% - 16px)!important}
-}
-</style>
-
 </head>
 <body>
 <div class="container">
@@ -351,7 +247,7 @@ body.dark .hero-art{
         <article class="tool-card"><div class="icon-bubble">🍽️</div><h3>Блюда дня</h3><p id="todayList">Загрузка...</p></article>
         <article class="tool-card"><div class="icon-bubble">⏱️</div><h3>Ближайшее питание</h3><p id="nextMeal">Загрузка...</p></article>
       </div>
-      <div class="section-head"><div><h3>🔥 Популярные блюда</h3><p>Выбор учеников из каталога.</p></div></div>
+      <div class="section-head"><div><h3>🔥 Рекомендуем</h3><p>Выбор учеников из каталога.</p></div></div>
       <div class="catalog-grid" id="homePopular"></div>
     </section>
 
@@ -426,31 +322,18 @@ body.dark .hero-art{
     </section>
 
     <section id="admin" class="panel">
-      <div class="section-head"><div><h3>Управление меню</h3><p>Изменения публикуются для всех посетителей сайта.</p></div></div>
-      <div id="adminLoginBox" class="admin-note">
-        <b>🔐 Доступ сотрудника</b><br>
-        Только авторизованный администратор может менять меню. Обычные школьники не смогут редактировать цены.
-        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px">
-          <input id="adminEmail" class="field" type="email" autocomplete="username" placeholder="Email администратора">
-          <input id="adminPassword" class="field" type="password" autocomplete="current-password" placeholder="Пароль">
-        </div>
-        <div class="admin-toolbar">
-          <button class="action primary" id="adminLoginBtn" type="button">Войти</button>
-          <span class="search-status" id="adminAuthStatus" aria-live="polite"></span>
-        </div>
+      <div class="section-head"><div><h3>Управление меню</h3><p>Изменения сохраняются только в этом браузере.</p></div></div>
+      <div class="admin-note">Здесь можно изменить цену, название, категорию, БЖУ, калорийность, популярность и описание. Для публикации на другом компьютере экспортируй JSON и импортируй его там. Это локальный редактор без авторизации: не используй его для секретных данных.</div>
+      <div class="admin-toolbar">
+        <button class="action primary" id="saveMenuBtn" type="button">Сохранить изменения</button>
+        <button class="action" id="resetMenuBtn" type="button">Сбросить изменения</button>
+        <button class="action" id="exportMenuBtn" type="button">Экспорт JSON</button>
+        <label class="action import-label" for="importMenuInput">Импорт JSON<input id="importMenuInput" type="file" accept="application/json,.json"></label>
+        <span class="search-status" id="adminStatus" aria-live="polite"></span>
       </div>
-      <div id="adminPanel" hidden>
-        <div class="admin-note">Вы вошли как администратор. Здесь можно изменить цену, название, категорию, БЖУ, калорийность, популярность и описание. Нажатие «Опубликовать» записывает данные в общую базу.</div>
-        <div class="admin-toolbar">
-          <button class="action primary" id="saveMenuBtn" type="button">Опубликовать изменения</button>
-          <button class="action" id="resetMenuBtn" type="button">Вернуть данные из базы</button>
-          <button class="action" id="logoutAdminBtn" type="button">Выйти</button>
-          <span class="search-status" id="adminStatus" aria-live="polite"></span>
-        </div>
-        <div class="admin-table-wrap"><table class="admin-table"><thead><tr>
-        <th>ID</th><th>Название</th><th>Цена, ₽</th><th>Категория</th><th>Белки</th><th>Жиры</th><th>Углеводы</th><th>Ккал</th><th>Популярность</th><th>Описание</th>
+      <div class="admin-table-wrap"><table class="admin-table"><thead><tr>
+        <th>ID</th><th>Название</th><th>Цена, ₽</th><th>Категория</th><th>Белки</th><th>Жиры</th><th>Углеводы</th><th>Ккал</th><th></th><th>Описание</th>
       </tr></thead><tbody id="adminRows"></tbody></table></div>
-        </div>
     </section>
 
   </main>
@@ -470,7 +353,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzBmNzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzIyZDNlZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42yPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JHQvtGA0Ykg0YEg0LPQvtCy0Y/QtNC40L3QvtC5PC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgyIj5DeWJlckNhbnRlZW4g4oCiINC/0YDQvtGB0LzQvtGC0YAg0YbQtdC9PC90ZXh0Pjwvc3ZnPg==",
                 b: 7, j: 9, u: 14, kcal: 165,
                 desc: "Школьное блюдо из категории «soup». Пищевая ценность указана справочно.",
-                category: "soup", popularity: 72,
+                category: "soup",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -479,7 +362,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzYwYTVmYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42yPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0KnQuCDQuNC3INGB0LLQtdC20LXQuSDQutCw0L/Rg9GB0YLRizwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 5, j: 8, u: 13, kcal: 140,
                 desc: "Школьное блюдо из категории «soup». Пищевая ценность указана справочно.",
-                category: "soup", popularity: 89,
+                category: "soup",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -488,7 +371,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzdjM2FlZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2MwODRmYyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42yPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0KHRg9C/INGBINGE0YDQuNC60LDQtNC10LvRjNC60LDQvNC4PC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgyIj5DeWJlckNhbnRlZW4g4oCiINC/0YDQvtGB0LzQvtGC0YAg0YbQtdC9PC90ZXh0Pjwvc3ZnPg==",
                 b: 9, j: 8, u: 12, kcal: 175,
                 desc: "Школьное блюдо из категории «soup». Пищевая ценность указана справочно.",
-                category: "soup", popularity: 61,
+                category: "soup",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -497,7 +380,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2JlMTIzYyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiNzE4NSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42yPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JrRg9GA0LjQvdGL0Lkg0YHRg9C/INGBINC70LDQv9GI0L7QuTwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 8, j: 7, u: 13, kcal: 155,
                 desc: "Школьное блюдо из категории «soup». Пищевая ценность указана справочно.",
-                category: "soup", popularity: 78,
+                category: "soup",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -506,7 +389,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2I0NTMwOSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Y1OWUwYiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WjPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JPRgNC10YfQvdC10LLQsNGPINC60LDRiNCwINGBINC80L7Qu9C+0LrQvtC8PC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgyIj5DeWJlckNhbnRlZW4g4oCiINC/0YDQvtGB0LzQvtGC0YAg0YbQtdC9PC90ZXh0Pjwvc3ZnPg==",
                 b: 6, j: 4, u: 18, kcal: 135,
                 desc: "Школьное блюдо из категории «porridge». Пищевая ценность указана справочно.",
-                category: "porridge", popularity: 95,
+                category: "porridge",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -515,7 +398,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzE1ODAzZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzRhZGU4MCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WjPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0J7QstGB0Y/QvdCw0Y8g0LrQsNGI0LAg0YEg0LzQvtC70L7QutC+0Lw8L3RleHQ+PHRleHQgeD0iNDUwIiB5PSI0NTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE5IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuODIiPkN5YmVyQ2FudGVlbiDigKIg0L/RgNC+0YHQvNC+0YLRgCDRhtC10L08L3RleHQ+PC9zdmc+",
                 b: 6, j: 4, u: 16, kcal: 125,
                 desc: "Школьное блюдо из категории «porridge». Пищевая ценность указана справочно.",
-                category: "porridge", popularity: 67,
+                category: "porridge",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -524,7 +407,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzBmNzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzIyZDNlZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42977iPPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JzQsNC60LDRgNC+0L3RiyDRgSDRgdGL0YDQvtC8PC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgyIj5DeWJlckNhbnRlZW4g4oCiINC/0YDQvtGB0LzQvtGC0YAg0YbQtdC9PC90ZXh0Pjwvc3ZnPg==",
                 b: 8, j: 9, u: 25, kcal: 225,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
-                category: "main", popularity: 84,
+                category: "main",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -533,7 +416,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzYwYTVmYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WUPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JrQsNGA0YLQvtGE0LXQu9GM0L3QvtC1INC/0Y7RgNC1PC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgyIj5DeWJlckNhbnRlZW4g4oCiINC/0YDQvtGB0LzQvtGC0YAg0YbQtdC9PC90ZXh0Pjwvc3ZnPg==",
                 b: 3, j: 4, u: 15, kcal: 105,
                 desc: "Школьное блюдо из категории «garnish». Пищевая ценность указана справочно.",
-                category: "garnish", popularity: 56,
+                category: "garnish",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -542,7 +425,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzdjM2FlZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2MwODRmYyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WUPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0KDQuNGBINC+0YLQstCw0YDQvdC+0Lk8L3RleHQ+PHRleHQgeD0iNDUwIiB5PSI0NTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE5IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuODIiPkN5YmVyQ2FudGVlbiDigKIg0L/RgNC+0YHQvNC+0YLRgCDRhtC10L08L3RleHQ+PC9zdmc+",
                 b: 3, j: 1, u: 17, kcal: 95,
                 desc: "Школьное блюдо из категории «garnish». Пищевая ценность указана справочно.",
-                category: "garnish", popularity: 73,
+                category: "garnish",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -551,7 +434,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2JlMTIzYyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiNzE4NSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WUPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JPRgNC10YfQutCwINC+0YLQstCw0YDQvdCw0Y88L3RleHQ+PHRleHQgeD0iNDUwIiB5PSI0NTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE5IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuODIiPkN5YmVyQ2FudGVlbiDigKIg0L/RgNC+0YHQvNC+0YLRgCDRhtC10L08L3RleHQ+PC9zdmc+",
                 b: 4, j: 2, u: 16, kcal: 105,
                 desc: "Школьное блюдо из категории «garnish». Пищевая ценность указана справочно.",
-                category: "garnish", popularity: 90,
+                category: "garnish",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -560,7 +443,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2I0NTMwOSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Y1OWUwYiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42977iPPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JrQvtGC0LvQtdGC0LAg0LrRg9GA0LjQvdCw0Y88L3RleHQ+PHRleHQgeD0iNDUwIiB5PSI0NTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE5IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuODIiPkN5YmVyQ2FudGVlbiDigKIg0L/RgNC+0YHQvNC+0YLRgCDRhtC10L08L3RleHQ+PC9zdmc+",
                 b: 17, j: 10, u: 7, kcal: 190,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
-                category: "main", popularity: 62,
+                category: "main",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -569,7 +452,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzE1ODAzZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzRhZGU4MCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42977iPPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JrQvtGC0LvQtdGC0LAg0YDRi9Cx0L3QsNGPPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgyIj5DeWJlckNhbnRlZW4g4oCiINC/0YDQvtGB0LzQvtGC0YAg0YbQtdC9PC90ZXh0Pjwvc3ZnPg==",
                 b: 16, j: 9, u: 10, kcal: 205,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
-                category: "main", popularity: 79,
+                category: "main",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -578,7 +461,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzBmNzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzIyZDNlZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42977iPPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JPRg9C70Y/RiCDQuNC3INCz0L7QstGP0LTQuNC90Ys8L3RleHQ+PHRleHQgeD0iNDUwIiB5PSI0NTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE5IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuODIiPkN5YmVyQ2FudGVlbiDigKIg0L/RgNC+0YHQvNC+0YLRgCDRhtC10L08L3RleHQ+PC9zdmc+",
                 b: 20, j: 12, u: 8, kcal: 225,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
-                category: "main", popularity: 96,
+                category: "main",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -587,7 +470,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzYwYTVmYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42977iPPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JrRg9GA0LjRhtCwINC30LDQv9C10YfRkdC90L3QsNGPPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgyIj5DeWJlckNhbnRlZW4g4oCiINC/0YDQvtGB0LzQvtGC0YAg0YbQtdC9PC90ZXh0Pjwvc3ZnPg==",
                 b: 23, j: 9, u: 2, kcal: 185,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
-                category: "main", popularity: 68,
+                category: "main",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -596,7 +479,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzdjM2FlZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2MwODRmYyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42977iPPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0KDRi9Cx0LAg0LfQsNC/0LXRh9GR0L3QvdCw0Y88L3RleHQ+PHRleHQgeD0iNDUwIiB5PSI0NTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE5IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuODIiPkN5YmVyQ2FudGVlbiDigKIg0L/RgNC+0YHQvNC+0YLRgCDRhtC10L08L3RleHQ+PC9zdmc+",
                 b: 21, j: 8, u: 3, kcal: 170,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
-                category: "main", popularity: 85,
+                category: "main",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -605,7 +488,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2JlMTIzYyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiNzE4NSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42977iPPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0KLQtdGE0YLQtdC70Lgg0LIg0YHQvtGD0YHQtTwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 17, j: 11, u: 8, kcal: 205,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
-                category: "main", popularity: 57,
+                category: "main",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -614,7 +497,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2I0NTMwOSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Y1OWUwYiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42zPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0J7QvNC70LXRgjwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 9, j: 8, u: 3, kcal: 120,
                 desc: "Школьное блюдо из категории «breakfast». Пищевая ценность указана справочно.",
-                category: "breakfast", popularity: 74,
+                category: "breakfast",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -623,7 +506,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzE1ODAzZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzRhZGU4MCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn42wPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JfQsNC/0LXQutCw0L3QutCwINGC0LLQvtGA0L7QttC90LDRjzwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 14, j: 6, u: 22, kcal: 200,
                 desc: "Школьное блюдо из категории «dessert». Пищевая ценность указана справочно.",
-                category: "dessert", popularity: 91,
+                category: "dessert",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -632,7 +515,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzBmNzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzIyZDNlZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WXPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0KHQsNC70LDRgiDQuNC3INGB0LLQtdC20LXQuSDQutCw0L/Rg9GB0YLRizwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 2, j: 4, u: 7, kcal: 70,
                 desc: "Школьное блюдо из категории «salad». Пищевая ценность указана справочно.",
-                category: "salad", popularity: 63,
+                category: "salad",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -641,7 +524,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzYwYTVmYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WXPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JLQuNC90LXQs9GA0LXRgjwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 2, j: 5, u: 12, kcal: 105,
                 desc: "Школьное блюдо из категории «salad». Пищевая ценность указана справочно.",
-                category: "salad", popularity: 80,
+                category: "salad",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -650,7 +533,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzdjM2FlZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2MwODRmYyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WXPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0KHQsNC70LDRgiDQuNC3INC+0LPRg9GA0YbQvtCyINC4INC/0L7QvNC40LTQvtGA0L7QsjwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 2, j: 5, u: 8, kcal: 85,
                 desc: "Школьное блюдо из категории «salad». Пищевая ценность указана справочно.",
-                category: "salad", popularity: 97,
+                category: "salad",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -659,7 +542,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2JlMTIzYyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiNzE4NSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WkPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JrQvtC80L/QvtGCINC40Lcg0YHRg9GF0L7RhNGA0YPQutGC0L7QsjwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 0, j: 0, u: 24, kcal: 95,
                 desc: "Школьное блюдо из категории «drink». Пищевая ценность указана справочно.",
-                category: "drink", popularity: 69,
+                category: "drink",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -668,7 +551,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2I0NTMwOSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Y1OWUwYiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WkPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JrQuNGB0LXQu9GMINGP0LPQvtC00L3Ri9C5PC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgyIj5DeWJlckNhbnRlZW4g4oCiINC/0YDQvtGB0LzQvtGC0YAg0YbQtdC9PC90ZXh0Pjwvc3ZnPg==",
                 b: 0, j: 0, u: 22, kcal: 90,
                 desc: "Школьное блюдо из категории «drink». Пищевая ценность указана справочно.",
-                category: "drink", popularity: 86,
+                category: "drink",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -677,7 +560,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzE1ODAzZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzRhZGU4MCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WkPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0KfQsNC5INGBINC70LjQvNC+0L3QvtC8PC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgyIj5DeWJlckNhbnRlZW4g4oCiINC/0YDQvtGB0LzQvtGC0YAg0YbQtdC9PC90ZXh0Pjwvc3ZnPg==",
                 b: 0, j: 0, u: 8, kcal: 35,
                 desc: "Школьное блюдо из категории «drink». Пищевая ценность указана справочно.",
-                category: "drink", popularity: 58,
+                category: "drink",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -686,7 +569,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzBmNzY2ZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzIyZDNlZSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WQPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JHRg9C70L7Rh9C60LAg0YEg0YHQsNGF0LDRgNC+0Lw8L3RleHQ+PHRleHQgeD0iNDUwIiB5PSI0NTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE5IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuODIiPkN5YmVyQ2FudGVlbiDigKIg0L/RgNC+0YHQvNC+0YLRgCDRhtC10L08L3RleHQ+PC9zdmc+",
                 b: 6, j: 7, u: 31, kcal: 205,
                 desc: "Школьное блюдо из категории «bakery». Пищевая ценность указана справочно.",
-                category: "bakery", popularity: 75,
+                category: "bakery",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -695,7 +578,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzFkNGVkOCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzYwYTVmYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WQPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0JHRg9C70L7Rh9C60LAg0YEg0YLQstC+0YDQvtCz0L7QvDwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 9, j: 7, u: 28, kcal: 210,
                 desc: "Школьное блюдо из категории «bakery». Пищевая ценность указана справочно.",
-                category: "bakery", popularity: 92,
+                category: "bakery",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -704,7 +587,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzdjM2FlZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2MwODRmYyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WQPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0J/QuNGA0L7QttC+0Log0YEg0LrQsNC/0YPRgdGC0L7QuTwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQ1MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44MiI+Q3liZXJDYW50ZWVuIOKAoiDQv9GA0L7RgdC80L7RgtGAINGG0LXQvTwvdGV4dD48L3N2Zz4=",
                 b: 5, j: 8, u: 25, kcal: 190,
                 desc: "Школьное блюдо из категории «bakery». Пищевая ценность указана справочно.",
-                category: "bakery", popularity: 64,
+                category: "bakery",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -713,7 +596,7 @@ const database = [
                 img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeDI9IjEiIHkxPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2JlMTIzYyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZiNzE4NSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiByeD0iMzQiIGZpbGw9InVybCgjZykiLz48Y2lyY2xlIGN4PSI3NzAiIGN5PSI5MCIgcj0iMTUwIiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuMTIiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI0NTAiIHI9IjE5MCIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjA3Ii8+PHRleHQgeD0iNDUwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTcwIj7wn6WQPC90ZXh0Pjx0ZXh0IHg9IjQ1MCIgeT0iNDEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+0J/QuNGA0L7QttC+0Log0YEg0LrQsNGA0YLQvtGE0LXQu9C10Lw8L3RleHQ+PHRleHQgeD0iNDUwIiB5PSI0NTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE5IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuODIiPkN5YmVyQ2FudGVlbiDigKIg0L/RgNC+0YHQvNC+0YLRgCDRhtC10L08L3RleHQ+PC9zdmc+",
                 b: 5, j: 7, u: 27, kcal: 195,
                 desc: "Школьное блюдо из категории «bakery». Пищевая ценность указана справочно.",
-                category: "bakery", popularity: 81,
+                category: "bakery",
                 fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
                 fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
                 history: []
@@ -723,7 +606,7 @@ const database = [
               img: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgOTAwIDUyMCI+PHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI1MjAiIHJ4PSIzNiIgZmlsbD0iIzJiNDMzZiIvPjx0ZXh0IHg9IjQ1MCIgeT0iMzEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE2MCI+8J+DrjwvdGV4dD48dGV4dCB4PSI0NTAiIHk9IjQxNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM0IiBmaWxsPSJ3aGl0ZSI+0JfQtdGA0LXRidC+0LHQvtCy0LrQuDwvdGV4dD48L3N2Zz4=",
               b: 0, j: 0, u: 0, kcal: 0,
               desc: "Напиток из каталога. Цена появится после публикации обновлённого меню.",
-              category: "drink", popularity: 60,
+              category: "drink",
               aliases: ["газява","газировка","газированная вода"],
               fun: "Слово «газява» специально распознаётся умным поиском.",
               fact: "Это информационная карточка: официальная цена отсутствует, поэтому сайт её не выдумывает.",
@@ -732,20 +615,9 @@ const database = [
 
 ];
 
-// ===== ПОДКЛЮЧЕНИЕ К ОБЩЕЙ БАЗЕ МЕНЮ =====
-// 1) Создай проект Supabase.
-// 2) Вставь сюда Project URL и anon key из Project Settings -> API.
-// 3) Выполни файл supabase_setup.sql, который я дал вместе с этим HTML.
-const SUPABASE_URL = 'https://lzbhpdievyemsioluvyc.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_twusUPyK52Z6ZWlUj3N0Xg__9qocH_9';
-const supabaseConfigured = SUPABASE_URL.startsWith('http') && !SUPABASE_ANON_KEY.startsWith('ВСТАВЬ_');
-const supabaseClient = supabaseConfigured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-const publicMenuTable = 'menu_items';
-
-const editableFields=['name','price','category','b','j','u','kcal','popularity','desc'];
+const editableFields=['name','price','category','b','j','u','kcal','desc'];
 const allowedCategories=new Set(['soup','porridge','main','garnish','breakfast','salad','dessert','bakery','drink']);
 const menuStorageKey='stolovkaMenuOverrides';
-const remoteMenuIds=new Set();
 
 function readJsonStorage(key,fallback){
   try{
@@ -1038,9 +910,7 @@ function renderCatalog(){
   return items.length;
 }
 
-function renderPopular(){
-  els.popular.innerHTML=[...database].sort((a,b)=>b.popularity-a.popularity).slice(0,3).map(renderCard).join('');
-}
+function renderPopular(){}
 function renderFavorites(){
   const list=database.filter(d=>state.favorites.has(d.id));
   els.fav.innerHTML=list.length?list.map(d=>renderCard(d,true)).join(''):'<div class="favorites-empty">Пока ничего нет ⭐<br>Открой блюдо и нажми «В избранное».</div>';
@@ -1052,6 +922,15 @@ function menuData(){
     editableFields.forEach(field=>item[field]=d[field]);
     return item;
   });
+}
+
+function persistMenuData(){
+  try{
+    localStorage.setItem(menuStorageKey,JSON.stringify(menuData()));
+    return true;
+  }catch{
+    return false;
+  }
 }
 
 function renderAdmin(){
@@ -1071,104 +950,54 @@ function renderAdmin(){
   </tr>`).join('');
 }
 
-function setAdminLoggedIn(loggedIn){
-  const loginBox=$('#adminLoginBox'), panel=$('#adminPanel');
-  if(loginBox)loginBox.hidden=loggedIn;
-  if(panel)panel.hidden=!loggedIn;
-}
-
-async function loadRemoteMenu(){
-  if(!supabaseClient){
-    if(els.adminStatus)els.adminStatus.textContent='Supabase ещё не настроен: сайт работает с исходными данными.';
-    return;
-  }
-  const {data,error}=await supabaseClient.from(publicMenuTable).select('*').order('id');
-  if(error){
-    console.warn('Не удалось загрузить меню из базы:',error);
-    if(els.adminStatus)els.adminStatus.textContent='Не удалось загрузить общую базу; показаны исходные данные.';
-    return;
-  }
-  if(Array.isArray(data)&&data.length){
-    const byId=new Map(data.map(item=>[Number(item.id),item]));
-    for(const dish of database){
-      const row=byId.get(dish.id);
-      if(row)Object.assign(dish,normalizeMenuPatch(row,dish));
-    }
-    renderCatalog();renderPopular();renderFavorites();renderToday();
-    if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
-  }
-}
-
-async function refreshAdminAuth(){
-  if(!supabaseClient){setAdminLoggedIn(false);return;}
-  const {data}=await supabaseClient.auth.getSession();
-  if(!data?.session){setAdminLoggedIn(false);return;}
-  const {data:isAdmin,error}=await supabaseClient.rpc('is_menu_admin');
-  setAdminLoggedIn(Boolean(!error && isAdmin));
-}
-
-async function adminLogin(){
-  if(!supabaseClient){
-    $('#adminAuthStatus').textContent='Сначала укажи SUPABASE_URL и SUPABASE_ANON_KEY в файле.';
-    return;
-  }
-  const email=$('#adminEmail').value.trim(),password=$('#adminPassword').value;
-  if(!email||!password){$('#adminAuthStatus').textContent='Введи email и пароль.';return;}
-  $('#adminAuthStatus').textContent='Выполняю вход…';
-  const {error}=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){$('#adminAuthStatus').textContent='Ошибка входа: '+error.message;return;}
-  $('#adminPassword').value='';
-  const {data:isAdmin}=await supabaseClient.rpc('is_menu_admin');
-  if(!isAdmin){
-    await supabaseClient.auth.signOut();
-    setAdminLoggedIn(false);
-    $('#adminAuthStatus').textContent='Этот аккаунт не добавлен в список администраторов.';
-    return;
-  }
-  $('#adminAuthStatus').textContent='';
-  setAdminLoggedIn(true);
-  await loadRemoteMenu();
-  renderAdmin();
-}
-
-async function saveAdminChanges(){
-  if(!supabaseClient){showToast('Supabase не настроен');return;}
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  if(!session){setAdminLoggedIn(false);showToast('Нужен вход администратора');return;}
-  const updates=[];
+function saveAdminChanges(){
   $$('#adminRows tr').forEach(row=>{
     const id=Number(row.dataset.adminId),dish=database.find(item=>item.id===id);
     if(!dish)return;
     const raw={};
     editableFields.forEach(field=>{raw[field]=$( `[data-admin-field="${field}"]`,row)?.value;});
-    const patch=normalizeMenuPatch(raw,dish);
-    Object.assign(dish,patch);
-    updates.push({id,...patch,updated_at:new Date().toISOString()});
+    Object.assign(dish,normalizeMenuPatch(raw,dish));
   });
-  if(els.adminStatus)els.adminStatus.textContent='Публикую…';
-  const {error}=await supabaseClient.from(publicMenuTable).upsert(updates,{onConflict:'id'});
-  if(error){
-    if(els.adminStatus)els.adminStatus.textContent='Ошибка публикации: '+error.message;
-    showToast('Не удалось опубликовать');
-    return;
-  }
-  renderCatalog();renderPopular();renderFavorites();renderToday();renderAdmin();
+  const saved=persistMenuData();
+  renderCatalog();renderFavorites();
   if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
-  if(els.adminStatus)els.adminStatus.textContent='Опубликовано для всех посетителей.';
-  showToast('Меню опубликовано');
-}
-
-async function resetMenuChanges(){
-  await loadRemoteMenu();
   renderAdmin();
-  if(els.adminStatus)els.adminStatus.textContent='Загружены данные из общей базы.';
-  showToast('Данные обновлены');
+  if(els.adminStatus)els.adminStatus.textContent=saved?'Сохранено в этом браузере.':'Не удалось записать данные.';
+  showToast(saved?'Меню сохранено':'Не удалось сохранить меню');
 }
 
-async function logoutAdmin(){
-  if(supabaseClient)await supabaseClient.auth.signOut();
-  setAdminLoggedIn(false);
-  showToast('Вы вышли из админки');
+function resetMenuChanges(){
+  database.splice(0,database.length,...defaultDatabase.map(copyDish));
+  try{localStorage.removeItem(menuStorageKey);}catch{}
+  renderCatalog();renderFavorites();renderAdmin();
+  if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
+  if(els.adminStatus)els.adminStatus.textContent='Изменения сброшены.';
+  showToast('Возвращены исходные данные');
+}
+
+function exportMenuData(){
+  const payload={version:1,exportedAt:new Date().toISOString(),dishes:menuData()};
+  const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
+  const link=document.createElement('a');link.href=url;link.download='stolovka-menu.json';link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),0);
+  if(els.adminStatus)els.adminStatus.textContent='Файл меню подготовлен для скачивания.';
+}
+
+async function importMenuData(file){
+  if(!file)return;
+  try{
+    const payload=JSON.parse(await file.text());
+    if(!Array.isArray(payload?.dishes))throw new Error('Неверный формат');
+    applyMenuOverrides(payload);
+    const saved=persistMenuData();
+    renderCatalog();renderFavorites();renderAdmin();
+    if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
+    if(els.adminStatus)els.adminStatus.textContent=saved?'Импорт выполнен и сохранён.':'Импорт выполнен, но сохранить не удалось.';
+    showToast(saved?'Меню импортировано':'Не удалось сохранить импорт');
+  }catch{
+    if(els.adminStatus)els.adminStatus.textContent='Ошибка: нужен JSON, экспортированный этим редактором.';
+    showToast('Не удалось импортировать файл');
+  }
 }
 
 
@@ -1306,7 +1135,7 @@ function renderDetail(id,{scroll=true}={}){
         </div>
         <div class="meta-row">
           <div class="meta-box"><span>Цена</span><strong>${d.price==null?'Не опубликована':d.price+' ₽'}</strong></div>
-          <div class="meta-box"><span>Популярность</span><strong>${d.popularity}/100</strong></div>
+          <div class="meta-box"><span></span><strong>${d.popularity}/100</strong></div>
         </div>
         <div class="actions" style="margin-top:14px">
           <button class="action primary" data-fav="${d.id}">${state.favorites.has(d.id)?'★ В избранном':'☆ В избранное'}</button>
@@ -1455,17 +1284,13 @@ $('#budgetBtn').addEventListener('click',renderBudget);
 els.themeToggle.addEventListener('click',toggleTheme);
 $('#saveMenuBtn')?.addEventListener('click',saveAdminChanges);
 $('#resetMenuBtn')?.addEventListener('click',resetMenuChanges);
-$('#adminLoginBtn')?.addEventListener('click',adminLogin);
-$('#logoutAdminBtn')?.addEventListener('click',logoutAdmin);
-$('#adminPassword')?.addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
-if(supabaseClient){supabaseClient.auth.onAuthStateChange((_event,session)=>setAdminLoggedIn(Boolean(session)));}
+$('#exportMenuBtn')?.addEventListener('click',exportMenuData);
+$('#importMenuInput')?.addEventListener('change',event=>importMenuData(event.target.files?.[0]));
 
-renderCatalog();renderPopular();renderFavorites();renderToday();renderAdmin();
-setAdminLoggedIn(false);
-refreshAdminAuth();
-loadRemoteMenu();
+renderCatalog();renderFavorites();renderToday();renderAdmin();
 $("#toTop").addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
 $("#toCatalog").addEventListener("click",()=>{switchTab("catalog");setTimeout(()=>$("#search")?.focus(),180);});
 </script>
 </body>
 </html>
+
