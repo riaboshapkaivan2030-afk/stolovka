@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Столовка — панель сотрудника</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#f6f3ed;--paper:#fff;--ink:#18201d;--muted:#69736e;--line:#e4ddd2;--accent:#d85a36;--accent2:#ad3e22;--ok:#257a70;--shadow:0 18px 45px rgba(70,50,30,.10);--radius:20px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Segoe UI",sans-serif}.wrap{max-width:1450px;margin:auto;padding:28px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}.brand{font-size:1.5rem;font-weight:900}.muted{color:var(--muted)}.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}.login{max-width:520px;margin:70px auto}.field{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);font:inherit}.fields{display:grid;gap:10px;margin:16px 0}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:11px 15px;border-radius:13px;font-weight:800;cursor:pointer}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn:hover{transform:translateY(-1px)}.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:14px 0}.status{color:var(--muted);min-height:20px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px}.table{width:100%;min-width:1050px;border-collapse:collapse}.table th,.table td{padding:9px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}.table th{position:sticky;top:0;background:#fff;color:var(--muted);font-size:.75rem;text-transform:uppercase}.table input,.table select,.table textarea{width:100%;padding:8px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);font:inherit}.table textarea{min-height:60px;resize:vertical}.id{font-weight:900;color:var(--muted)}.price{min-width:90px}.name{min-width:210px}.desc{min-width:260px}.search{max-width:360px}.hint{padding:12px 14px;border-radius:13px;background:#fff8e7;border:1px solid #eedbb0;color:#6f5b2d}.hidden{display:none!important}@media(max-width:700px){.wrap{padding:14px}.top{align-items:flex-start;flex-direction:column}.login{margin:25px auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="login" class="card login">
+    <div class="brand">🍽️ Столовка</div>
+    <h1>Панель сотрудника</h1>
+    <div class="muted">Изменяй цены и меню здесь. Эта страница не нужна ученикам.</div>
+    <div class="fields">
+      <input id="email" class="field" type="email" autocomplete="username" placeholder="Email">
+      <input id="password" class="field" type="password" autocomplete="current-password" placeholder="Пароль">
+    </div>
+    <button id="loginBtn" class="btn primary">Войти</button>
+    <div id="loginStatus" class="status"></div>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="top">
+      <div><div class="brand">🍽️ Столовка — меню</div><div class="muted">Редактор для сотрудника</div></div>
+      <button id="logoutBtn" class="btn">Выйти</button>
+    </div>
+    <div class="card">
+      <div class="hint">Меняй нужные поля и нажми «Сохранить всё». Изменения сразу попадут в общую базу и на публичный сайт.</div>
+      <div class="toolbar">
+        <input id="filter" class="field search" placeholder="Поиск блюда...">
+        <button id="reloadBtn" class="btn">Обновить</button>
+        <button id="saveBtn" class="btn primary">Сохранить всё</button>
+        <span id="status" class="status"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>ID</th><th>Название</th><th>Цена ₽</th><th>Категория</th><th>Белки</th><th>Жиры</th><th>Углеводы</th><th>Ккал</th><th>Описание</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const SUPABASE_URL='https://lzbhpdievyemsioluvyc.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_twusUPyK52Z6ZWlUj3N0Xg__9qocH_9';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const categories=['soup','porridge','main','garnish','breakfast','salad','dessert','bakery','drink'];
+let rows=[];
+const $=s=>document.querySelector(s);
+function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function setStatus(t){$('#status').textContent=t||''}
+function setLoginStatus(t){$('#loginStatus').textContent=t||''}
+function render(){
+  const q=$('#filter').value.trim().toLowerCase();
+  const list=rows.filter(d=>!q||d.name.toLowerCase().includes(q));
+  $('#rows').innerHTML=list.map(d=>`<tr data-id="${d.id}"><td class="id">${d.id}</td><td><input class="name" data-f="name" value="${esc(d.name)}"></td><td><input class="price" data-f="price" type="number" min="0" step="1" value="${d.price??''}"></td><td><select data-f="category">${categories.map(c=>`<option value="${c}" ${c===d.category?'selected':''}>${c}</option>`).join('')}</select></td><td><input data-f="b" type="number" min="0" step="0.1" value="${d.b??0}"></td><td><input data-f="j" type="number" min="0" step="0.1" value="${d.j??0}"></td><td><input data-f="u" type="number" min="0" step="0.1" value="${d.u??0}"></td><td><input data-f="kcal" type="number" min="0" step="1" value="${d.kcal??0}"></td><td><textarea class="desc" data-f="desc">${esc(d.desc)}</textarea></td></tr>`).join('');
+}
+async function load(){
+  setStatus('Загружаю меню…');
+  const {data,error}=await supabaseClient.from('menu_items').select('*').order('id');
+  if(error){setStatus('Ошибка: '+error.message);return false}
+  rows=data||[];render();setStatus(`Загружено: ${rows.length}`);return true;
+}
+async function login(){
+  const email=$('#email').value.trim(),password=$('#password').value;
+  if(!email||!password){setLoginStatus('Введи email и пароль.');return}
+  setLoginStatus('Вход…');
+  const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error){setLoginStatus('Ошибка входа: '+error.message);return}
+  const {data:isAdmin,error:adminError}=await supabaseClient.rpc('is_menu_admin');
+  if(adminError||!isAdmin){await supabaseClient.auth.signOut();setLoginStatus('Этот аккаунт не является администратором.');return}
+  $('#login').classList.add('hidden');$('#app').classList.remove('hidden');setLoginStatus('');await load();
+}
+async function save(){
+  const updates=[];
+  document.querySelectorAll('#rows tr').forEach(tr=>{
+    const id=Number(tr.dataset.id),raw={};
+    tr.querySelectorAll('[data-f]').forEach(el=>raw[el.dataset.f]=el.value);
+    updates.push({id,name:raw.name.trim(),price:Number(raw.price),category:raw.category,b:Number(raw.b),j:Number(raw.j),u:Number(raw.u),kcal:Number(raw.kcal),desc:raw.desc.trim(),updated_at:new Date().toISOString()});
+  });
+  if(!updates.length)return;
+  setStatus('Сохраняю…');
+  const {error}=await supabaseClient.from('menu_items').upsert(updates,{onConflict:'id'});
+  if(error){setStatus('Ошибка: '+error.message);return}
+  setStatus('Сохранено ✓');await load();
+}
+async function boot(){
+  const {data}=await supabaseClient.auth.getSession();
+  if(data?.session){const {data:isAdmin}=await supabaseClient.rpc('is_menu_admin');if(isAdmin){$('#login').classList.add('hidden');$('#app').classList.remove('hidden');await load()}}
+}
+$('#loginBtn').onclick=login;$('#password').onkeydown=e=>{if(e.key==='Enter')login()};$('#logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();location.reload()};$('#reloadBtn').onclick=load;$('#saveBtn').onclick=save;$('#filter').oninput=render;boot();
+</script>
+</body>
+</html>
