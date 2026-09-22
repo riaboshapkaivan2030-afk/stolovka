@@ -664,7 +664,8 @@ const categoryImages={
   bakery:'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=80',
   drink:'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=900&q=80'
 };
-function dishImage(d){return categoryImages[d.category]||d.img;}
+const dishPhotoMap={};
+function dishImage(d){return dishPhotoMap[d.id]||categoryImages[d.category]||d.img;}
 
 const favoriteIds=readJsonStorage('stolovkaFavorites',[]);
 const state={selectedId:null, favorites:new Set(Array.isArray(favoriteIds)?favoriteIds.map(Number).filter(Number.isFinite):[]), chart:null, searchTimer:null};
@@ -1229,20 +1230,17 @@ function renderBudget(){
     if(total<=amount)combos.push({items:clean,label,total,left:amount-total});
   };
   for(const main of mains){
-    for(const drink of drinks)add([main,drink],'Основное + напиток');
     for(const garnish of garnishes){
-      for(const drink of drinks)add([main,garnish,drink],'Сытный комбо');
+      add([main,garnish],'Основное + гарнир');
+      for(const drink of drinks)add([main,garnish,drink],'Обед + напиток');
     }
-  }
-  const gulyash=mains.find(d=>d.name==='Гуляш из говядины');
-  const makarony=mains.find(d=>d.name==='Макароны с сыром');
-  if(gulyash&&makarony){
-    for(const drink of drinks)add([gulyash,makarony,drink],'Макароны + гуляш + напиток');
   }
   for(const soup of soups){
     for(const main of mains){
-      add([soup,main],'Суп + основное');
-      for(const drink of drinks)add([soup,main,drink],'Полный обед');
+      for(const garnish of garnishes){
+        add([soup,main,garnish],'Полный обед');
+        for(const drink of drinks)add([soup,main,garnish,drink],'Полный обед + напиток');
+      }
     }
   }
   for(const breakfast of breakfasts)for(const drink of drinks)add([breakfast,drink],'Завтрак + напиток');
@@ -1258,7 +1256,7 @@ function renderBudget(){
     return a.left-b.left;
   });
   if(!unique.length){
-    box.innerHTML="На эту сумму пока не получается собрать готовое комбо.";
+    box.innerHTML="На эту сумму не получается собрать комбо с гарниром. Попробуй увеличить бюджет.";
   }else{
     box.innerHTML='<strong>Готовые комбо:</strong><div class="budget-combos">'+unique.slice(0,6).map(c=>`<button class="budget-combo" data-budget-combo="${c.items.map(d=>d.id).join(',')}"><span>${c.label}</span><b>${c.items.map(d=>d.name).join(' + ')}</b><em>${c.total} ₽</em></button>`).join('')+'</div>';
   }
