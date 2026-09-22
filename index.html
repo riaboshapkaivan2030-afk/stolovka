@@ -27,6 +27,24 @@ body.dark .open-btn:hover{background:#42675e}
 body.dark .badge{background:rgba(23,35,34,.94)}
 body.dark .review{background:var(--paper)}
 body.dark .chart-box,body.dark .review-textarea,body.dark .random-result{background:var(--paper)}
+body:not(.dark){
+  color-scheme:light;
+  --bg:#fffdf9;--paper:#ffffff;--ink:#17201d;--muted:#51605a;
+  --line:#e6dccd;--accent:#d85a36;--accent-2:#9f351e;--mint:#257a70;
+  --gold:#d7961c;--shadow:0 18px 50px rgba(91,62,24,.10);
+}
+body:not(.dark) .topbar{background:rgba(255,253,248,.94);}
+body:not(.dark) .tab-btn{background:#fff;color:#4e5a55;}
+body:not(.dark) .tab-btn.active{background:#17201d;color:#fff;}
+body:not(.dark) .controls input,body:not(.dark) .controls select,
+body:not(.dark) .field,body:not(.dark) .admin-table input,body:not(.dark) .admin-table select,body:not(.dark) .admin-table textarea{
+  background:#fff;color:#17201d;
+}
+body.dark .tab-btn{background:#121d1b;color:#c0cbc6;}
+body.dark .tab-btn.active{background:#f7fbf8;color:#121d1b;}
+body.dark .controls input,body.dark .controls select,body.dark .field,body.dark .admin-table input,body.dark .admin-table select,body.dark .admin-table textarea{
+  background:#121d1b;color:#f7fbf8;
+}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
@@ -224,7 +242,6 @@ button{cursor:pointer}
     <button class="tab-btn" data-tab="today">О сайте</button>
     <button class="tab-btn" data-tab="favorites">Избранное</button>
     <button class="tab-btn" data-tab="features">Фишки</button>
-    <button class="tab-btn" data-tab="admin">Управление</button>
   </nav>
 
   <main>
@@ -237,8 +254,6 @@ button{cursor:pointer}
         <article class="tool-card"><div class="icon-bubble">🍽️</div><h3>Блюда дня</h3><p id="todayList">Загрузка...</p></article>
         <article class="tool-card"><div class="icon-bubble">⏱️</div><h3>Ближайшее питание</h3><p id="nextMeal">Загрузка...</p></article>
       </div>
-      <div class="section-head"><div><h3>🔥 Популярные блюда</h3><p>Выбор учеников из каталога.</p></div></div>
-      <div class="catalog-grid" id="homePopular"></div>
     </section>
 
     <section id="catalog" class="panel">
@@ -315,7 +330,7 @@ button{cursor:pointer}
       <div class="section-head"><div><h3>Управление меню</h3><p>Изменения публикуются для всех посетителей сайта.</p></div></div>
       <div id="adminLoginBox" class="admin-note">
         <b>🔐 Доступ сотрудника</b><br>
-        Только авторизованный администратор может менять меню. Обычные школьники не смогут редактировать цены.
+        Только авторизованный сотрудник может менять меню. Обычные посетители не видят эту страницу в навигации.
         <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px">
           <input id="adminEmail" class="field" type="email" autocomplete="username" placeholder="Email администратора">
           <input id="adminPassword" class="field" type="password" autocomplete="current-password" placeholder="Пароль">
@@ -326,7 +341,7 @@ button{cursor:pointer}
         </div>
       </div>
       <div id="adminPanel" hidden>
-        <div class="admin-note">Вы вошли как администратор. Здесь можно изменить цену, название, категорию, БЖУ, калорийность, популярность и описание. Нажатие «Опубликовать» записывает данные в общую базу.</div>
+        <div class="admin-note">Вы вошли как администратор. Здесь можно изменить цену, название, категорию, БЖУ, калорийность и описание. Нажатие «Опубликовать» записывает данные в общую базу.</div>
         <div class="admin-toolbar">
           <button class="action primary" id="saveMenuBtn" type="button">Опубликовать изменения</button>
           <button class="action" id="resetMenuBtn" type="button">Вернуть данные из базы</button>
@@ -334,7 +349,7 @@ button{cursor:pointer}
           <span class="search-status" id="adminStatus" aria-live="polite"></span>
         </div>
         <div class="admin-table-wrap"><table class="admin-table"><thead><tr>
-        <th>ID</th><th>Название</th><th>Цена, ₽</th><th>Категория</th><th>Белки</th><th>Жиры</th><th>Углеводы</th><th>Ккал</th><th>Популярность</th><th>Описание</th>
+        <th>ID</th><th>Название</th><th>Цена, ₽</th><th>Категория</th><th>Белки</th><th>Жиры</th><th>Углеводы</th><th>Ккал</th><th>Описание</th>
       </tr></thead><tbody id="adminRows"></tbody></table></div>
         </div>
     </section>
@@ -628,7 +643,7 @@ const supabaseConfigured = SUPABASE_URL.startsWith('http') && !SUPABASE_ANON_KEY
 const supabaseClient = supabaseConfigured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const publicMenuTable = 'menu_items';
 
-const editableFields=['name','price','category','b','j','u','kcal','popularity','desc'];
+const editableFields=['name','price','category','b','j','u','kcal','desc'];
 const allowedCategories=new Set(['soup','porridge','main','garnish','breakfast','salad','dessert','bakery','drink']);
 const menuStorageKey='stolovkaMenuOverrides';
 const remoteMenuIds=new Set();
@@ -688,14 +703,28 @@ const categoryImages={
   bakery:'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=80',
   drink:'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=900&q=80'
 };
-function dishImage(d){return categoryImages[d.category]||d.img;}
+const categoryImagePools={
+  soup:[categoryImages.soup,'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80'],
+  porridge:[categoryImages.porridge,'https://images.unsplash.com/photo-1517673132405-a56a62b18caf?auto=format&fit=crop&w=900&q=80'],
+  main:[categoryImages.main,'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=80'],
+  garnish:[categoryImages.garnish,'https://images.unsplash.com/photo-1515003197210-e0cd71810b11?auto=format&fit=crop&w=900&q=80'],
+  breakfast:[categoryImages.breakfast,'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=900&q=80'],
+  salad:[categoryImages.salad,'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=900&q=80'],
+  dessert:[categoryImages.dessert,'https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80'],
+  bakery:[categoryImages.bakery,'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=80'],
+  drink:[categoryImages.drink,'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=900&q=80']
+};
+function dishImage(d){
+  const pool=categoryImagePools[d.category];
+  return pool?.[Number(d.id)%pool.length]||d.img;
+}
 
 const favoriteIds=readJsonStorage('stolovkaFavorites',[]);
 const state={selectedId:null, favorites:new Set(Array.isArray(favoriteIds)?favoriteIds.map(Number).filter(Number.isFinite):[]), chart:null, searchTimer:null};
 const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 const els={tabs:$('#tabs'),search:$('#search'),category:$('#category'),catalog:$('#catalogGrid'),
-  popular:$('#homePopular'),detail:$('#detailMount'),fav:$('#favoritesGrid'),toast:$('#toast'),
+  detail:$('#detailMount'),fav:$('#favoritesGrid'),toast:$('#toast'),
   searchStatus:$('#searchStatus'),themeToggle:$('#themeToggle'),adminRows:$('#adminRows'),adminStatus:$('#adminStatus')};
 
 const themeKey='stolovkaTheme';
@@ -727,6 +756,8 @@ function switchTab(id){
   $$('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
   if(id==='favorites') renderFavorites();
   if(id==='admin') renderAdmin();
+  if(id==='admin' && location.hash!=='#staff') history.replaceState(null,'','#staff');
+  if(id!=='admin' && location.hash==='#staff') history.replaceState(null,'',location.pathname+location.search);
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -896,10 +927,9 @@ function searchScore(d,q){
 }
 
 function renderCard(d,fromFavorites=false){
-  const hot=d.popularity>=95?'<span class="badge">🔥 ХИТ</span>':'';
   const remove=fromFavorites&&state.favorites.has(d.id)?`<button class="favorite-remove" title="Удалить из избранного" data-remove-fav="${d.id}">×</button>`:'';
   return `<article class="dish-card" data-open="${d.id}">
-    ${hot}${remove}<img class="dish-img" src="${dishImage(d)}" alt="${d.name}" loading="lazy">
+    ${remove}<img class="dish-img" src="${dishImage(d)}" alt="${d.name}" loading="lazy" onerror="this.onerror=null;this.src='${d.img}';">
     <div class="dish-info">
       <div class="dish-name">${d.name}</div>
       <div class="dish-price">${d.price==null?'Цена не опубликована':d.price+' ₽'}</div>
@@ -924,9 +954,6 @@ function renderCatalog(){
   return items.length;
 }
 
-function renderPopular(){
-  els.popular.innerHTML=[...database].sort((a,b)=>b.popularity-a.popularity).slice(0,3).map(renderCard).join('');
-}
 function renderFavorites(){
   const list=database.filter(d=>state.favorites.has(d.id));
   els.fav.innerHTML=list.length?list.map(d=>renderCard(d,true)).join(''):'<div class="favorites-empty">Пока ничего нет ⭐<br>Открой блюдо и нажми «В избранное».</div>';
@@ -952,7 +979,6 @@ function renderAdmin(){
     <td><input data-admin-field="j" type="number" min="0" step="0.1" value="${d.j??''}"></td>
     <td><input data-admin-field="u" type="number" min="0" step="0.1" value="${d.u??''}"></td>
     <td><input data-admin-field="kcal" type="number" min="0" step="1" value="${d.kcal??''}"></td>
-    <td><input data-admin-field="popularity" type="number" min="0" max="100" step="1" value="${d.popularity??''}"></td>
     <td><textarea class="desc-input" data-admin-field="desc" maxlength="500">${escapeHtml(d.desc)}</textarea></td>
   </tr>`).join('');
 }
@@ -980,7 +1006,7 @@ async function loadRemoteMenu(){
       const row=byId.get(dish.id);
       if(row)Object.assign(dish,normalizeMenuPatch(row,dish));
     }
-    renderCatalog();renderPopular();renderFavorites();renderToday();
+    renderCatalog();renderFavorites();renderToday();
     if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
   }
 }
@@ -1038,7 +1064,7 @@ async function saveAdminChanges(){
     showToast('Не удалось опубликовать');
     return;
   }
-  renderCatalog();renderPopular();renderFavorites();renderToday();renderAdmin();
+  renderCatalog();renderFavorites();renderToday();renderAdmin();
   if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
   if(els.adminStatus)els.adminStatus.textContent='Опубликовано для всех посетителей.';
   showToast('Меню опубликовано');
@@ -1346,7 +1372,9 @@ $('#logoutAdminBtn')?.addEventListener('click',logoutAdmin);
 $('#adminPassword')?.addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
 if(supabaseClient){supabaseClient.auth.onAuthStateChange((_event,session)=>setAdminLoggedIn(Boolean(session)));}
 
-renderCatalog();renderPopular();renderFavorites();renderToday();renderAdmin();
+if(location.hash==='#staff') switchTab('admin');
+else switchTab('home');
+renderCatalog();renderFavorites();renderToday();renderAdmin();
 setAdminLoggedIn(false);
 refreshAdminAuth();
 loadRemoteMenu();
