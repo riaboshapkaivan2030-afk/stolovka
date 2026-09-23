@@ -1,0 +1,21 @@
+.dish-card {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 380px;
+}
+
+.dish-card img {
+    width: 100%;
+    height: 175px;
+    object-fit: cover;
+}
+
+.dish-image-empty {
+    height: 175px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1b2a27;
+    font-size: 45px;
+}
