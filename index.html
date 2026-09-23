@@ -203,6 +203,18 @@ button{cursor:pointer}
         .import-label input{display:none}
         @media(max-width:760px){.quick-nav{right:10px;bottom:12px}}
 
+
+:root{
+ --bg:#111315!important;
+ --paper:#1b2022!important;
+ --ink:#f3f5f4!important;
+ --muted:#b6c0bc!important;
+ --line:#34403d!important;
+}
+body:not(.dark){--bg:#202326;--paper:#2b3033;--ink:#f4f6f5;--muted:#c3cbc8;--line:#485250;}
+.tab-btn.active{background:#8fd3c1!important;color:#10201c!important;border-color:#8fd3c1!important;}
+.tab-btn{background:#242a2d;color:#eef3f1;}
+.tab-btn:hover{color:#fff;}
 </style>
 </head>
 <body>
@@ -238,7 +250,7 @@ button{cursor:pointer}
         <article class="tool-card"><div class="icon-bubble">⏱️</div><h3>Ближайшее питание</h3><p id="nextMeal">Загрузка...</p></article>
       </div>
       
-      <div class="catalog-grid" id="homePopular"></div>
+      
     </section>
 
     <section id="catalog" class="panel">
@@ -334,7 +346,7 @@ button{cursor:pointer}
           <span class="search-status" id="adminStatus" aria-live="polite"></span>
         </div>
         <div class="admin-table-wrap"><table class="admin-table"><thead><tr>
-        <th>ID</th><th>Название</th><th>Цена, ₽</th><th>Категория</th><th>Белки</th><th>Жиры</th><th>Углеводы</th><th>Ккал</th><th>Популярность</th><th>Описание</th>
+        <th>ID</th><th>Название</th><th>Цена, ₽</th><th>Категория</th><th>Белки</th><th>Жиры</th><th>Углеводы</th><th>Ккал</th><th>Описание</th>
       </tr></thead><tbody id="adminRows"></tbody></table></div>
         </div>
     </section>
@@ -1038,7 +1050,7 @@ async function saveAdminChanges(){
     showToast('Не удалось опубликовать');
     return;
   }
-  renderCatalog();renderPopular();renderFavorites();renderToday();renderAdmin();
+  renderCatalog();renderFavorites();renderToday();renderAdmin();
   if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
   if(els.adminStatus)els.adminStatus.textContent='Опубликовано для всех посетителей.';
   showToast('Меню опубликовано');
@@ -1368,7 +1380,7 @@ $('#logoutAdminBtn')?.addEventListener('click',logoutAdmin);
 $('#adminPassword')?.addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
 if(supabaseClient){supabaseClient.auth.onAuthStateChange((_event,session)=>setAdminLoggedIn(Boolean(session)));}
 
-renderCatalog();renderPopular();renderFavorites();renderToday();renderAdmin();
+renderCatalog();renderFavorites();renderToday();renderAdmin();
 setAdminLoggedIn(false);
 refreshAdminAuth();
 loadRemoteMenu();
