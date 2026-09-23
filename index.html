@@ -1070,6 +1070,21 @@ function getReviewUserId(){
 
 function ratingKey(id){return `stolovkaRating_${id}`;}
 
+async function getRemoteRatings(id){
+  if(!supabaseClient)return [];
+  const {data,error}=await supabaseClient
+    .from('reviews')
+    .select('*')
+    .eq('dish_id',id)
+    .order('created_at',{ascending:false})
+    .limit(50);
+  if(error){console.warn(error);return []}
+  return (data||[]).map(r=>({
+    id:r.id, stars:r.stars, text:r.text, author:r.author,
+    date:new Date(r.created_at).getTime(), userId:r.user_id
+  }));
+}
+
 function getRatings(id){
   try{
     const list=JSON.parse(localStorage.getItem(ratingKey(id))||"[]");
@@ -1115,8 +1130,8 @@ function getUserReviewForDish(id){
   return getRatings(id).find(r=>r.userId===getReviewUserId())||null;
 }
 
-function renderRatingBox(d){
-  const list=getRatings(d.id);
+async function renderRatingBox(d){
+  const list=await getRemoteRatings(d.id);
   const avg=ratingAverage(list);
   const recent=list.slice(-5).reverse();
   const mine=getUserReviewForDish(d.id);
@@ -1135,37 +1150,44 @@ function renderRatingBox(d){
   </div>`;
 }
 
-function submitRating(id){
+async function submitRating(id){
   const box=document.querySelector(`[data-starbox="${id}"]`);
   const stars=Number(box?.dataset.value||0);
   if(!stars){showToast("Сначала выбери звёзды ⭐");return;}
   const author=document.getElementById('reviewName')?.value.trim()||'';
   const text=document.getElementById("reviewText")?.value.trim()||"";
-  if(!/^[A-Za-zА-Яа-яЁё0-9][A-Za-zА-Яа-яЁё0-9 _-]{1,31}$/.test(author)){
-    showToast('Имя: от 2 символов, только буквы, цифры, пробел, дефис или _');return;
-  }
-  if(reviewWords(text).filter(word=>word.length>=2).length<5){
-    showToast('Отзыв должен содержать минимум 5 полноценных слов');return;
-  }
-  if(containsProhibitedLanguage(`${author} ${text}`)){
-    showToast('Отзыв содержит недопустимые слова. Измени текст.');return;
-  }
-  const list=getRatings(id);
+  if(!/^[A-Za-zА-Яа-яЁё0-9][A-Za-zА-Яа-яЁё0-9 _-]{1,31}$/.test(author)){showToast('Имя: от 2 символов');return;}
+  if(reviewWords(text).filter(word=>word.length>=2).length<5){showToast('Отзыв должен содержать минимум 5 слов');return;}
+  if(containsProhibitedLanguage(`${author} ${text}`)){showToast('Недопустимый текст');return;}
+
   const userId=getReviewUserId();
-  const existingIndex=list.findIndex(r=>r.userId===userId);
-  const review={stars,text,author,date:Date.now(),userId};
-  if(existingIndex>=0) list[existingIndex]=review; else list.push(review);
+  if(supabaseClient){
+    const {error}=await supabaseClient.from('reviews').upsert({
+      dish_id:id,user_id:userId,author,text,stars,updated_at:new Date().toISOString()
+    },{onConflict:'dish_id,user_id'});
+    if(error){console.warn(error);showToast('Ошибка сохранения');return;}
+  } else {
+    const list=getRatings(id);
+    const index=list.findIndex(r=>r.userId===userId);
+    const review={stars,text,author,date:Date.now(),userId};
+    if(index>=0)list[index]=review;else list.push(review);
+    localStorage.setItem(ratingKey(id),JSON.stringify(list));
+  }
   localStorage.setItem('stolovkaReviewName',author);
-  localStorage.setItem(ratingKey(id),JSON.stringify(list));
-  renderDetail(id,{scroll:false});
-  showToast(existingIndex>=0?'Отзыв обновлён':'Спасибо за отзыв ⭐');
+  await renderDetail(id,{scroll:false});
+  showToast('Спасибо за отзыв ⭐');
 }
 
-function deleteRating(id){
+async function deleteRating(id){
   const userId=getReviewUserId();
-  const list=getRatings(id).filter(r=>r.userId!==userId);
-  localStorage.setItem(ratingKey(id),JSON.stringify(list));
-  renderDetail(id,{scroll:false});
+  if(supabaseClient){
+    const {error}=await supabaseClient.from('reviews').delete().eq('dish_id',id).eq('user_id',userId);
+    if(error){console.warn(error);showToast('Ошибка удаления');return;}
+  } else {
+    const list=getRatings(id).filter(r=>r.userId!==userId);
+    localStorage.setItem(ratingKey(id),JSON.stringify(list));
+  }
+  await renderDetail(id,{scroll:false});
   showToast('Отзыв удалён');
 }
 
@@ -1173,7 +1195,7 @@ function priceHistory(d){
   return Array.isArray(d.history)?d.history:[];
 }
 
-function renderDetail(id,{scroll=true}={}){
+async function renderDetail(id,{scroll=true}={}){
   const d=database.find(x=>x.id===id);if(!d)return;
   state.selectedId=id;
   const history=priceHistory(d);
@@ -1192,7 +1214,7 @@ function renderDetail(id,{scroll=true}={}){
         </div>
         <div class="meta-row">
           <div class="meta-box"><span>Цена</span><strong>${d.price==null?'Не опубликована':d.price+' ₽'}</strong></div>
-          <div class="meta-box"><span>Популярность</span><strong>${d.popularity}/100</strong></div>
+          
         </div>
         <div class="actions" style="margin-top:14px">
           <button class="action primary" data-fav="${d.id}">${state.favorites.has(d.id)?'★ В избранном':'☆ В избранное'}</button>
@@ -1200,7 +1222,7 @@ function renderDetail(id,{scroll=true}={}){
         </div>
         <div class="info-strip">${d.fact||'Карточка содержит справочную информацию о блюде.'}</div>
         <div class="info-strip" style="margin-top:10px">${d.fun||'Интересная информация появится здесь.'}</div>
-        ${renderRatingBox(d)}
+        ${await renderRatingBox(d)}
       </div>
     </div>
     <div class="chart-box">
