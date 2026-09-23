@@ -224,7 +224,7 @@ button{cursor:pointer}
     <button class="tab-btn" data-tab="today">О сайте</button>
     <button class="tab-btn" data-tab="favorites">Избранное</button>
     <button class="tab-btn" data-tab="features">Фишки</button>
-    <button class="tab-btn" data-tab="admin">Управление</button>
+    
   </nav>
 
   <main>
@@ -237,7 +237,7 @@ button{cursor:pointer}
         <article class="tool-card"><div class="icon-bubble">🍽️</div><h3>Блюда дня</h3><p id="todayList">Загрузка...</p></article>
         <article class="tool-card"><div class="icon-bubble">⏱️</div><h3>Ближайшее питание</h3><p id="nextMeal">Загрузка...</p></article>
       </div>
-      <div class="section-head"><div><h3>🔥 Популярные блюда</h3><p>Выбор учеников из каталога.</p></div></div>
+      
       <div class="catalog-grid" id="homePopular"></div>
     </section>
 
@@ -1355,3 +1355,5 @@ $("#toCatalog").addEventListener("click",()=>{switchTab("catalog");setTimeout(()
 </script>
 </body>
 </html>
+
+<style>.admin-tab-hidden{display:none!important}</style>
