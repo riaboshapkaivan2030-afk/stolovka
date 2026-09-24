@@ -849,63 +849,40 @@ function wordVariants(word){
   return [...variants].filter(Boolean);
 }
 
+
+const BAD_SEARCH_WORDS = [
+ "хуй","хуи","хуйня","пизд","пиздец","бляд","бля","сук","сука",
+ "говно","дерьмо","еб","ёб","fuck","shit"
+];
+
+function containsBadSearch(q){
+  const x=normalizeText(q).replace(/\s+/g,"");
+  return BAD_SEARCH_WORDS.some(w=>x.includes(w));
+}
+
 function searchScore(d,q){
-  const query=normalizeText(q);
-  if(!query)return 1;
+  q=normalizeText(q);
+  if(!q) return 1;
+  if(containsBadSearch(q)) return -9999;
 
-  const name=normalizeText(d.name);
-  const desc=normalizeText(d.desc);
-  const category=normalizeText(d.category);
-  const custom=(d.aliases||[]).map(normalizeText);
-  const all=[name,desc,category,...custom];
+  const fields=[
+    normalizeText(d.name),
+    normalizeText(d.desc),
+    normalizeText(d.category),
+    ...(d.aliases||[]).map(normalizeText)
+  ];
 
-  // Категориальный запрос имеет приоритет над обычным совпадением.
-  const intent=searchCategoryIntents[query];
-  if(intent){
-    if(d.category===intent)return 150;
-    const semantic=searchSynonyms[query]||[];
-    if(semantic.some(s=>name.includes(normalizeText(s))||desc.includes(normalizeText(s))))return 105;
-    return 0;
+  const words=q.split(/\s+/).filter(Boolean);
+
+  if(fields.some(f=>f===q)) return 200;
+  if(fields.some(f=>f.includes(q))) return 120;
+
+  let hits=0;
+  for(const w of words){
+    if(fields.some(f=>f.includes(w) || fuzzySimilar(w,f))) hits++;
   }
 
-  // Прямое совпадение.
-  if(all.some(x=>x.includes(query)))return 100;
-
-  // Семантический словарь.
-  const semantic=searchSynonyms[query]||[];
-  if(semantic.some(s=>{
-    const n=normalizeText(s);
-    return all.some(x=>x.includes(n));
-  }))return 95;
-
-  // Несколько слов + формы слов.
-  const words=query.split(/\s+/).filter(Boolean);
-  let matched=0;
-  for(const word of words){
-    const variants=wordVariants(word);
-    if(all.some(x=>variants.some(v=>x.includes(v)) ||
-      x.split(/\s+/).some(part=>variants.some(v=>fuzzySimilar(v,part))))) matched++;
-  }
-  if(matched){
-    const ratio=matched/words.length;
-    return ratio>=1?90:Math.round(60*ratio);
-  }
-
-  // Опечатки: сравниваем и с названиями, и со всеми известными понятиями.
-  const candidates=[
-    name,...custom,...Object.keys(searchSynonyms),
-    ...Object.values(searchSynonyms).flat()
-  ].map(normalizeText);
-
-  let best=0;
-  for(const candidate of candidates){
-    const parts=candidate.split(/\s+/);
-    for(const part of parts){
-      if(fuzzySimilar(query,part))best=Math.max(best,55);
-    }
-    if(fuzzySimilar(query,candidate))best=Math.max(best,68);
-  }
-  return best;
+  return hits===words.length ? 90 : hits ? 40 : 0;
 }
 
 function renderCard(d,fromFavorites=false){

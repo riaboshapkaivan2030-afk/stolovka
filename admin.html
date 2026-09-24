@@ -16,6 +16,7 @@ table{width:100%;border-collapse:collapse;margin-top:20px}
 th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}
 td input,td textarea{width:100%}
 .status{margin-top:10px;color:#666}
+.reviewAdmin{padding:12px;border:1px solid #ddd;border-radius:12px;margin:10px 0}.reviewAdmin button{margin-top:8px}
 </style>
 </head>
 
@@ -39,6 +40,9 @@ td input,td textarea{width:100%}
 <button id="logoutBtn">Выйти</button>
 
 <div class="status" id="status"></div>
+<h3>⭐ Отзывы</h3>
+<button id="loadReviewsBtn">Обновить отзывы</button>
+<div id="reviewsAdmin"></div>
 
 <table>
 <thead>
@@ -135,6 +139,7 @@ $("#loginBox").classList.add("hidden");
 $("#adminBox").classList.remove("hidden");
 
 loadMenu();
+loadReviews();
 
 }
 
@@ -215,6 +220,27 @@ error?error.message:"✅ Сохранено";
 }
 
 
+
+async function loadReviews(){
+ const box=$("#reviewsAdmin");
+ box.innerHTML="Загрузка...";
+ const {data,error}=await supabaseClient.from("reviews").select("*").order("created_at",{ascending:false}).limit(100);
+ if(error){box.textContent=error.message;return;}
+ box.innerHTML=(data||[]).map(r=>`
+ <div class="reviewAdmin">
+ <b>${r.user_name||"Гость"}</b><br>
+ ${r.text||r.comment||""}
+ <br><small>${r.created_at||""}</small>
+ <br><button onclick="deleteReview('${r.id}')">🗑 Удалить</button>
+ </div>`).join("") || "Отзывов нет";
+}
+async function deleteReview(id){
+ if(!confirm("Удалить отзыв?"))return;
+ const {error}=await supabaseClient.from("reviews").delete().eq("id",id);
+ if(error) alert(error.message);
+ else loadReviews();
+}
+$("#loadReviewsBtn").onclick=loadReviews;
 
 $("#loginBtn").onclick=login;
 
