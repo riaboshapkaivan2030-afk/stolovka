@@ -2,81 +2,80 @@
 <html lang="ru">
 
 <head>
-<meta charset="utf-8">
+
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>Админка столовой</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <style>
 
 *{
 box-sizing:border-box;
-font-family:Arial;
+font-family:Arial,sans-serif;
 }
+
 
 body{
+
 margin:0;
 min-height:100vh;
-background:#111;
+
+background:
+linear-gradient(135deg,#151515,#292929);
+
 color:white;
-padding:30px;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+padding:20px;
+
 }
 
 
-.box{
+.container{
 
-max-width:1100px;
-margin:auto;
+width:100%;
+max-width:900px;
 
-background:#1b1b1b;
-
-padding:30px;
+background:#1c1c1c;
 
 border-radius:25px;
 
-box-shadow:0 20px 50px #000;
+padding:30px;
+
+box-shadow:0 20px 60px #000;
 
 }
 
-
-.login{
-
-max-width:420px;
-
-margin:80px auto;
-
-}
-
-
-h1,h2{
-
-margin-top:0;
-
-}
 
 
 input,textarea,button{
 
 width:100%;
 
-padding:13px;
+padding:14px;
 
 margin:8px 0;
 
 border-radius:12px;
-
-border:1px solid #444;
 
 font-size:16px;
 
 }
 
 
+
 input,textarea{
 
-background:#242424;
+background:#292929;
+
+border:1px solid #555;
 
 color:white;
 
@@ -92,9 +91,9 @@ border:0;
 
 color:white;
 
-cursor:pointer;
-
 font-weight:bold;
+
+cursor:pointer;
 
 }
 
@@ -106,6 +105,7 @@ background:#ff7043;
 }
 
 
+
 .hidden{
 
 display:none;
@@ -113,29 +113,32 @@ display:none;
 }
 
 
-.msg{
+
+.message{
 
 padding:12px;
 
-margin-top:10px;
-
 border-radius:10px;
 
-background:#252525;
+margin-top:10px;
+
+background:#222;
 
 }
 
 
-.error{
 
-background:#5a2020;
+.good{
+
+background:#155b2b;
 
 }
 
 
-.ok{
 
-background:#18552b;
+.bad{
+
+background:#6b2020;
 
 }
 
@@ -143,32 +146,13 @@ background:#18552b;
 
 .card{
 
-background:#242424;
+background:#292929;
 
 padding:15px;
 
-margin:10px 0;
+margin:15px 0;
 
 border-radius:15px;
-
-}
-
-
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-
-td,th{
-
-padding:10px;
-
-border-bottom:1px solid #444;
 
 }
 
@@ -182,16 +166,20 @@ font-size:13px;
 
 }
 
+
+
 </style>
 
+
 </head>
+
 
 
 <body>
 
 
 
-<div id="loginBox" class="box login">
+<div class="container" id="login">
 
 
 <h1>
@@ -202,7 +190,7 @@ font-size:13px;
 <input id="email" placeholder="Email">
 
 
-<input id="password"
+<input id="password" 
 type="password"
 placeholder="Пароль">
 
@@ -212,7 +200,7 @@ placeholder="Пароль">
 </button>
 
 
-<div id="loginMsg"></div>
+<div id="status"></div>
 
 
 </div>
@@ -222,12 +210,13 @@ placeholder="Пароль">
 
 
 
-<div id="adminBox" class="box hidden">
+<div class="container hidden" id="panel">
 
 
 <h1>
 🍽 Админ панель
 </h1>
+
 
 
 <button onclick="logout()">
@@ -237,20 +226,11 @@ placeholder="Пароль">
 
 
 <h2>
-📋 Меню
-</h2>
-
-
-<div id="menu"></div>
-
-
-
-<h2>
 ⭐ Отзывы
 </h2>
 
 
-<button onclick="loadReviews()">
+<button onclick="reviewsLoad()">
 Обновить отзывы
 </button>
 
@@ -259,10 +239,17 @@ placeholder="Пароль">
 
 
 
-<div id="debug"></div>
+<h2>
+🍲 Меню
+</h2>
+
+
+<div id="menu"></div>
+
 
 
 </div>
+
 
 
 
@@ -277,29 +264,35 @@ const SUPABASE_URL =
 "https://lzbhpdievyemsioluvyc.supabase.co";
 
 
-const SUPABASE_ANON_KEY =
+
+const SUPABASE_KEY =
 "sb_publishable_twusUPyK52Z6ZWlUj3N0Xg__9qocH_9";
 
 
-const supabaseClient =
+
+const db =
 supabase.createClient(
 SUPABASE_URL,
-SUPABASE_ANON_KEY
+SUPABASE_KEY
 );
 
 
 
-function message(text,error=false){
 
-let box=document.createElement("div");
 
-box.className="msg "+(error?"error":"ok");
+function show(text,type=""){
 
-box.innerText=text;
-
-document.querySelector("#loginMsg").appendChild(box);
+status.innerHTML +=
+`
+<div class="message ${type}">
+${text}
+</div>
+`;
 
 }
+
+
+
 
 
 
@@ -307,19 +300,22 @@ document.querySelector("#loginMsg").appendChild(box);
 async function login(){
 
 
-loginMsg.innerHTML="";
+status.innerHTML="";
 
 
-message("Проверяем...");
+show("Проверяем вход...");
 
 
-const {data,error}=await supabaseClient.auth.signInWithPassword({
+
+let {data,error}=
+
+await db.auth.signInWithPassword({
 
 email:
-document.querySelector("#email").value.trim(),
+email.value.trim(),
 
 password:
-document.querySelector("#password").value
+password.value
 
 });
 
@@ -327,9 +323,9 @@ document.querySelector("#password").value
 
 if(error){
 
-message(
+show(
 "Ошибка входа: "+error.message,
-true
+"bad"
 );
 
 return;
@@ -338,19 +334,17 @@ return;
 
 
 
-message("Авторизация успешна");
+show("Авторизация успешна","good");
 
 
 
-const uid=data.user.id;
+let uid=data.user.id;
 
 
 
-console.log("UID",uid);
+let {data:admin,error:aerror}=
 
-
-
-const {data:admin,error:adminError}=await supabaseClient
+await db
 
 .from("admin_users")
 
@@ -360,11 +354,11 @@ const {data:admin,error:adminError}=await supabaseClient
 
 
 
-if(adminError){
+if(aerror){
 
-message(
-"Ошибка admin_users: "+adminError.message,
-true
+show(
+"Ошибка admin_users: "+aerror.message,
+"bad"
 );
 
 return;
@@ -375,9 +369,9 @@ return;
 
 if(!admin || admin.length===0){
 
-message(
-"Этот пользователь не добавлен в admin_users",
-true
+show(
+"Нет доступа. UID не найден.",
+"bad"
 );
 
 return;
@@ -386,122 +380,24 @@ return;
 
 
 
-openAdmin();
-
-
-}
-
-
-
-
-
-
-function openAdmin(){
-
-loginBox.classList.add("hidden");
-
-adminBox.classList.remove("hidden");
-
-
-loadMenu();
-
-loadReviews();
-
-}
-
-
-
-
-
-
-
-async function loadMenu(){
-
-
-const {data,error}=await supabaseClient
-
-.from("menu_items")
-
-.select("*")
-
-.order("id");
-
-
-
-if(error){
-
-menu.innerHTML=
-error.message;
-
-return;
-
-}
-
-
-
-menu.innerHTML=data.map(x=>`
-
-<div class="card">
-
-<b>${x.name}</b>
-
-<br>
-
-Цена:
-<input id="price${x.id}" value="${x.price}">
-
-
-<textarea id="desc${x.id}">
-${x.desc||""}
-</textarea>
-
-
-<button onclick="saveItem(${x.id})">
-💾 Сохранить
-</button>
-
-
-</div>
-
-`).join("");
-
-}
-
-
-
-
-async function saveItem(id){
-
-
-let price=document.querySelector("#price"+id).value;
-
-let desc=document.querySelector("#desc"+id).value;
-
-
-
-const {error}=await supabaseClient
-
-.from("menu_items")
-
-.update({
-
-price:Number(price),
-
-desc:desc
-
-})
-
-.eq("id",id);
-
-
-
-alert(
-error?
-error.message:
-"Сохранено"
+show(
+"Админ подтверждён",
+"good"
 );
 
 
+
+login.classList.add("hidden");
+
+panel.classList.remove("hidden");
+
+
+
+reviewsLoad();
+
+menuLoad();
+
+
 }
 
 
@@ -511,19 +407,26 @@ error.message:
 
 
 
-async function loadReviews(){
+async function reviewsLoad(){
 
 
 reviews.innerHTML="Загрузка...";
 
 
-const {data,error}=await supabaseClient
+let {data,error}=
+
+await db
 
 .from("reviews")
 
 .select("*")
 
-.order("created_at",{ascending:false});
+.order(
+"created_at",
+{
+ascending:false
+}
+);
 
 
 
@@ -537,23 +440,31 @@ return;
 
 
 
-reviews.innerHTML=(data||[]).map(r=>`
+reviews.innerHTML=
+
+(data||[]).map(r=>`
+
 
 <div class="card">
 
-<b>${r.author||"Гость"}</b>
+<b>
+${r.author || "Гость"}
+</b>
 
-<br>
-
-⭐ ${r.stars||0}
 
 <p>
-${r.text||""}
+${r.text || ""}
 </p>
 
 
 <div class="small">
-${r.created_at||""}
+
+⭐ ${r.stars || 0}
+
+<br>
+
+${r.created_at || ""}
+
 </div>
 
 
@@ -566,7 +477,10 @@ ${r.created_at||""}
 
 </div>
 
+
 `).join("");
+
+
 
 }
 
@@ -582,7 +496,9 @@ return;
 
 
 
-const {error}=await supabaseClient
+let {error}=
+
+await db
 
 .from("reviews")
 
@@ -596,13 +512,78 @@ if(error)
 
 alert(error.message);
 
-
 else
 
-loadReviews();
+reviewsLoad();
 
 
 }
+
+
+
+
+
+
+
+async function menuLoad(){
+
+
+menu.innerHTML="Загрузка...";
+
+
+let {data,error}=
+
+await db
+
+.from("menu_items")
+
+.select("*")
+
+.order("id");
+
+
+
+if(error){
+
+menu.innerHTML=error.message;
+
+return;
+
+}
+
+
+
+menu.innerHTML=
+
+(data||[]).map(x=>`
+
+<div class="card">
+
+
+<b>${x.name}</b>
+
+
+<br>
+
+Цена:
+${x.price} ₽
+
+
+<br>
+
+
+${x.desc || ""}
+
+
+</div>
+
+
+`).join("");
+
+
+
+}
+
 
 
 
@@ -611,7 +592,7 @@ loadReviews();
 
 async function logout(){
 
-await supabaseClient.auth.signOut();
+await db.auth.signOut();
 
 location.reload();
 
@@ -619,8 +600,8 @@ location.reload();
 
 
 
-
 </script>
+
 
 
 </body>
