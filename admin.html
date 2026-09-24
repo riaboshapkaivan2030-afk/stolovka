@@ -1,128 +1,303 @@
 <!doctype html>
-<html>
+<html lang="ru">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Админка столовой</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+margin:0;
+min-height:100vh;
+background:#111;
+color:white;
+padding:30px;
+}
+
+
+.box{
+
+max-width:1100px;
+margin:auto;
+
+background:#1b1b1b;
+
+padding:30px;
+
+border-radius:25px;
+
+box-shadow:0 20px 50px #000;
+
+}
+
+
+.login{
+
+max-width:420px;
+
+margin:80px auto;
+
+}
+
+
+h1,h2{
+
+margin-top:0;
+
+}
+
+
+input,textarea,button{
+
+width:100%;
+
+padding:13px;
+
+margin:8px 0;
+
+border-radius:12px;
+
+border:1px solid #444;
+
+font-size:16px;
+
+}
+
+
+input,textarea{
+
+background:#242424;
+
+color:white;
+
+}
+
+
+
+button{
+
+background:#ff5722;
+
+border:0;
+
+color:white;
+
+cursor:pointer;
+
+font-weight:bold;
+
+}
+
+
+button:hover{
+
+background:#ff7043;
+
+}
+
+
+.hidden{
+
+display:none;
+
+}
+
+
+.msg{
+
+padding:12px;
+
+margin-top:10px;
+
+border-radius:10px;
+
+background:#252525;
+
+}
+
+
+.error{
+
+background:#5a2020;
+
+}
+
+
+.ok{
+
+background:#18552b;
+
+}
+
+
+
+.card{
+
+background:#242424;
+
+padding:15px;
+
+margin:10px 0;
+
+border-radius:15px;
+
+}
+
+
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+
+td,th{
+
+padding:10px;
+
+border-bottom:1px solid #444;
+
+}
+
+
+
+.small{
+
+color:#aaa;
+
+font-size:13px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+
+<div id="loginBox" class="box login">
+
+
+<h1>
+🔐 Админ вход
+</h1>
+
+
+<input id="email" placeholder="Email">
+
+
+<input id="password"
+type="password"
+placeholder="Пароль">
+
+
+<button onclick="login()">
+Войти
+</button>
+
+
+<div id="loginMsg"></div>
+
+
+</div>
+
+
+
+
+
+
+<div id="adminBox" class="box hidden">
+
+
+<h1>
+🍽 Админ панель
+</h1>
+
+
+<button onclick="logout()">
+Выйти
+</button>
+
+
+
+<h2>
+📋 Меню
+</h2>
+
+
+<div id="menu"></div>
+
+
+
+<h2>
+⭐ Отзывы
+</h2>
+
+
+<button onclick="loadReviews()">
+Обновить отзывы
+</button>
+
+
+<div id="reviews"></div>
+
+
+
+<div id="debug"></div>
+
+
+</div>
+
+
+
+
+
+
+
 <script>
 
-const SUPABASE_URL="https://lzbhpdievyemsioluvyc.supabase.co";
 
-const SUPABASE_ANON_KEY="sb_publishable_twusUPyK52Z6ZWlUj3N0Xg__9qocH_9";
+const SUPABASE_URL =
+"https://lzbhpdievyemsioluvyc.supabase.co";
 
 
-const supabaseClient=supabase.createClient(
+const SUPABASE_ANON_KEY =
+"sb_publishable_twusUPyK52Z6ZWlUj3N0Xg__9qocH_9";
+
+
+const supabaseClient =
+supabase.createClient(
 SUPABASE_URL,
 SUPABASE_ANON_KEY
 );
 
 
-const $=x=>document.querySelector(x);
 
+function message(text,error=false){
 
-function log(text,type="info"){
+let box=document.createElement("div");
 
-let box=$("#loginStatus");
+box.className="msg "+(error?"error":"ok");
 
-box.innerHTML += 
-`<div style="
-margin:5px;
-padding:8px;
-border-radius:8px;
-background:${type==="error"?"#ffd7d7":"#dff5df"}
-">
-${text}
-</div>`;
+box.innerText=text;
 
-}
-
-
-
-async function diagnose(){
-
-log("🔍 Проверка Supabase...");
-
-
-try{
-
-const {data,error}=await supabaseClient.auth.getSession();
-
-
-if(error){
-
-log("❌ Auth ошибка: "+error.message,"error");
-return false;
-
-}
-
-
-if(!data.session){
-
-log("❌ Сессии нет. Пользователь не вошёл","error");
-return false;
-
-}
-
-
-let uid=data.session.user.id;
-
-
-log("✅ Сессия найдена");
-log("👤 UID: "+uid);
-
-
-
-const {data:admin,error:adminError}=await supabaseClient
-.from("admin_users")
-.select("*")
-.eq("user_id",uid);
-
-
-
-if(adminError){
-
-log(
-"❌ Ошибка admin_users: "+
-adminError.message,
-"error"
-);
-
-return false;
-
-}
-
-
-
-if(!admin || admin.length===0){
-
-log(
-"❌ UID отсутствует в admin_users",
-"error"
-);
-
-log(
-"Добавь UID: "+uid,
-"error"
-);
-
-return false;
-
-}
-
-
-log("✅ Админ найден");
-
-
-return true;
-
-
-}catch(e){
-
-log(
-"❌ Критическая ошибка: "+e.message,
-"error"
-);
-
-return false;
-
-}
-
+document.querySelector("#loginMsg").appendChild(box);
 
 }
 
@@ -132,22 +307,19 @@ return false;
 async function login(){
 
 
-$("#loginStatus").innerHTML="";
+loginMsg.innerHTML="";
 
 
-log("⏳ Вход...");
-
-
-let email=$("#email").value.trim();
-
-let password=$("#password").value;
-
+message("Проверяем...");
 
 
 const {data,error}=await supabaseClient.auth.signInWithPassword({
 
-email,
-password
+email:
+document.querySelector("#email").value.trim(),
+
+password:
+document.querySelector("#password").value
 
 });
 
@@ -155,9 +327,9 @@ password
 
 if(error){
 
-log(
-"❌ Ошибка входа: "+error.message,
-"error"
+message(
+"Ошибка входа: "+error.message,
+true
 );
 
 return;
@@ -166,49 +338,78 @@ return;
 
 
 
-log("✅ Пароль принят");
+message("Авторизация успешна");
 
 
 
-if(await diagnose()){
+const uid=data.user.id;
 
 
-log("🎉 Доступ администратора открыт");
+
+console.log("UID",uid);
+
+
+
+const {data:admin,error:adminError}=await supabaseClient
+
+.from("admin_users")
+
+.select("*")
+
+.eq("user_id",uid);
+
+
+
+if(adminError){
+
+message(
+"Ошибка admin_users: "+adminError.message,
+true
+);
+
+return;
+
+}
+
+
+
+if(!admin || admin.length===0){
+
+message(
+"Этот пользователь не добавлен в admin_users",
+true
+);
+
+return;
+
+}
+
 
 
 openAdmin();
 
 
-}else{
-
-
-log(
-"🚫 Админка закрыта. Исправь ошибку выше",
-"error"
-);
-
-
 }
 
 
-}
 
 
 
 
 function openAdmin(){
 
-$("#loginBox").classList.add("hidden");
+loginBox.classList.add("hidden");
 
-$("#adminBox").classList.remove("hidden");
+adminBox.classList.remove("hidden");
 
 
 loadMenu();
 
 loadReviews();
 
-
 }
+
+
 
 
 
@@ -217,149 +418,19 @@ loadReviews();
 async function loadMenu(){
 
 
-$("#status").textContent="Загрузка меню...";
-
-
 const {data,error}=await supabaseClient
+
 .from("menu_items")
+
 .select("*")
+
 .order("id");
 
 
 
 if(error){
 
-$("#status").textContent=
-"❌ MENU ERROR: "+error.message;
-
-return;
-
-}
-
-
-
-$("#rows").innerHTML=data.map(x=>`
-
-
-<tr data-id="${x.id}">
-
-<td>${x.id}</td>
-
-<td>
-<input data-name value="${escapeHtml(x.name)}">
-</td>
-
-<td>
-<input data-price type="number" value="${x.price}">
-</td>
-
-<td>${escapeHtml(x.category)}</td>
-
-<td>
-<textarea data-desc>${escapeHtml(x.desc)}</textarea>
-</td>
-
-
-</tr>
-
-
-`).join("");
-
-
-
-$("#status").textContent=
-"✅ Загружено блюд: "+data.length;
-
-
-}
-
-
-
-
-
-async function save(){
-
-
-let rows=document.querySelectorAll("#rows tr");
-
-
-let updates=[];
-
-
-
-rows.forEach(row=>{
-
-
-updates.push({
-
-id:Number(row.dataset.id),
-
-name:
-row.querySelector("[data-name]").value,
-
-price:
-Number(row.querySelector("[data-price]").value),
-
-desc:
-row.querySelector("[data-desc]").value,
-
-updated_at:
-new Date().toISOString()
-
-
-});
-
-
-});
-
-
-
-const {error}=await supabaseClient
-.from("menu_items")
-.upsert(
-updates,
-{onConflict:"id"}
-);
-
-
-
-$("#status").textContent=
-error?
-"❌ SAVE ERROR: "+error.message:
-"✅ Сохранено";
-
-
-}
-
-
-
-
-
-async function loadReviews(){
-
-
-const box=$("#reviewsAdmin");
-
-
-box.innerHTML="Загрузка отзывов...";
-
-
-
-const {data,error}=await supabaseClient
-.from("reviews")
-.select("*")
-.order(
-"created_at",
-{ascending:false}
-)
-.limit(100);
-
-
-
-if(error){
-
-box.innerHTML=
-"❌ REVIEWS ERROR: "+
+menu.innerHTML=
 error.message;
 
 return;
@@ -368,40 +439,137 @@ return;
 
 
 
-box.innerHTML=(data||[]).map(r=>`
+menu.innerHTML=data.map(x=>`
 
+<div class="card">
 
-<div class="reviewAdmin">
-
-<b>${escapeHtml(r.author||"Гость")}</b>
-
-<p>
-${escapeHtml(r.text||"")}
-</p>
-
-
-<small>
-${r.created_at||""}
-</small>
-
+<b>${x.name}</b>
 
 <br>
 
+Цена:
+<input id="price${x.id}" value="${x.price}">
 
-<button onclick="deleteReview('${r.id}')">
-🗑 Удалить
+
+<textarea id="desc${x.id}">
+${x.desc||""}
+</textarea>
+
+
+<button onclick="saveItem(${x.id})">
+💾 Сохранить
 </button>
 
 
 </div>
 
+`).join("");
 
-`).join("")
-||
-"Отзывов нет";
+}
+
+
+
+
+async function saveItem(id){
+
+
+let price=document.querySelector("#price"+id).value;
+
+let desc=document.querySelector("#desc"+id).value;
+
+
+
+const {error}=await supabaseClient
+
+.from("menu_items")
+
+.update({
+
+price:Number(price),
+
+desc:desc
+
+})
+
+.eq("id",id);
+
+
+
+alert(
+error?
+error.message:
+"Сохранено"
+);
 
 
 }
+
+
+
+
+
+
+
+
+async function loadReviews(){
+
+
+reviews.innerHTML="Загрузка...";
+
+
+const {data,error}=await supabaseClient
+
+.from("reviews")
+
+.select("*")
+
+.order("created_at",{ascending:false});
+
+
+
+if(error){
+
+reviews.innerHTML=error.message;
+
+return;
+
+}
+
+
+
+reviews.innerHTML=(data||[]).map(r=>`
+
+<div class="card">
+
+<b>${r.author||"Гость"}</b>
+
+<br>
+
+⭐ ${r.stars||0}
+
+<p>
+${r.text||""}
+</p>
+
+
+<div class="small">
+${r.created_at||""}
+</div>
+
+
+<button onclick="deleteReview('${r.id}')">
+
+🗑 Удалить
+
+</button>
+
+
+</div>
+
+`).join("");
+
+}
+
 
 
 
@@ -415,24 +583,21 @@ return;
 
 
 const {error}=await supabaseClient
+
 .from("reviews")
+
 .delete()
+
 .eq("id",id);
 
 
 
-if(error){
+if(error)
 
-alert(
-"❌ DELETE ERROR:\n"+
-error.message
-);
+alert(error.message);
 
 
-}else{
-
-
-alert("✅ Отзыв удалён");
+else
 
 loadReviews();
 
@@ -440,46 +605,24 @@ loadReviews();
 }
 
 
-}
 
 
 
 
-
-function escapeHtml(text){
-
-return String(text||"")
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;");
-
-
-}
-
-
-
-
-$("#loginBtn").onclick=login;
-
-$("#saveBtn").onclick=save;
-
-$("#loadReviewsBtn").onclick=loadReviews;
-
-
-
-$("#logoutBtn").onclick=async()=>{
+async function logout(){
 
 await supabaseClient.auth.signOut();
 
 location.reload();
 
-};
+}
 
-
-
-diagnose();
 
 
 
 </script>
+
+
+</body>
+
+</html>
