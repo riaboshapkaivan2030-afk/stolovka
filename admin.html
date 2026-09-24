@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -8,124 +8,78 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <style>
-
-*{
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
 body{
 margin:0;
 background:#111;
+font-family:Arial;
 color:white;
-padding:20px;
+padding:30px;
 }
 
-
-.card{
-max-width:1200px;
+.box{
+max-width:1100px;
 margin:auto;
-background:#1b1b1b;
+background:#1c1c1c;
 padding:30px;
 border-radius:20px;
-box-shadow:0 0 30px #000;
 }
 
-
-input,textarea,button{
-
+input,textarea{
 width:100%;
 padding:12px;
 margin:8px 0;
 border-radius:10px;
-border:0;
-font-size:16px;
-
-}
-
-
-input,textarea{
-
-background:#303746;
+background:#303747;
 color:white;
-
+border:1px solid #555;
 }
-
 
 button{
-
-background:#ff572f;
+padding:14px;
+width:100%;
+border:0;
+border-radius:12px;
+background:#ff5722;
 color:white;
-cursor:pointer;
 font-weight:bold;
-
+cursor:pointer;
+margin-top:10px;
 }
-
 
 button:hover{
-
 opacity:.8;
-
 }
-
 
 .hidden{
 display:none;
 }
 
-
-.error{
-
-background:#7d2222;
+.status{
+margin-top:15px;
 padding:12px;
 border-radius:10px;
-
+background:#333;
 }
-
 
 .ok{
-
-background:#1f6b35;
-padding:12px;
-border-radius:10px;
-
+background:#087f23;
 }
 
+.err{
+background:#8b1e1e;
+}
 
 
 table{
-
 width:100%;
+margin-top:20px;
 border-collapse:collapse;
-
 }
-
 
 td,th{
-
 padding:10px;
 border-bottom:1px solid #444;
-
-}
-
-
-.review{
-
-background:#222;
-padding:15px;
-margin:10px 0;
-border-radius:12px;
-
-}
-
-
-.small{
-
-color:#aaa;
-font-size:13px;
-
 }
 
 </style>
@@ -136,17 +90,17 @@ font-size:13px;
 <body>
 
 
-
-<div class="card" id="login">
-
+<div class="box" id="login">
 
 <h1>🔐 Админ вход</h1>
 
 
-<input id="email" placeholder="Email">
+<input id="email"
+value="riaboshapkaiwan2030@gmail.com"
+placeholder="Email">
 
 
-<input id="password" 
+<input id="password"
 type="password"
 placeholder="Пароль">
 
@@ -156,7 +110,9 @@ placeholder="Пароль">
 </button>
 
 
-<div id="msg"></div>
+<div id="loginStatus" class="status">
+Ожидание...
+</div>
 
 
 </div>
@@ -164,11 +120,10 @@ placeholder="Пароль">
 
 
 
+<div class="box hidden" id="admin">
 
-<div class="card hidden" id="panel">
 
-
-<h1>🍽 Панель управления</h1>
+<h1>🍽 Панель администратора</h1>
 
 
 <button onclick="logout()">
@@ -176,27 +131,33 @@ placeholder="Пароль">
 </button>
 
 
+<div id="status" class="status"></div>
+
+
 <h2>Меню</h2>
 
 
-<div id="menu"></div>
+<table>
+
+<thead>
+
+<tr>
+<th>ID</th>
+<th>Название</th>
+<th>Цена</th>
+<th>Описание</th>
+</tr>
+
+</thead>
 
 
-<h2>Отзывы</h2>
+<tbody id="menu"></tbody>
 
 
-<button onclick="loadReviews()">
-Обновить отзывы
-</button>
-
-
-<div id="reviews"></div>
-
+</table>
 
 
 </div>
-
-
 
 
 
@@ -208,8 +169,7 @@ const SUPABASE_URL =
 
 
 const SUPABASE_KEY =
-"sb_publishable_twusUPyK52Z6ZWlUj3N0Xg__9qocH_9";
-
+"ТВОЙ_PUBLISHABLE_KEY";
 
 
 const db =
@@ -220,57 +180,46 @@ SUPABASE_KEY
 
 
 
-
-
-function msg(text,type="error"){
-
-document.querySelector("#msg").innerHTML=
-`
-<div class="${type}">
-${text}
-</div>
-`;
-
+function msg(id,text,type=""){
+let el=document.getElementById(id);
+el.innerHTML=text;
+el.className="status "+type;
 }
-
-
 
 
 
 async function login(){
 
 
-msg("Проверка...","ok");
+msg(
+"loginStatus",
+"⏳ Авторизация..."
+);
 
 
-let email =
-document.querySelector("#email").value.trim();
+let email=
+document.getElementById("email").value;
 
 
-let password =
-document.querySelector("#password").value;
+let password=
+document.getElementById("password").value;
 
 
 
-let result =
+let res=
 await db.auth.signInWithPassword({
-
 email,
 password
-
 });
 
 
 
-console.log(result);
-
-
-
-if(result.error){
+if(res.error){
 
 msg(
-"Ошибка входа:<br>"+
-result.error.message
+"loginStatus",
+"❌ "+res.error.message,
+"err"
 );
 
 return;
@@ -279,15 +228,29 @@ return;
 
 
 
-let user =
-result.data.user;
+msg(
+"loginStatus",
+"Проверяем права..."
+);
 
 
 
-let admin =
+let user=
+res.data.user;
+
+
+
+console.log(
+"USER:",
+user.id
+);
+
+
+
+let check=
 await db
 .from("admin_users")
-.select("*")
+.select("user_id")
 .eq(
 "user_id",
 user.id
@@ -295,15 +258,16 @@ user.id
 
 
 
-console.log(admin);
+console.log(check);
 
 
 
-if(admin.error){
+if(check.error){
 
 msg(
-"Ошибка admin_users:<br>"+
-admin.error.message
+"loginStatus",
+"❌ Ошибка admin_users: "+check.error.message,
+"err"
 );
 
 return;
@@ -312,273 +276,116 @@ return;
 
 
 
-if(!admin.data.length){
-
+if(!check.data.length){
 
 await db.auth.signOut();
 
 
 msg(
-"Аккаунт есть, но нет прав администратора"
+"loginStatus",
+"❌ Нет доступа. UID не найден",
+"err"
 );
 
 
 return;
 
+}
+
+
+
+openAdmin();
+
 
 }
 
 
 
-openPanel();
 
+function openAdmin(){
 
-}
-
-
-
-
-function openPanel(){
-
-
-document.querySelector("#login")
+document
+.getElementById("login")
 .classList.add("hidden");
 
 
-document.querySelector("#panel")
+document
+.getElementById("admin")
 .classList.remove("hidden");
 
 
 loadMenu();
 
-loadReviews();
-
-
 }
-
-
 
 
 
 async function loadMenu(){
 
 
-let box=document.querySelector("#menu");
+msg(
+"status",
+"Загрузка меню..."
+);
 
 
-box.innerHTML="Загрузка...";
 
-
-
-let {data,error}=await db
+let r=
+await db
 .from("menu_items")
 .select("*")
 .order("id");
 
 
 
-if(error){
+if(r.error){
 
-box.innerHTML=error.message;
+msg(
+"status",
+"❌ "+r.error.message,
+"err"
+);
+
 return;
 
 }
 
 
 
-box.innerHTML=`
-
-<table>
-
-<tr>
-<th>ID</th>
-<th>Название</th>
-<th>Цена</th>
-<th>Описание</th>
-<th></th>
-</tr>
-
-${
-data.map(x=>`
+document
+.getElementById("menu")
+.innerHTML =
+r.data.map(x=>`
 
 <tr>
 
 <td>${x.id}</td>
 
+<td>
+<input value="${x.name}">
+</td>
 
 <td>
-<input id="n${x.id}" value="${x.name}">
+<input value="${x.price}">
 </td>
 
 
 <td>
-<input id="p${x.id}" value="${x.price}">
-</td>
-
-
-<td>
-<textarea id="d${x.id}">
-${x.desc||""}
-</textarea>
-</td>
-
-
-<td>
-
-<button onclick="saveItem(${x.id})">
-💾
-</button>
-
+<textarea>${x.desc||""}</textarea>
 </td>
 
 
 </tr>
 
 
-`).join("")
-}
-
-</table>
-
-`;
-
-
-
-}
-
-
-
-
-async function saveItem(id){
-
-
-let {error}=await db
-.from("menu_items")
-.update({
-
-name:
-document.querySelector("#n"+id).value,
-
-
-price:
-Number(
-document.querySelector("#p"+id).value
-),
-
-
-desc:
-document.querySelector("#d"+id).value,
-
-
-updated_at:
-new Date()
-
-})
-.eq("id",id);
-
-
-
-if(error)
-alert(error.message);
-
-else
-alert("Сохранено");
-
-
-
-}
-
-
-
-
-async function loadReviews(){
-
-
-let box=
-document.querySelector("#reviews");
-
-
-box.innerHTML="Загрузка...";
-
-
-
-let {data,error}=await db
-.from("reviews")
-.select("*")
-.order(
-"created_at",
-{
-ascending:false
-}
-);
-
-
-
-if(error){
-
-box.innerHTML=error.message;
-return;
-
-}
-
-
-
-box.innerHTML =
-data.map(r=>`
-
-<div class="review">
-
-<b>
-${r.author||"Гость"}
-</b>
-
-
-<p>
-${r.text}
-</p>
-
-
-<div class="small">
-${r.created_at}
-</div>
-
-
-<button onclick="deleteReview('${r.id}')">
-🗑 Удалить
-</button>
-
-
-</div>
-
 `).join("");
 
 
 
-}
-
-
-
-async function deleteReview(id){
-
-
-if(!confirm("Удалить отзыв?"))
-return;
-
-
-let {error}=await db
-.from("reviews")
-.delete()
-.eq("id",id);
-
-
-
-if(error)
-alert(error.message);
-
-
-else
-loadReviews();
-
+msg(
+"status",
+"✅ Загружено "+r.data.length
+,"ok");
 
 
 }
@@ -596,36 +403,8 @@ location.reload();
 
 
 
-
-
-db.auth.getSession()
-.then(async({data})=>{
-
-if(data.session){
-
-let check =
-await db
-.from("admin_users")
-.select("*")
-.eq(
-"user_id",
-data.session.user.id
-);
-
-
-
-if(check.data.length)
-openPanel();
-
-}
-
-
-});
-
-
-
 </script>
 
 
 </body>
-</html>
+</html>а
