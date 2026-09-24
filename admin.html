@@ -1,70 +1,9 @@
-<!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Столовка — Админка</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#f6f3ed;font-family:Arial;color:#18201d;padding:25px}
-.box{max-width:1200px;margin:auto;background:#fff;padding:25px;border-radius:20px;box-shadow:0 15px 40px #0002}
-input,textarea,button{font:inherit;padding:10px;border-radius:10px;border:1px solid #ddd}
-button{background:#d85a36;color:#fff;border:0;cursor:pointer;font-weight:bold}
-.hidden{display:none}
-table{width:100%;border-collapse:collapse;margin-top:20px}
-th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}
-td input,td textarea{width:100%}
-.status{margin-top:10px;color:#666}
-.reviewAdmin{padding:12px;border:1px solid #ddd;border-radius:12px;margin:10px 0}.reviewAdmin button{margin-top:8px}
-</style>
-</head>
-
-<body>
-
-<div class="box" id="loginBox">
-<h2>🔐 Админ вход</h2>
-<input id="email" type="email" placeholder="Email">
-<br><br>
-<input id="password" type="password" placeholder="Пароль">
-<br><br>
-<button id="loginBtn">Войти</button>
-<div class="status" id="loginStatus"></div>
-</div>
-
-
-<div class="box hidden" id="adminBox">
-<h2>🍽 Редактор меню</h2>
-
-<button id="saveBtn">💾 Сохранить</button>
-<button id="logoutBtn">Выйти</button>
-
-<div class="status" id="status"></div>
-<h3>⭐ Отзывы</h3>
-<button id="loadReviewsBtn">Обновить отзывы</button>
-<div id="reviewsAdmin"></div>
-
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Название</th>
-<th>Цена ₽</th>
-<th>Категория</th>
-<th>Описание</th>
-</tr>
-</thead>
-<tbody id="rows"></tbody>
-</table>
-
-</div>
-
-
 <script>
 
 const SUPABASE_URL="https://lzbhpdievyemsioluvyc.supabase.co";
 
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6YmhwZGlldnllbXNpb2x1dnljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwOTkwNzMsImV4cCI6MjEwNTY3NTA3M30.9fas8ob_yy4PP0r2_FAdMSFjvs8jcxevy7EyDoo6bGY";
+const SUPABASE_ANON_KEY="ТУТ_ТВОЙ_ANON_KEY";
+
 
 const supabaseClient=supabase.createClient(
 SUPABASE_URL,
@@ -75,60 +14,183 @@ SUPABASE_ANON_KEY
 const $=x=>document.querySelector(x);
 
 
-async function checkAdmin(){
+function log(text,type="info"){
 
-const {data:{session}}=
-await supabaseClient.auth.getSession();
+let box=$("#loginStatus");
 
-if(!session)return false;
-
-
-const {data,error}=await supabaseClient
-.from("admin_users")
-.select("*")
-.eq("user_id",session.user.id)
-.single();
-
-
-return !error&&data;
+box.innerHTML += 
+`<div style="
+margin:5px;
+padding:8px;
+border-radius:8px;
+background:${type==="error"?"#ffd7d7":"#dff5df"}
+">
+${text}
+</div>`;
 
 }
 
 
-async function login(){
 
-$("#loginStatus").textContent="Проверка...";
+async function diagnose(){
 
-const {error}=await supabaseClient.auth.signInWithPassword({
+log("🔍 Проверка Supabase...");
 
-email:$("#email").value.trim(),
 
-password:$("#password").value
+try{
 
-});
+const {data,error}=await supabaseClient.auth.getSession();
 
 
 if(error){
 
-$("#loginStatus").textContent=error.message;
+log("❌ Auth ошибка: "+error.message,"error");
+return false;
+
+}
+
+
+if(!data.session){
+
+log("❌ Сессии нет. Пользователь не вошёл","error");
+return false;
+
+}
+
+
+let uid=data.session.user.id;
+
+
+log("✅ Сессия найдена");
+log("👤 UID: "+uid);
+
+
+
+const {data:admin,error:adminError}=await supabaseClient
+.from("admin_users")
+.select("*")
+.eq("user_id",uid);
+
+
+
+if(adminError){
+
+log(
+"❌ Ошибка admin_users: "+
+adminError.message,
+"error"
+);
+
+return false;
+
+}
+
+
+
+if(!admin || admin.length===0){
+
+log(
+"❌ UID отсутствует в admin_users",
+"error"
+);
+
+log(
+"Добавь UID: "+uid,
+"error"
+);
+
+return false;
+
+}
+
+
+log("✅ Админ найден");
+
+
+return true;
+
+
+}catch(e){
+
+log(
+"❌ Критическая ошибка: "+e.message,
+"error"
+);
+
+return false;
+
+}
+
+
+}
+
+
+
+
+async function login(){
+
+
+$("#loginStatus").innerHTML="";
+
+
+log("⏳ Вход...");
+
+
+let email=$("#email").value.trim();
+
+let password=$("#password").value;
+
+
+
+const {data,error}=await supabaseClient.auth.signInWithPassword({
+
+email,
+password
+
+});
+
+
+
+if(error){
+
+log(
+"❌ Ошибка входа: "+error.message,
+"error"
+);
+
 return;
 
 }
 
 
-if(await checkAdmin()){
+
+log("✅ Пароль принят");
+
+
+
+if(await diagnose()){
+
+
+log("🎉 Доступ администратора открыт");
+
 
 openAdmin();
 
+
 }else{
 
-await supabaseClient.auth.signOut();
 
-$("#loginStatus").textContent="Нет доступа";
+log(
+"🚫 Админка закрыта. Исправь ошибку выше",
+"error"
+);
+
 
 }
 
+
 }
+
 
 
 
@@ -138,16 +200,22 @@ $("#loginBox").classList.add("hidden");
 
 $("#adminBox").classList.remove("hidden");
 
+
 loadMenu();
+
 loadReviews();
+
 
 }
 
 
 
+
+
 async function loadMenu(){
 
-$("#status").textContent="Загрузка...";
+
+$("#status").textContent="Загрузка меню...";
 
 
 const {data,error}=await supabaseClient
@@ -156,95 +224,246 @@ const {data,error}=await supabaseClient
 .order("id");
 
 
+
 if(error){
 
-$("#status").textContent=error.message;
+$("#status").textContent=
+"❌ MENU ERROR: "+error.message;
+
 return;
 
 }
 
 
+
 $("#rows").innerHTML=data.map(x=>`
 
+
 <tr data-id="${x.id}">
+
 <td>${x.id}</td>
-<td><input data-name value="${x.name||""}"></td>
-<td><input data-price type="number" value="${x.price||0}"></td>
-<td>${x.category||""}</td>
-<td><textarea data-desc>${x.desc||""}</textarea></td>
+
+<td>
+<input data-name value="${escapeHtml(x.name)}">
+</td>
+
+<td>
+<input data-price type="number" value="${x.price}">
+</td>
+
+<td>${escapeHtml(x.category)}</td>
+
+<td>
+<textarea data-desc>${escapeHtml(x.desc)}</textarea>
+</td>
+
+
 </tr>
+
 
 `).join("");
 
 
-$("#status").textContent="Загружено: "+data.length;
+
+$("#status").textContent=
+"✅ Загружено блюд: "+data.length;
+
 
 }
+
+
 
 
 
 async function save(){
 
+
 let rows=document.querySelectorAll("#rows tr");
+
 
 let updates=[];
 
 
+
 rows.forEach(row=>{
+
 
 updates.push({
 
 id:Number(row.dataset.id),
 
-name:row.querySelector("[data-name]").value,
+name:
+row.querySelector("[data-name]").value,
 
-price:Number(row.querySelector("[data-price]").value),
+price:
+Number(row.querySelector("[data-price]").value),
 
-desc:row.querySelector("[data-desc]").value,
+desc:
+row.querySelector("[data-desc]").value,
 
-updated_at:new Date().toISOString()
+updated_at:
+new Date().toISOString()
+
 
 });
 
+
 });
+
 
 
 const {error}=await supabaseClient
 .from("menu_items")
-.upsert(updates,{onConflict:"id"});
+.upsert(
+updates,
+{onConflict:"id"}
+);
+
 
 
 $("#status").textContent=
-error?error.message:"✅ Сохранено";
+error?
+"❌ SAVE ERROR: "+error.message:
+"✅ Сохранено";
+
 
 }
+
+
 
 
 
 async function loadReviews(){
- const box=$("#reviewsAdmin");
- box.innerHTML="Загрузка...";
- const {data,error}=await supabaseClient.from("reviews").select("*").order("created_at",{ascending:false}).limit(100);
- if(error){box.textContent=error.message;return;}
- box.innerHTML=(data||[]).map(r=>`
- <div class="reviewAdmin">
- <b>${r.user_name||"Гость"}</b><br>
- ${r.text||r.comment||""}
- <br><small>${r.created_at||""}</small>
- <br><button onclick="deleteReview('${r.id}')">🗑 Удалить</button>
- </div>`).join("") || "Отзывов нет";
+
+
+const box=$("#reviewsAdmin");
+
+
+box.innerHTML="Загрузка отзывов...";
+
+
+
+const {data,error}=await supabaseClient
+.from("reviews")
+.select("*")
+.order(
+"created_at",
+{ascending:false}
+)
+.limit(100);
+
+
+
+if(error){
+
+box.innerHTML=
+"❌ REVIEWS ERROR: "+
+error.message;
+
+return;
+
 }
+
+
+
+box.innerHTML=(data||[]).map(r=>`
+
+
+<div class="reviewAdmin">
+
+<b>${escapeHtml(r.author||"Гость")}</b>
+
+<p>
+${escapeHtml(r.text||"")}
+</p>
+
+
+<small>
+${r.created_at||""}
+</small>
+
+
+<br>
+
+
+<button onclick="deleteReview('${r.id}')">
+🗑 Удалить
+</button>
+
+
+</div>
+
+
+`).join("")
+||
+"Отзывов нет";
+
+
+}
+
+
+
+
 async function deleteReview(id){
- if(!confirm("Удалить отзыв?"))return;
- const {error}=await supabaseClient.from("reviews").delete().eq("id",id);
- if(error) alert(error.message);
- else loadReviews();
+
+
+if(!confirm("Удалить отзыв?"))
+return;
+
+
+
+const {error}=await supabaseClient
+.from("reviews")
+.delete()
+.eq("id",id);
+
+
+
+if(error){
+
+alert(
+"❌ DELETE ERROR:\n"+
+error.message
+);
+
+
+}else{
+
+
+alert("✅ Отзыв удалён");
+
+loadReviews();
+
+
 }
-$("#loadReviewsBtn").onclick=loadReviews;
+
+
+}
+
+
+
+
+
+function escapeHtml(text){
+
+return String(text||"")
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;");
+
+
+}
+
+
+
 
 $("#loginBtn").onclick=login;
 
 $("#saveBtn").onclick=save;
+
+$("#loadReviewsBtn").onclick=loadReviews;
+
 
 
 $("#logoutBtn").onclick=async()=>{
@@ -256,13 +475,9 @@ location.reload();
 };
 
 
-checkAdmin().then(ok=>{
 
-if(ok)openAdmin();
+diagnose();
 
-});
+
 
 </script>
-
-</body>
-</html>
