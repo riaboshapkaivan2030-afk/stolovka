@@ -1,75 +1,446 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
+
 <meta charset="UTF-8">
-<title>Столовая Админ</title>
+<title>Админка Столовая</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-body{background:#111;color:white;font-family:Arial;padding:30px}
-.box{max-width:900px;margin:auto;background:#222;padding:25px;border-radius:20px}
-input,button{width:100%;padding:14px;margin:8px 0;border-radius:10px}
-button{background:#ff5722;color:white;border:0;font-weight:bold}
-.hidden{display:none}.card{background:#333;padding:15px;margin:10px 0;border-radius:12px}
-.bad{background:#702020;padding:10px}.good{background:#176b35;padding:10px}
+
+body{
+background:#111;
+color:white;
+font-family:Arial;
+padding:30px;
+}
+
+.box{
+max-width:1000px;
+margin:auto;
+background:#1d1d1d;
+padding:30px;
+border-radius:20px;
+}
+
+
+input,button,textarea{
+
+width:100%;
+padding:14px;
+margin:8px 0;
+border-radius:10px;
+border:0;
+
+}
+
+
+button{
+background:#ff5722;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+
+.hidden{
+display:none;
+}
+
+
+.card{
+
+background:#292929;
+padding:15px;
+margin:10px 0;
+border-radius:15px;
+
+}
+
+
+.error{
+
+background:#8b0000;
+padding:15px;
+border-radius:10px;
+
+}
+
+.ok{
+
+background:#087f23;
+padding:15px;
+border-radius:10px;
+
+}
+
+
 </style>
+
 </head>
+
+
 <body>
+
+
 <div class="box" id="login">
+
+
 <h1>🔐 Админ вход</h1>
+
+
 <input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Пароль">
-<button onclick="login()">Войти</button>
-<div id="status"></div>
+
+<input id="pass" type="password" placeholder="Пароль">
+
+
+<button onclick="login()">
+Войти
+</button>
+
+
+<div id="msg"></div>
+
+
 </div>
+
+
+
 
 <div class="box hidden" id="panel">
+
+
 <h1>🍽 Админ панель</h1>
-<button onclick="logout()">Выйти</button>
-<h2>Отзывы</h2>
-<button onclick="reviews()">Обновить</button>
-<div id="reviews"></div>
+
+
+<button onclick="loadReviews()">
+Отзывы
+</button>
+
+
+<button onclick="loadMenu()">
+Меню
+</button>
+
+
+<button onclick="logout()">
+Выйти
+</button>
+
+
+
+<div id="content"></div>
+
+
 </div>
 
+
+
+
+
 <script>
+
+
 const URL="https://lzbhpdievyemsioluvyc.supabase.co";
-const KEY="sb_publishable_twusUPyK52Z6ZWlUj3N0Xg__9qocH_9";
+
+
+const KEY="ТВОЙ_PUBLISHABLE_KEY";
+
+
 const db=supabase.createClient(URL,KEY);
 
+
+
+function msg(t,type="error"){
+
+document.querySelector("#msg").innerHTML=
+`<div class="${type}">
+${t}
+</div>`;
+
+}
+
+
+
+
 async function login(){
-status.innerHTML="Проверка...";
-let r=await db.auth.signInWithPassword({
-email:email.value.trim(),
-password:password.value
+
+
+msg("Проверка...","ok");
+
+
+let {error}=await db.auth.signInWithPassword({
+
+email:
+email.value,
+
+password:
+pass.value
+
 });
-if(r.error){status.innerHTML='<div class="bad">'+r.error.message+'</div>';return;}
 
-let a=await db.from("admin_users").select("*").eq("user_id",r.data.user.id);
-if(a.error){status.innerHTML='<div class="bad">'+a.error.message+'</div>';return;}
-if(!a.data.length){status.innerHTML='<div class="bad">Нет доступа</div>';return;}
 
-document.getElementById("login").classList.add("hidden");
-document.getElementById("panel").classList.remove("hidden");
-reviews();
+
+if(error){
+
+msg(
+"Ошибка входа: "+error.message
+);
+
+return;
+
 }
 
-async function reviews(){
-let r=await db.from("reviews").select("*").order("created_at",{ascending:false});
-if(r.error){document.getElementById("reviews").innerHTML=r.error.message;return;}
-document.getElementById("reviews").innerHTML=(r.data||[]).map(x=>
-'<div class="card"><b>'+ (x.author||"Гость") +'</b><p>'+ (x.text||"")+
-'</p><button onclick="delReview(\''+x.id+'\')">Удалить</button></div>'
-).join("");
+
+
+let session=
+await db.auth.getSession();
+
+
+
+let uid=
+session.data.session.user.id;
+
+
+
+let {data,error:e}=await db
+.from("admin_users")
+.select("*")
+.eq("user_id",uid);
+
+
+
+console.log(data,e);
+
+
+
+if(e){
+
+msg(
+"Ошибка admin_users: "+e.message
+);
+
+return;
+
 }
+
+
+
+if(!data.length){
+
+msg(
+"Ты вошел, но тебя нет в админах"
+);
+
+await db.auth.signOut();
+
+return;
+
+}
+
+
+
+login.classList.add("hidden");
+
+panel.classList.remove("hidden");
+
+
+
+}
+
+
+
+
+async function loadReviews(){
+
+
+let box=document.querySelector("#content");
+
+
+box.innerHTML="Загрузка...";
+
+
+let {data,error}=await db
+.from("reviews")
+.select("*")
+.order("created_at",
+{ascending:false});
+
+
+
+if(error){
+
+box.innerHTML=
+error.message;
+
+return;
+
+}
+
+
+
+box.innerHTML="";
+
+
+data.forEach(r=>{
+
+
+box.innerHTML+=`
+
+<div class="card">
+
+<b>${r.author||"Гость"}</b>
+
+<p>${r.text}</p>
+
+<button onclick="delReview('${r.id}')">
+Удалить
+</button>
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
+
+
+
 
 async function delReview(id){
-await db.from("reviews").delete().eq("id",id);
-reviews();
+
+
+let {error}=await db
+.from("reviews")
+.delete()
+.eq("id",id);
+
+
+
+if(error)
+
+alert(error.message);
+
+else
+
+loadReviews();
+
+
 }
 
-async function logout(){
-await db.auth.signOut();
-location.reload();
+
+
+
+
+
+async function loadMenu(){
+
+
+let box=document.querySelector("#content");
+
+box.innerHTML="Загрузка меню";
+
+
+let {data,error}=await db
+.from("menu_items")
+.select("*")
+.order("id");
+
+
+
+if(error){
+
+box.innerHTML=error.message;
+
+return;
+
 }
+
+
+box.innerHTML="";
+
+
+data.forEach(x=>{
+
+
+box.innerHTML+=`
+
+<div class="card">
+
+<h3>${x.name}</h3>
+
+Цена:
+<input id="p${x.id}" value="${x.price}">
+
+
+<button onclick="save(${x.id})">
+Сохранить
+</button>
+
+
+</div>
+
+`;
+
+
+
+});
+
+
+}
+
+
+
+async function save(id){
+
+
+let price=
+document.querySelector("#p"+id).value;
+
+
+
+let {error}=await db
+.from("menu_items")
+.update({
+
+price:Number(price)
+
+})
+.eq("id",id);
+
+
+
+if(error)
+
+alert(error.message);
+
+else
+
+alert("Сохранено");
+
+
+}
+
+
+
+async function logout(){
+
+await db.auth.signOut();
+
+location.reload();
+
+}
+
+
 </script>
+
+
 </body>
 </html>
