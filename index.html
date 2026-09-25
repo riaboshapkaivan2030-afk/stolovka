@@ -789,13 +789,22 @@ box.innerHTML=items.map(x=>`
 <div class="card">
 
 
+${
+x.image_url
+
+?
+
+`
 <img
-
-src="${x.image_url || './no-image.png'}"
-
-onerror="this.style.display='none'"
-
+src="${x.image_url}"
 >
+`
+
+:
+
+""
+
+}
 
 
 
