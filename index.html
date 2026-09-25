@@ -789,22 +789,13 @@ box.innerHTML=items.map(x=>`
 <div class="card">
 
 
-${
-x.image_url
-
-?
-
-`
 <img
-src="${x.image_url}"
+
+src="${x.image_url || 'https://via.placeholder.com/400'}"
+
+onerror="this.src='https://via.placeholder.com/400'"
+
 >
-`
-
-:
-
-""
-
-}
 
 
 
@@ -1626,62 +1617,219 @@ reviewMessage(
 
 }
   // =================================
-// ЗАГРУЗКА ОТЗЫВОВ
+// ОТЗЫВЫ
 // =================================
 
 
-async function loadReviews(dishId){
-
-
-const box =
-document.getElementById("reviews");
-
-
-
-box.innerHTML =
-"Загрузка отзывов...";
+let reviewDishId=null;
 
 
 
 
+function openReview(id){
 
-const {data,error}=
 
-await supabaseClient
+reviewDishId=id;
 
-.from("reviews")
 
-.select("*")
+let old=document.getElementById("reviewWindow");
 
-.eq(
-"dish_id",
-dishId
-)
 
-.order(
-"created_at",
-{
-ascending:false
+if(old)
+old.remove();
+
+
+
+let box=document.createElement("div");
+
+
+box.id="reviewWindow";
+
+
+box.innerHTML=`
+
+<div class="review-box">
+
+
+<h2>
+⭐ Новый отзыв
+</h2>
+
+
+<textarea
+
+id="reviewText"
+
+placeholder="Напишите ваше мнение..."
+
+></textarea>
+
+
+
+<button onclick="sendReview()">
+
+Отправить
+
+</button>
+
+
+
+<div id="reviewMessage"></div>
+
+
+</div>
+
+
+`;
+
+
+
+document
+.querySelector(".container")
+.appendChild(box);
+
+
+
 }
+
+
+
+
+
+
+
+
+function reviewMessage(text,type="error"){
+
+
+document
+.getElementById("reviewMessage")
+.innerHTML=
+
+`
+
+<div class="message ${type}">
+
+${text}
+
+</div>
+
+`;
+
+}
+
+
+
+
+
+
+
+
+
+// =================================
+// ФИЛЬТР
+// =================================
+
+
+
+async function checkReviewText(text){
+
+
+
+let clean=
+
+text
+
+.toLowerCase()
+
+.replace(
+/[\s@._\-]/g,
+""
 );
 
 
 
 
+// слова из базы
 
 
-if(error){
+const {data}=await supabaseClient
+
+.from("review_blocks")
+
+.select("word");
 
 
-box.innerHTML=
 
-`
-<div class="message error">
-Ошибка загрузки отзывов
-</div>
-`;
 
-return;
+
+if(data){
+
+
+for(let item of data){
+
+
+if(
+
+clean.includes(
+
+item.word
+.toLowerCase()
+
+)
+
+)
+
+return "bad";
+
+
+
+}
+
+}
+
+
+
+
+// дополнительная защита
+
+
+let badWords=[
+
+
+"бля",
+
+"хуй",
+
+"хуе",
+
+"пизд",
+
+"еб",
+
+"сука",
+
+"тварь",
+
+"дебил",
+
+"идиот"
+
+
+];
+
+
+
+
+for(let word of badWords){
+
+
+if(
+clean.includes(word)
+)
+
+return "bad";
+
 
 }
 
@@ -1689,62 +1837,12 @@ return;
 
 
 
-
-if(!data.length){
-
-
-box.innerHTML=
-
-`
-<div class="message">
-Пока отзывов нет
-</div>
-`;
-
-return;
+return "ok";
 
 
 }
 
 
-
-
-
-
-box.innerHTML=data.map(r=>`
-
-
-<div class="message">
-
-
-⭐ ${r.stars || 5}/5
-
-<br>
-
-
-${r.text}
-
-
-<br>
-
-
-<small>
-
-${new Date(r.created_at)
-.toLocaleDateString()}
-
-</small>
-
-
-
-</div>
-
-
-`).join("");
-
-
-
-}
 
 
 
@@ -1753,19 +1851,208 @@ ${new Date(r.created_at)
 
 
 // =================================
-// ПРОВЕРКА СЕССИИ
+// ЗАЩИТА ПЕДАГОГОВ
 // =================================
 
 
-async function checkUser(){
+
+function checkStaff(text){
+
+
+let t=text.toLowerCase();
 
 
 
-const {
+let staff=[
 
-data
 
-}=
+"учитель",
+
+"учителя",
+
+"педагог",
+
+"препод",
+
+"директор",
+
+"завуч"
+
+
+];
+
+
+
+let insult=[
+
+
+"туп",
+
+"идиот",
+
+"дебил",
+
+"дурак",
+
+"ненавижу",
+
+"уб"
+
+];
+
+
+
+
+let hasStaff=
+
+staff.some(x=>t.includes(x));
+
+
+
+let hasInsult=
+
+insult.some(x=>t.includes(x));
+
+
+
+
+return hasStaff && hasInsult;
+
+
+}
+
+
+
+
+
+
+
+
+
+// =================================
+// ОТПРАВКА
+// =================================
+
+
+
+async function sendReview(){
+
+
+
+let text=
+
+document
+
+.getElementById("reviewText")
+
+.value
+
+.trim();
+
+
+
+
+
+if(!text){
+
+
+reviewMessage(
+"⚠ Напишите отзыв"
+);
+
+
+return;
+
+
+}
+
+
+
+
+if(text.length<5){
+
+
+reviewMessage(
+"⚠ Слишком короткий отзыв"
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+if(text.length>500){
+
+
+reviewMessage(
+"⚠ Максимум 500 символов"
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+
+let filter=
+
+await checkReviewText(text);
+
+
+
+
+if(filter==="bad"){
+
+
+reviewMessage(
+
+"❌ В отзыве есть запрещённые слова"
+
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+
+if(checkStaff(text)){
+
+
+reviewMessage(
+
+"⚠ Нельзя оскорблять сотрудников школы"
+
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+
+
+let session=
 
 await supabaseClient
 
@@ -1776,23 +2063,164 @@ await supabaseClient
 
 
 
-if(data.session){
+
+let user=
+
+session.data.session?.user;
 
 
-console.log(
-"Пользователь:",
-data.session.user.email
+
+
+
+
+if(!user){
+
+
+reviewMessage(
+
+"⚠ Нужно войти в аккаунт"
+
 );
 
 
+return;
+
+
 }
 
 
 
+
+
+
+
+// проверяем был ли отзыв
+
+
+
+let old=
+
+await supabaseClient
+
+.from("reviews")
+
+.select("id")
+
+.eq(
+"dish_id",
+reviewDishId
+)
+
+.eq(
+"user_id",
+user.id
+);
+
+
+
+
+
+
+if(old.data && old.data.length){
+
+
+
+reviewMessage(
+
+"⚠ Вы уже писали отзыв на это блюдо"
+
+);
+
+
+
+return;
+
+
 }
 
 
 
 
 
-checkUser();
+
+
+
+let result=
+
+await supabaseClient
+
+.from("reviews")
+
+.insert({
+
+
+dish_id:
+
+reviewDishId,
+
+
+user_id:
+
+user.id,
+
+
+text:text,
+
+
+stars:5,
+
+
+created_at:
+
+new Date()
+
+});
+
+
+
+
+
+
+
+if(result.error){
+
+
+
+console.log(result.error);
+
+
+
+reviewMessage(
+
+"❌ Ошибка сохранения:<br>"+
+
+result.error.message
+
+);
+
+
+
+return;
+
+
+}
+
+
+
+
+
+
+reviewMessage(
+
+"✅ Спасибо! Отзыв добавлен",
+
+"ok"
+
+);
+
+
+
+
+
+
+}
