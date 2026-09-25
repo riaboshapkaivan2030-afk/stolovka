@@ -1,72 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Админка столовой</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+margin:0;
+background:#111;
+color:white;
+padding:20px;
+}
+
+
+.card{
+max-width:1200px;
+margin:auto;
+background:#1b1b1b;
+padding:30px;
+border-radius:20px;
+box-shadow:0 0 30px #000;
+}
+
+
+input,textarea,button{
+
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:10px;
+border:0;
+font-size:16px;
+
+}
+
+
+input,textarea{
+
+background:#303746;
+color:white;
+
+}
+
+
+button{
+
+background:#ff572f;
+color:white;
+cursor:pointer;
+font-weight:bold;
+
+}
+
+
+button:hover{
+
+opacity:.8;
+
+}
+
+
+.hidden{
+display:none;
+}
+
+
+.error{
+
+background:#7d2222;
+padding:12px;
+border-radius:10px;
+
+}
+
+
+.ok{
+
+background:#1f6b35;
+padding:12px;
+border-radius:10px;
+
+}
+
+
+
+table{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+
+td,th{
+
+padding:10px;
+border-bottom:1px solid #444;
+
+}
+
+
+.review{
+
+background:#222;
+padding:15px;
+margin:10px 0;
+border-radius:12px;
+
+}
+
+
+.small{
+
+color:#aaa;
+font-size:13px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+
+<div class="card" id="login">
+
+
+<h1>🔐 Админ вход</h1>
+
+
+<input id="email" placeholder="Email">
+
+
+<input id="password" 
+type="password"
+placeholder="Пароль">
+
+
+<button onclick="login()">
+Войти
+</button>
+
+
+<div id="msg"></div>
+
+
+</div>
+
+
+
+
+
+<div class="card hidden" id="panel">
+
+
+<h1>🍽 Панель управления</h1>
+
+
+<button onclick="logout()">
+Выйти
+</button>
+
+
+<h2>Меню</h2>
+
+
+<div id="menu"></div>
+
+
+<h2>Отзывы</h2>
+
+
+<button onclick="loadReviews()">
+Обновить отзывы
+</button>
+
+
+<div id="reviews"></div>
+
+
+
+</div>
+
+
+
+
+
 <script>
 
-console.log("SCRIPT START");
 
-
-const URL =
+const SUPABASE_URL =
 "https://lzbhpdievyemsioluvyc.supabase.co";
 
 
-const KEY =
+const SUPABASE_KEY =
 "sb_publishable_qvh9ZOOXqlEAsBexdJfdlA_UGu3jsCG";
 
 
-console.log("Создаем Supabase");
 
-
-const client =
+const db =
 supabase.createClient(
-URL,
-KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
 
-console.log("Supabase OK");
+
+
+
+function msg(text,type="error"){
+
+document.querySelector("#msg").innerHTML=
+`
+<div class="${type}">
+${text}
+</div>
+`;
+
+}
+
+
 
 
 
 async function login(){
 
-console.log("Кнопка нажата");
+
+msg("Проверка...","ok");
 
 
-let info=document.getElementById("info");
+let email =
+document.querySelector("#email").value.trim();
 
 
-info.innerHTML="1. Кнопка работает";
-
-
-let email=document.getElementById("email").value;
-let password=document.getElementById("password").value;
-
-
-
-info.innerHTML="2. Отправляем запрос...";
-
-
-console.log(email,password);
+let password =
+document.querySelector("#password").value;
 
 
 
 let result =
-await client.auth.signInWithPassword({
+await db.auth.signInWithPassword({
 
-email:email,
-
-password:password
+email,
+password
 
 });
 
 
 
-console.log("Ответ Supabase:",result);
+console.log(result);
 
 
 
 if(result.error){
 
-info.innerHTML=
-"❌ "+result.error.message;
+msg(
+"Ошибка входа:<br>"+
+result.error.message
+);
 
 return;
 
@@ -74,13 +279,353 @@ return;
 
 
 
-info.innerHTML=
-"✅ Вход успешен UID: "+
-result.data.user.id;
+let user =
+result.data.user;
+
+
+
+let admin =
+await db
+.from("admin_users")
+.select("*")
+.eq(
+"user_id",
+user.id
+);
+
+
+
+console.log(admin);
+
+
+
+if(admin.error){
+
+msg(
+"Ошибка admin_users:<br>"+
+admin.error.message
+);
+
+return;
+
+}
+
+
+
+if(!admin.data.length){
+
+
+await db.auth.signOut();
+
+
+msg(
+"Аккаунт есть, но нет прав администратора"
+);
+
+
+return;
 
 
 }
 
 
 
+openPanel();
+
+
+}
+
+
+
+
+function openPanel(){
+
+
+document.querySelector("#login")
+.classList.add("hidden");
+
+
+document.querySelector("#panel")
+.classList.remove("hidden");
+
+
+loadMenu();
+
+loadReviews();
+
+
+}
+
+
+
+
+
+async function loadMenu(){
+
+
+let box=document.querySelector("#menu");
+
+
+box.innerHTML="Загрузка...";
+
+
+
+let {data,error}=await db
+.from("menu_items")
+.select("*")
+.order("id");
+
+
+
+if(error){
+
+box.innerHTML=error.message;
+return;
+
+}
+
+
+
+box.innerHTML=`
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Название</th>
+<th>Цена</th>
+<th>Описание</th>
+<th></th>
+</tr>
+
+${
+data.map(x=>`
+
+<tr>
+
+<td>${x.id}</td>
+
+
+<td>
+<input id="n${x.id}" value="${x.name}">
+</td>
+
+
+<td>
+<input id="p${x.id}" value="${x.price}">
+</td>
+
+
+<td>
+<textarea id="d${x.id}">
+${x.desc||""}
+</textarea>
+</td>
+
+
+<td>
+
+<button onclick="saveItem(${x.id})">
+💾
+</button>
+
+</td>
+
+
+</tr>
+
+
+`).join("")
+}
+
+</table>
+
+`;
+
+
+
+}
+
+
+
+
+async function saveItem(id){
+
+
+let {error}=await db
+.from("menu_items")
+.update({
+
+name:
+document.querySelector("#n"+id).value,
+
+
+price:
+Number(
+document.querySelector("#p"+id).value
+),
+
+
+desc:
+document.querySelector("#d"+id).value,
+
+
+updated_at:
+new Date()
+
+})
+.eq("id",id);
+
+
+
+if(error)
+alert(error.message);
+
+else
+alert("Сохранено");
+
+
+
+}
+
+
+
+
+async function loadReviews(){
+
+
+let box=
+document.querySelector("#reviews");
+
+
+box.innerHTML="Загрузка...";
+
+
+
+let {data,error}=await db
+.from("reviews")
+.select("*")
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
+
+
+if(error){
+
+box.innerHTML=error.message;
+return;
+
+}
+
+
+
+box.innerHTML =
+data.map(r=>`
+
+<div class="review">
+
+<b>
+${r.author||"Гость"}
+</b>
+
+
+<p>
+${r.text}
+</p>
+
+
+<div class="small">
+${r.created_at}
+</div>
+
+
+<button onclick="deleteReview('${r.id}')">
+🗑 Удалить
+</button>
+
+
+</div>
+
+`).join("");
+
+
+
+}
+
+
+
+async function deleteReview(id){
+
+
+if(!confirm("Удалить отзыв?"))
+return;
+
+
+let {error}=await db
+.from("reviews")
+.delete()
+.eq("id",id);
+
+
+
+if(error)
+alert(error.message);
+
+
+else
+loadReviews();
+
+
+
+}
+
+
+
+
+async function logout(){
+
+await db.auth.signOut();
+
+location.reload();
+
+}
+
+
+
+
+
+db.auth.getSession()
+.then(async({data})=>{
+
+if(data.session){
+
+let check =
+await db
+.from("admin_users")
+.select("*")
+.eq(
+"user_id",
+data.session.user.id
+);
+
+
+
+if(check.data.length)
+openPanel();
+
+}
+
+
+});
+
+
+
 </script>
+
+
+</body>
+</html>
