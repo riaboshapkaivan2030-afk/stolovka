@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Админка столовой</title>
-
+<title>Столовка — Admin</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -16,21 +13,133 @@
 <style>
 
 *{
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
 
 
 body{
 
-margin:0;
-
-background:#101218;
-
-color:white;
+    margin:0;
+    background:#0f1117;
+    color:white;
 
 }
 
+
+/* LOGIN */
+
+#loginPage{
+
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+
+
+
+.login-box{
+
+    width:380px;
+    background:#191f2b;
+    padding:30px;
+    border-radius:25px;
+    box-shadow:0 20px 50px #000;
+
+}
+
+
+h1,h2,h3{
+
+    margin-top:0;
+
+}
+
+
+
+input,
+textarea,
+select{
+
+
+    width:100%;
+    padding:13px;
+
+    margin:8px 0;
+
+    border-radius:12px;
+
+    border:1px solid #394354;
+
+    background:#252d3b;
+
+    color:white;
+
+    font-size:15px;
+
+}
+
+
+
+textarea{
+
+    min-height:100px;
+
+}
+
+
+
+
+button{
+
+
+    padding:13px;
+
+    border:0;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
+
+
+
+
+.login-btn,
+.save-btn{
+
+
+    width:100%;
+
+    background:#ff5722;
+
+    color:white;
+
+}
+
+
+
+.error{
+
+
+    background:#9b2c2c;
+
+    padding:10px;
+
+    margin-top:10px;
+
+    border-radius:10px;
+
+}
+
+
+
+/* ADMIN */
 
 
 .hidden{
@@ -41,150 +150,11 @@ display:none!important;
 
 
 
-.login{
-
-height:100vh;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-}
-
-
-
-.box{
-
-background:#1b2230;
-
-padding:30px;
-
-border-radius:25px;
-
-width:380px;
-
-box-shadow:0 0 40px #000;
-
-}
-
-
-
-h1,h2{
-
-margin-top:0;
-
-}
-
-
-
-
-input,
-textarea,
-select{
-
-
-width:100%;
-
-padding:13px;
-
-margin:8px 0;
-
-border-radius:12px;
-
-border:0;
-
-background:#303849;
-
-color:white;
-
-font-size:16px;
-
-}
-
-
-
-textarea{
-
-min-height:120px;
-
-}
-
-
-
-button{
-
-
-padding:13px 20px;
-
-border:0;
-
-border-radius:12px;
-
-background:#ff5722;
-
-color:white;
-
-font-weight:bold;
-
-cursor:pointer;
-
-margin:5px;
-
-
-}
-
-
-
-button:hover{
-
-opacity:.8;
-
-}
-
-
-
-#adminPanel{
-
-
-min-height:100vh;
-
-}
-
-
-
-header{
-
-
-background:#1b2230;
-
-padding:20px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-}
-
-
-
-.logo{
-
-font-size:25px;
-
-font-weight:bold;
-
-}
-
-
-
 .layout{
 
-
 display:flex;
+
+min-height:100vh;
 
 }
 
@@ -193,32 +163,55 @@ display:flex;
 .sidebar{
 
 
-width:240px;
+width:260px;
 
-background:#171c27;
-
-min-height:calc(100vh - 80px);
+background:#171d28;
 
 padding:20px;
+
+position:fixed;
+
+height:100vh;
+
 
 }
 
 
 
-.sidebar button{
+.logo{
+
+
+font-size:26px;
+
+font-weight:bold;
+
+margin-bottom:35px;
+
+
+}
+
+
+
+
+.menu button{
 
 
 width:100%;
 
-background:#252d3c;
+background:#232c3b;
+
+color:white;
+
+margin-bottom:10px;
 
 text-align:left;
+
 
 }
 
 
 
-.sidebar button:hover{
+.menu button:hover{
 
 background:#ff5722;
 
@@ -226,29 +219,40 @@ background:#ff5722;
 
 
 
+
 .content{
 
 
-flex:1;
+margin-left:260px;
 
-padding:25px;
+padding:30px;
+
+width:100%;
+
 
 }
+
+
 
 
 
 .card{
 
 
-background:#1b2230;
+background:#191f2b;
 
 padding:25px;
 
-border-radius:20px;
+border-radius:22px;
 
 margin-bottom:20px;
 
+box-shadow:0 10px 30px #0005;
+
+
 }
+
+
 
 
 
@@ -258,91 +262,114 @@ margin-bottom:20px;
 display:grid;
 
 grid-template-columns:
-
-repeat(auto-fit,minmax(250px,1fr));
+repeat(auto-fit,minmax(220px,1fr));
 
 gap:20px;
 
+
 }
+
+
+
+.stat{
+
+
+font-size:40px;
+
+font-weight:bold;
+
+
+}
+
+
+
+
+
+.red{
+
+
+background:#c62828;
+
+color:white;
+
+
+}
+
+
+.green{
+
+
+background:#2e7d32;
+
+color:white;
+
+
+}
+
+
+.orange{
+
+
+background:#ff5722;
+
+color:white;
+
+
+}
+
 
 
 
 .product{
 
 
-background:#252d3c;
+background:#222b38;
 
 padding:20px;
 
-border-radius:18px;
+border-radius:15px;
+
+margin-top:15px;
+
 
 }
 
 
 
-.product img{
 
+@media(max-width:800px){
+
+
+.sidebar{
+
+position:relative;
 
 width:100%;
 
-height:180px;
+height:auto;
 
-object-fit:cover;
+}
 
-border-radius:15px;
+
+.content{
+
+margin-left:0;
+
+}
+
+
+.layout{
+
+display:block;
 
 }
 
 
 
-.red{
-
-background:#c62828;
-
 }
-
-
-
-.green{
-
-background:#2e7d32;
-
-}
-
-
-
-.message{
-
-padding:12px;
-
-border-radius:10px;
-
-background:#333;
-
-margin-top:10px;
-
-}
-
-
-
-.error{
-
-background:#8b2020;
-
-}
-
-
-
-.ok{
-
-background:#20733a;
-
-}
-
 
 
 </style>
-
 
 </head>
 
@@ -351,22 +378,23 @@ background:#20733a;
 
 
 
-<!-- LOGIN -->
+<!-- ВХОД -->
 
 
-<div id="loginPage" class="login">
+<div id="loginPage">
 
 
-<div class="box">
+<div class="login-box">
 
 
 <h1>
-🔐 Админ вход
+🔐 Вход
 </h1>
 
 
 
 <input id="email"
+type="email"
 placeholder="Email">
 
 
@@ -377,7 +405,8 @@ placeholder="Пароль">
 
 
 
-<button onclick="login()">
+<button class="login-btn"
+onclick="login()">
 
 Войти
 
@@ -385,7 +414,7 @@ placeholder="Пароль">
 
 
 
-<div id="loginMessage"></div>
+<div id="loginError"></div>
 
 
 </div>
@@ -397,46 +426,43 @@ placeholder="Пароль">
 
 
 
-<!-- ADMIN -->
+<!-- АДМИНКА -->
 
 
-<div id="adminPanel" class="hidden">
-
-
-
-<header>
-
-
-<div class="logo">
-
-🍽 Столовая Admin
-
-</div>
-
-
-
-<button onclick="logout()">
-
-Выйти
-
-</button>
-
-
-</header>
-
-
+<div id="adminPage"
+class="hidden">
 
 
 
 <div class="layout">
 
 
-<div class="sidebar">
+
+<aside class="sidebar">
+
+
+<div class="logo">
+
+🍽 Столовка
+
+</div>
+
+
+
+<div class="menu">
+
+
+<button onclick="openTab('home')">
+
+🏠 Главная
+
+</button>
+
 
 
 <button onclick="openTab('products')">
 
-🍔 Товары
+🍔 Блюда
 
 </button>
 
@@ -450,9 +476,25 @@ placeholder="Пароль">
 
 
 
-<button onclick="openTab('settings')">
+<button onclick="openTab('combos')">
 
-⚙ Настройки
+🔥 Комбо
+
+</button>
+
+
+
+<button onclick="openTab('bans')">
+
+🚫 Баны
+
+</button>
+
+
+
+<button onclick="logout()">
+
+🚪 Выйти
 
 </button>
 
@@ -461,57 +503,76 @@ placeholder="Пароль">
 </div>
 
 
+</aside>
 
 
 
 
-<div class="content">
+
+<main class="content">
 
 
 
-<section id="products">
-
-
-<div class="card">
+<section id="home">
 
 
 <h1>
-
-🍔 Управление товарами
-
+🏠 Главная
 </h1>
 
 
 
-<button onclick="openCreate()">
-
-➕ Добавить товар
-
-</button>
-
-
-</div>
+<div class="grid">
 
 
 
 <div class="card">
 
+<h3>
+🍽 Блюда
+</h3>
 
-<h2>
-Список блюд
-</h2>
+<div class="stat" id="countProducts">
+0
+</div>
 
-
-
-<input id="searchProduct"
-
-placeholder="🔎 Поиск">
-
-
-
-<div id="productsList">
 
 </div>
+
+
+
+
+
+<div class="card">
+
+<h3>
+⭐ Отзывы
+</h3>
+
+<div class="stat" id="countReviews">
+0
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h3>
+🔥 Комбо
+</h3>
+
+<div class="stat" id="countCombos">
+0
+</div>
+
+
+</div>
+
 
 
 </div>
@@ -524,8 +585,138 @@ placeholder="🔎 Поиск">
 
 
 
-<section id="reviews" class="hidden">
+<section id="products"
+class="hidden">
 
+
+
+<div class="card">
+
+
+<h1>
+🍔 Добавить блюдо
+</h1>
+
+
+
+<input id="productName"
+placeholder="Название">
+
+
+
+<select id="productCategory">
+
+<option>
+🍲 Первые блюда
+</option>
+
+<option>
+🍗 Вторые блюда
+</option>
+
+<option>
+🥗 Салаты
+</option>
+
+<option>
+🥤 Напитки
+</option>
+
+<option>
+🍰 Десерты
+</option>
+
+
+</select>
+
+
+
+<input id="productPrice"
+type="number"
+placeholder="Цена ₽">
+
+
+
+<input id="productWeight"
+placeholder="Вес">
+
+
+
+<h3>
+🔥 КБЖУ
+</h3>
+
+
+
+<input id="productCalories"
+placeholder="Калории">
+
+
+<input id="productProtein"
+placeholder="Белки">
+
+
+<input id="productFat"
+placeholder="Жиры">
+
+
+<input id="productCarbs"
+placeholder="Углеводы">
+
+
+
+<input id="productStock"
+type="number"
+placeholder="Количество">
+
+
+
+<textarea id="productDesc"
+placeholder="Описание"></textarea>
+
+
+
+<button class="save-btn"
+onclick="addProduct()">
+
+💾 Сохранить
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h1>
+Список блюд
+</h1>
+
+
+<input id="searchProduct"
+placeholder="🔎 Поиск">
+
+
+
+<div id="productList">
+
+</div>
+
+
+</div>
+
+
+
+</section>
+<!-- ОТЗЫВЫ -->
+
+<section id="reviews" class="hidden">
 
 <div class="card">
 
@@ -534,13 +725,20 @@ placeholder="🔎 Поиск">
 </h1>
 
 
-<div id="reviewsList">
+<button class="orange"
+onclick="loadReviews()">
+
+Обновить отзывы
+
+</button>
+
+
+<div id="reviewList">
 
 </div>
 
 
 </div>
-
 
 </section>
 
@@ -549,21 +747,25 @@ placeholder="🔎 Поиск">
 
 
 
-<section id="settings" class="hidden">
+<!-- КОМБО -->
+
+<section id="combos" class="hidden">
 
 
 <div class="card">
 
-
 <h1>
-⚙ Настройки
+🔥 Комбо
 </h1>
 
 
 <p>
+Скоро добавим конструктор:
+</p>
 
-Панель управления столовой
 
+<p>
+🍝 Макароны + 🍗 Котлета + 🥤 Компот
 </p>
 
 
@@ -575,13 +777,45 @@ placeholder="🔎 Поиск">
 
 
 
+
+
+<!-- БАНЫ -->
+
+<section id="bans" class="hidden">
+
+
+<div class="card">
+
+
+<h1>
+🚫 Блокировки
+</h1>
+
+
+<div id="banList">
+
+Пока пусто
+
 </div>
 
 
 </div>
 
 
+</section>
+
+
+
+
+
+
+</main>
+
 </div>
+
+</div>
+
+
 
 
 
@@ -589,27 +823,26 @@ placeholder="🔎 Поиск">
 <script>
 
 
-const SUPABASE_URL =
+// ============================
+// SUPABASE
+// ============================
 
+
+const SUPABASE_URL =
 "https://lzbhpdievyemsioluvyc.supabase.co";
 
 
-
 const SUPABASE_KEY =
-
-"ТВОЙ_SB_PUBLISHABLE_KEY";
+"sb_publishable_qvh9ZOOXqlEAsBexdJfdlA_UGu3jsCG";
 
 
 
 const db =
-
 supabase.createClient(
-
 SUPABASE_URL,
-
 SUPABASE_KEY
-
 );
+
 
 
 
@@ -618,13 +851,48 @@ let products=[];
 
 
 
-console.log("ADMIN START");
-// =================================
+
+
+// ============================
+// ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+// ============================
+
+
+function openTab(id){
+
+
+document
+.querySelectorAll(".content section")
+.forEach(section=>{
+
+section.classList.add("hidden");
+
+});
+
+
+document
+.getElementById(id)
+.classList.remove("hidden");
+
+
+}
+
+
+
+
+
+
+
+// ============================
 // ВХОД
-// =================================
+// ============================
 
 
 async function login(){
+
+
+console.log("login работает");
+
 
 
 let email =
@@ -636,14 +904,12 @@ document.getElementById("password").value;
 
 
 
-let msg =
-document.getElementById("loginMessage");
+let errorBox =
+document.getElementById("loginError");
 
 
 
-msg.innerHTML="Проверка...";
-
-
+errorBox.innerHTML="";
 
 
 
@@ -652,7 +918,6 @@ const {data,error}=
 await db.auth.signInWithPassword({
 
 email,
-
 password
 
 });
@@ -660,19 +925,22 @@ password
 
 
 
-
 if(error){
 
 
-msg.innerHTML=
+errorBox.innerHTML=
 
 `
-<div class="message error">
+<div class="error">
+
 ${error.message}
+
 </div>
 `;
 
+
 return;
+
 
 }
 
@@ -680,10 +948,7 @@ return;
 
 
 
-
-const user=data.user;
-
-
+let user=data.user;
 
 
 
@@ -706,6 +971,7 @@ user.id
 
 
 
+
 if(adminError || !admin){
 
 
@@ -714,15 +980,21 @@ await db.auth.signOut();
 
 
 
-msg.innerHTML=
+errorBox.innerHTML=
 
 `
-<div class="message error">
+<div class="error">
 
 Нет прав администратора
 
+<br>
+
+${adminError?.message || ""}
+
 </div>
 `;
+
+
 
 return;
 
@@ -741,10 +1013,246 @@ document
 
 
 document
-.getElementById("adminPanel")
+.getElementById("adminPage")
 .classList.remove("hidden");
 
 
+
+
+loadProducts();
+
+
+loadReviews();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ============================
+// ПРОВЕРКА СЕССИИ
+// ============================
+
+
+async function checkSession(){
+
+
+const {data}=
+
+await db.auth.getSession();
+
+
+
+if(!data.session)
+return;
+
+
+
+
+const check=
+
+await db
+
+.from("admin_users")
+
+.select("*")
+
+.eq(
+"user_id",
+data.session.user.id
+)
+
+.single();
+
+
+
+
+
+if(!check.error){
+
+
+document
+.getElementById("loginPage")
+.classList.add("hidden");
+
+
+
+document
+.getElementById("adminPage")
+.classList.remove("hidden");
+
+
+
+loadProducts();
+
+
+loadReviews();
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+// ============================
+// ДОБАВЛЕНИЕ ТОВАРА
+// ============================
+
+
+async function addProduct(){
+
+
+
+let item={
+
+
+
+name:
+
+document.getElementById("productName").value,
+
+
+
+category:
+
+document.getElementById("productCategory").value,
+
+
+
+price:
+
+Number(
+document.getElementById("productPrice").value
+),
+
+
+
+weight:
+
+document.getElementById("productWeight").value,
+
+
+
+calories:
+
+Number(
+document.getElementById("productCalories").value || 0
+),
+
+
+
+proteins:
+
+Number(
+document.getElementById("productProtein").value || 0
+),
+
+
+
+fats:
+
+Number(
+document.getElementById("productFat").value || 0
+),
+
+
+
+carbs:
+
+Number(
+document.getElementById("productCarbs").value || 0
+),
+
+
+
+stock:
+
+Number(
+document.getElementById("productStock").value || 0
+),
+
+
+
+desc:
+
+document.getElementById("productDesc").value,
+
+
+
+is_available:true
+
+
+};
+
+
+
+
+
+
+if(!item.name){
+
+
+alert(
+"Введите название"
+);
+
+return;
+
+}
+
+
+
+
+
+
+
+const {error}=
+
+await db
+
+.from("menu_items")
+
+.insert(item);
+
+
+
+
+
+
+
+if(error){
+
+
+alert(
+error.message
+);
+
+return;
+
+
+}
+
+
+
+
+
+alert(
+"✅ Блюдо добавлено"
+);
 
 
 
@@ -759,9 +1267,414 @@ loadProducts();
 
 
 
-// =================================
+// ============================
+// ЗАГРУЗКА ТОВАРОВ
+// ============================
+
+
+async function loadProducts(){
+
+
+
+let box =
+document.getElementById("productList");
+
+
+
+box.innerHTML="Загрузка...";
+
+
+
+
+
+const {data,error}=
+
+await db
+
+.from("menu_items")
+
+.select("*")
+
+.order(
+"id",
+{
+ascending:false
+}
+);
+
+
+
+
+
+if(error){
+
+
+box.innerHTML=
+error.message;
+
+
+return;
+
+
+}
+
+
+
+
+products=data;
+
+
+
+document
+.getElementById("countProducts")
+.innerText=data.length;
+
+
+
+
+renderProducts(data);
+
+
+
+}
+
+
+
+
+
+function renderProducts(list){
+
+
+
+let box =
+document.getElementById("productList");
+
+
+
+box.innerHTML=
+
+list.map(p=>`
+
+
+<div class="product">
+
+
+<h2>
+${p.name}
+</h2>
+
+
+<p>
+${p.category}
+</p>
+
+
+<h2>
+💰 ${p.price} ₽
+</h2>
+
+
+<p>
+⚖ ${p.weight || "-"}
+</p>
+
+
+<p>
+🔥 ${p.calories || 0} ккал
+</p>
+
+
+<p>
+🥩 ${p.proteins || 0}
+🧈 ${p.fats || 0}
+🍞 ${p.carbs || 0}
+</p>
+
+
+<p>
+📦 ${p.stock || 0} шт.
+</p>
+
+
+
+<button class="red"
+onclick="deleteProduct(${p.id})">
+
+🗑 Удалить
+
+</button>
+
+
+
+</div>
+
+
+`).join("");
+
+
+
+}
+
+
+
+
+
+
+async function deleteProduct(id){
+
+
+if(!confirm(
+"Удалить?"
+))
+return;
+
+
+
+
+const {error}=
+
+await db
+
+.from("menu_items")
+
+.delete()
+
+.eq(
+"id",
+id
+);
+
+
+
+
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+
+
+loadProducts();
+
+
+}
+
+
+
+
+
+
+document
+.getElementById("searchProduct")
+.addEventListener(
+"input",
+function(){
+
+let text=this.value.toLowerCase();
+
+
+renderProducts(
+
+products.filter(p=>
+
+p.name
+.toLowerCase()
+.includes(text)
+
+)
+
+);
+
+
+});
+
+
+
+// ============================
+// ОТЗЫВЫ
+// ============================
+
+
+async function loadReviews(){
+
+
+let box =
+document.getElementById("reviewList");
+
+
+box.innerHTML="Загрузка...";
+
+
+
+const {data,error}=
+
+await db
+
+.from("reviews")
+
+.select("*")
+
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
+
+
+
+
+if(error){
+
+
+box.innerHTML=
+error.message;
+
+
+return;
+
+
+}
+
+
+
+
+
+document
+.getElementById("countReviews")
+.innerText =
+data.length;
+
+
+
+if(!data.length){
+
+
+box.innerHTML="Отзывов нет";
+
+
+return;
+
+
+}
+
+
+
+
+
+box.innerHTML =
+
+data.map(r=>`
+
+
+<div class="product">
+
+
+<h3>
+
+${r.author || r.user_name || "Гость"}
+
+</h3>
+
+
+<p>
+
+${r.text || r.comment || ""}
+
+</p>
+
+
+<small>
+
+${r.created_at || ""}
+
+</small>
+
+
+
+<br><br>
+
+
+<button class="red"
+
+onclick="deleteReview('${r.id}')">
+
+🗑 Удалить
+
+</button>
+
+
+</div>
+
+
+`).join("");
+
+
+
+}
+
+
+
+
+
+async function deleteReview(id){
+
+
+if(!confirm(
+"Удалить отзыв?"
+))
+return;
+
+
+
+
+const {error}=
+
+await db
+
+.from("reviews")
+
+.delete()
+
+.eq(
+"id",
+id
+);
+
+
+
+
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+
+
+loadReviews();
+
+
+}
+
+
+
+
+
+
+
+
+// ============================
 // ВЫХОД
-// =================================
+// ============================
 
 
 async function logout(){
@@ -781,1729 +1694,18 @@ location.reload();
 
 
 
+// ============================
+// ЗАПУСК
+// ============================
 
-// =================================
-// ВКЛАДКИ
-// =================================
 
+checkSession();
 
-function openTab(id){
 
 
+</script>
 
-document
 
-.querySelectorAll(".content section")
+</body>
 
-.forEach(x=>{
-
-x.classList.add("hidden");
-
-});
-
-
-
-document
-
-.getElementById(id)
-
-.classList.remove("hidden");
-
-
-}
-
-
-
-
-
-
-
-
-
-// =================================
-// ЗАГРУЗКА ТОВАРОВ
-// =================================
-
-
-
-async function loadProducts(){
-
-
-
-let box=
-
-document.getElementById("productsList");
-
-
-
-box.innerHTML="Загрузка...";
-
-
-
-
-
-
-const {data,error}=
-
-await db
-
-.from("menu_items")
-
-.select("*")
-
-.order(
-"id",
-{
-ascending:false
-}
-
-);
-
-
-
-
-
-
-if(error){
-
-
-box.innerHTML=
-
-`
-<div class="message error">
-
-${error.message}
-
-</div>
-`;
-
-return;
-
-
-}
-
-
-
-
-
-
-products=data;
-
-
-renderProducts(data);
-
-
-}
-
-
-
-
-
-
-
-
-function renderProducts(list){
-
-
-let box=
-
-document.getElementById("productsList");
-
-
-
-if(!list.length){
-
-
-box.innerHTML=
-
-"Товаров нет";
-
-
-return;
-
-
-}
-
-
-
-
-
-box.innerHTML=
-
-list.map(p=>`
-
-
-
-<div class="product">
-
-
-
-${p.image_url ?
-
-`
-
-<img src="${p.image_url}">
-
-`
-
-:
-
-"📷 Нет фото"
-
-}
-
-
-
-
-<h2>
-
-${p.name}
-
-</h2>
-
-
-
-<p>
-
-Категория:
-${p.category || "-"}
-
-</p>
-
-
-
-<p>
-
-💰 ${p.price} ₽
-
-</p>
-
-
-
-<p>
-
-${p.description || p.desc || ""}
-
-</p>
-
-
-
-<p>
-
-🔥 ${p.calories || 0} ккал
-
-</p>
-
-
-
-<p>
-
-🥩 ${p.proteins || 0}
-
-🧈 ${p.fats || 0}
-
-🍞 ${p.carbs || 0}
-
-</p>
-
-
-
-<button onclick="editProduct(${p.id})">
-
-✏ Изменить
-
-</button>
-
-
-
-<button class="red"
-
-onclick="deleteProduct(${p.id})">
-
-🗑 Удалить
-
-</button>
-
-
-
-
-</div>
-
-
-
-`).join("");
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// =================================
-// ДОБАВЛЕНИЕ ТОВАРА
-// =================================
-
-
-
-function openCreate(){
-
-
-let name=
-
-prompt(
-"Название блюда"
-);
-
-
-
-if(!name)
-return;
-
-
-
-
-let price=
-
-prompt(
-"Цена"
-);
-
-
-
-createProduct({
-
-name,
-
-price:Number(price)
-
-});
-
-
-}
-
-
-
-
-
-
-
-
-async function createProduct(item){
-
-
-
-const {error}=
-
-await db
-
-.from("menu_items")
-
-.insert(item);
-
-
-
-
-
-if(error){
-
-
-alert(error.message);
-
-return;
-
-
-}
-
-
-
-
-alert(
-"Добавлено"
-);
-
-
-
-loadProducts();
-
-
-}
-
-
-
-
-
-
-// =================================
-// УДАЛЕНИЕ
-// =================================
-
-
-
-async function deleteProduct(id){
-
-
-
-if(!confirm(
-"Удалить блюдо?"
-))
-
-return;
-
-
-
-
-
-const {error}=
-
-await db
-
-.from("menu_items")
-
-.delete()
-
-.eq(
-"id",
-id
-);
-
-
-
-
-
-if(error){
-
-
-alert(error.message);
-
-return;
-
-
-}
-
-
-
-
-loadProducts();
-
-
-
-}
-
-
-
-
-
-
-
-// =================================
-// ПОИСК
-// =================================
-
-
-document
-
-.getElementById("searchProduct")
-
-.addEventListener(
-"input",
-function(){
-
-
-
-let text=
-
-this.value.toLowerCase();
-
-
-
-
-let result=
-
-products.filter(p=>
-
-
-(
-p.name+
-
-" "+
-
-p.category+
-
-" "+
-
-(p.description||"")
-
-)
-
-.toLowerCase()
-
-.includes(text)
-
-
-);
-
-
-
-
-
-renderProducts(result);
-
-
-
-});
-    // =================================
-// МОДАЛЬНОЕ ОКНО ТОВАРА
-// =================================
-
-
-let editId = null;
-
-
-
-function openCreate(){
-
-
-editId=null;
-
-
-showEditor();
-
-
-}
-
-
-
-
-
-
-function editProduct(id){
-
-
-let product =
-
-products.find(
-x=>x.id===id
-);
-
-
-
-if(!product)
-return;
-
-
-
-editId=id;
-
-
-
-showEditor(product);
-
-
-
-}
-
-
-
-
-
-
-
-function showEditor(product={}){
-
-
-
-let old=document.getElementById("editor");
-
-
-
-if(old)
-old.remove();
-
-
-
-
-
-let modal=document.createElement("div");
-
-
-modal.id="editor";
-
-
-
-modal.style=`
-
-position:fixed;
-
-top:0;
-
-left:0;
-
-width:100%;
-
-height:100%;
-
-background:#000b;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-z-index:100;
-
-`;
-
-
-
-
-
-modal.innerHTML=
-
-`
-
-<div class="card"
-
-style="width:500px;max-height:90vh;overflow:auto;">
-
-
-
-<h2>
-
-${editId ? "✏ Изменить блюдо" : "➕ Новое блюдо"}
-
-</h2>
-
-
-
-
-<input id="pName"
-
-placeholder="Название"
-
-value="${product.name || ""}"
-
->
-
-
-
-
-<select id="pCategory">
-
-
-<option value="soup">
-
-🍲 Первое
-
-</option>
-
-
-<option value="main">
-
-🍗 Второе
-
-</option>
-
-
-<option value="garnish">
-
-🍝 Гарнир
-
-</option>
-
-
-<option value="drink">
-
-🥤 Напитки
-
-</option>
-
-
-<option value="dessert">
-
-🍰 Десерт
-
-</option>
-
-
-<option value="bakery">
-
-🥐 Выпечка
-
-</option>
-
-
-
-</select>
-
-
-
-
-
-
-<input id="pPrice"
-
-type="number"
-
-placeholder="Цена"
-
-value="${product.price || ""}"
-
->
-
-
-
-
-
-<input id="pWeight"
-
-placeholder="Вес"
-
-value="${product.weight || ""}"
-
->
-
-
-
-
-
-<textarea id="pDesc"
-
-placeholder="Описание">
-
-${product.description || product.desc || ""}
-
-</textarea>
-
-
-
-
-
-
-
-<h3>
-
-КБЖУ
-
-</h3>
-
-
-
-<input id="pCalories"
-
-placeholder="Калории"
-
-value="${product.calories || 0}"
-
->
-
-
-
-<input id="pProtein"
-
-placeholder="Белки"
-
-value="${product.proteins || 0}"
-
->
-
-
-
-<input id="pFat"
-
-placeholder="Жиры"
-
-value="${product.fats || 0}"
-
->
-
-
-
-<input id="pCarbs"
-
-placeholder="Углеводы"
-
-value="${product.carbs || 0}"
-
->
-
-
-
-
-
-
-<h3>
-
-📷 Фото
-
-</h3>
-
-
-
-<input
-
-id="pImage"
-
-type="file"
-
-accept="image/*"
-
->
-
-
-
-
-
-<img id="preview"
-
-style="width:100%;border-radius:15px;margin-top:10px;"
-
-src="${product.image_url || ""}"
-
->
-
-
-
-
-
-
-<button onclick="saveProduct()">
-
-💾 Сохранить
-
-</button>
-
-
-
-
-<button onclick="closeEditor()"
-
-class="red">
-
-Отмена
-
-</button>
-
-
-
-
-</div>
-
-`;
-
-
-
-
-document.body.appendChild(modal);
-
-
-
-
-
-
-document
-
-.getElementById("pImage")
-
-.onchange=function(){
-
-
-
-let file=this.files[0];
-
-
-if(!file)
-return;
-
-
-
-document
-
-.getElementById("preview")
-
-.src=
-
-URL.createObjectURL(file);
-
-
-
-};
-
-
-
-}
-
-
-
-
-
-
-
-
-
-function closeEditor(){
-
-
-document
-
-.getElementById("editor")
-
-.remove();
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// =================================
-// СОХРАНЕНИЕ ТОВАРА
-// =================================
-
-
-async function saveProduct(){
-
-
-let imageUrl=null;
-
-
-
-const imageInput =
-document.getElementById("pImage");
-
-
-
-let file=null;
-
-
-
-if(imageInput){
-
-file=imageInput.files[0];
-
-}
-
-
-
-
-if(file){
-
-
-imageUrl =
-await uploadImage(file);
-
-
-}
-
-
-
-
-
-if(file){
-
-
-imageUrl=
-
-await uploadImage(file);
-
-
-}
-
-
-
-
-
-
-
-let item={
-
-
-
-name:
-
-document
-
-.getElementById("pName")
-
-.value,
-
-
-
-category:
-
-document
-
-.getElementById("pCategory")
-
-.value,
-
-
-
-price:
-
-Number(
-
-document
-
-.getElementById("pPrice")
-
-.value
-
-),
-
-
-
-weight:
-
-document
-
-.getElementById("pWeight")
-
-.value,
-
-
-
-description:
-
-document
-
-.getElementById("pDesc")
-
-.value,
-
-
-
-calories:
-
-Number(
-
-document
-
-.getElementById("pCalories")
-
-.value
-
-||0),
-
-
-
-proteins:
-
-Number(
-
-document
-
-.getElementById("pProtein")
-
-.value
-
-||0),
-
-
-
-fats:
-
-Number(
-
-document
-
-.getElementById("pFat")
-
-.value
-
-||0),
-
-
-
-carbs:
-
-Number(
-
-document
-
-.getElementById("pCarbs")
-
-.value
-
-||0)
-
-
-
-
-
-};
-
-
-
-
-
-
-
-if(imageUrl)
-
-item.image_url=imageUrl;
-
-
-
-
-
-
-
-let result;
-
-
-
-
-
-
-if(editId){
-
-
-result=
-
-await db
-
-.from("menu_items")
-
-.update(item)
-
-.eq(
-
-"id",
-
-editId
-
-);
-
-
-
-}
-
-else{
-
-
-result=
-
-await db
-
-.from("menu_items")
-
-.insert(item);
-
-
-
-}
-
-
-
-
-
-
-
-if(result.error){
-
-
-alert(
-
-result.error.message
-
-);
-
-
-return;
-
-
-}
-
-
-
-
-
-
-
-alert(
-"✅ Сохранено"
-);
-
-
-
-closeEditor();
-
-
-loadProducts();
-
-
-
-}
-
-
-
-
-
-
-
-
-// =================================
-// ЗАГРУЗКА ФОТО
-// =================================
-
-
-async function uploadImage(file){
-
-
-
-let filename=
-
-Date.now()
-
-+
-
-"-"
-
-+
-
-file.name;
-
-
-
-
-
-
-const {error}=
-
-await db.storage
-
-.from("menu-images")
-
-.upload(
-
-filename,
-
-file
-
-);
-
-
-
-
-
-
-
-if(error){
-
-
-alert(
-"Ошибка фото: "+error.message
-);
-
-
-return null;
-
-
-}
-
-
-
-
-
-
-
-const url=
-
-db.storage
-
-.from("menu-images")
-
-.getPublicUrl(filename);
-
-
-
-return url.data.publicUrl;
-
-
-
-}
-    // =================================
-// ПРОВЕРКА АВТОРИЗАЦИИ
-// =================================
-
-
-async function checkAdminSession(){
-
-
-const {
-
-data
-
-}=
-
-await db.auth.getSession();
-
-
-
-
-if(!data.session)
-
-return;
-
-
-
-
-
-
-const {data:admin}=
-
-await db
-
-.from("admin_users")
-
-.select("*")
-
-.eq(
-
-"user_id",
-
-data.session.user.id
-
-)
-
-.single();
-
-
-
-
-
-
-if(admin){
-
-
-
-document
-
-.getElementById("loginPage")
-
-.classList.add("hidden");
-
-
-
-document
-
-.getElementById("adminPanel")
-
-.classList.remove("hidden");
-
-
-
-loadProducts();
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-checkAdminSession();
-
-
-
-
-
-
-
-
-
-// =================================
-// ОТЗЫВЫ В АДМИНКЕ
-// =================================
-
-
-
-async function loadReviews(){
-
-
-
-let box=
-
-document.getElementById("reviewsList");
-
-
-
-box.innerHTML="Загрузка...";
-
-
-
-
-
-const {data,error}=
-
-await db
-
-.from("reviews")
-
-.select("*")
-
-.order(
-
-"created_at",
-
-{
-
-ascending:false
-
-}
-
-);
-
-
-
-
-
-if(error){
-
-
-box.innerHTML=
-
-`
-<div class="message error">
-${error.message}
-</div>
-`;
-
-return;
-
-}
-
-
-
-
-
-
-
-if(!data.length){
-
-
-box.innerHTML=
-
-"Отзывов нет";
-
-
-return;
-
-
-}
-
-
-
-
-
-
-
-box.innerHTML=data.map(r=>`
-
-
-<div class="product">
-
-
-<h3>
-
-⭐ ${r.stars || 5}/5
-
-</h3>
-
-
-
-<p>
-
-${r.text}
-
-</p>
-
-
-<small>
-
-${r.created_at}
-
-</small>
-
-
-
-
-<br>
-
-
-
-<button
-
-class="red"
-
-onclick="deleteReview('${r.id}')">
-
-🗑 Удалить
-
-</button>
-
-
-
-</div>
-
-
-
-`).join("");
-
-
-
-}
-
-
-
-
-
-
-
-async function deleteReview(id){
-
-
-
-if(
-!confirm(
-"Удалить отзыв?"
-)
-)
-
-return;
-
-
-
-
-
-const {error}=
-
-await db
-
-.from("reviews")
-
-.delete()
-
-.eq(
-
-"id",
-
-id
-
-);
-
-
-
-
-
-if(error)
-
-alert(error.message);
-
-else
-
-loadReviews();
-
-
-
-}
-
-
-
-
-
-
-
-
-// =================================
-// УДАЛЕНИЕ ФОТО
-// =================================
-
-
-
-async function deleteImage(url){
-
-
-
-if(!url)
-
-return;
-
-
-
-
-
-let file=
-
-url.split("/").pop();
-
-
-
-
-
-await db.storage
-
-.from("menu-images")
-
-.remove([file]);
-
-
-
-}
-
-
-
-
-
-
-
-
-// =================================
-// УДАЛЕНИЕ ТОВАРА С ФОТО
-// =================================
-
-
-// заменяем старую deleteProduct
-
-
-async function deleteProduct(id){
-
-
-
-if(
-!confirm(
-"Удалить блюдо?"
-)
-
-)
-
-return;
-
-
-
-
-
-
-let item=
-
-products.find(
-
-x=>x.id===id
-
-);
-
-
-
-
-
-
-
-if(item?.image_url){
-
-
-await deleteImage(
-item.image_url
-);
-
-
-}
-
-
-
-
-
-
-
-const {error}=
-
-await db
-
-.from("menu_items")
-
-.delete()
-
-.eq(
-
-"id",
-
-id
-
-);
-
-
-
-
-
-
-
-if(error){
-
-
-alert(error.message);
-
-return;
-
-
-}
-
-
-
-
-loadProducts();
-
-
-
-}
-
-
-
-
-
-
-
-
-// =================================
-// АВТООБНОВЛЕНИЕ
-// =================================
-
-
-
-setInterval(()=>{
-
-
-if(
-!document
-
-.getElementById("adminPanel")
-
-.classList.contains("hidden")
-
-){
-
-
-loadProducts();
-
-
-}
-
-
-},60000);
+</html>
