@@ -791,9 +791,9 @@ box.innerHTML=items.map(x=>`
 
 <img
 
-src="${x.image_url || 'https://via.placeholder.com/400'}"
+src="${x.image_url || './no-image.png'}"
 
-onerror="this.src='https://via.placeholder.com/400'"
+onerror="this.style.display='none'"
 
 >
 
