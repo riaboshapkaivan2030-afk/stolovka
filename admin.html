@@ -5,86 +5,120 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Столовка Admin</title>
+<title>Столовка — Admin</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <style>
 
 *{
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
 
+
 body{
-margin:0;
-background:#0b0f14;
-color:#fff;
+
+    margin:0;
+    background:#0f1117;
+    color:white;
+
 }
 
 
 /* LOGIN */
 
 #loginPage{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
+
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
 }
+
 
 
 .login-box{
-background:#171d27;
-width:380px;
-padding:30px;
-border-radius:25px;
-box-shadow:0 20px 50px #000;
+
+    width:380px;
+    background:#191f2b;
+    padding:30px;
+    border-radius:25px;
+    box-shadow:0 20px 50px #000;
+
+}
+
+
+h1,h2,h3{
+
+    margin-top:0;
+
 }
 
 
-input,select,textarea{
 
-width:100%;
-padding:12px;
-margin:7px 0;
+input,
+textarea,
+select{
 
-border-radius:12px;
-border:1px solid #3a4555;
 
-background:#222b38;
-color:white;
+    width:100%;
+    padding:13px;
 
-font-size:15px;
+    margin:8px 0;
+
+    border-radius:12px;
+
+    border:1px solid #394354;
+
+    background:#252d3b;
+
+    color:white;
+
+    font-size:15px;
 
 }
+
 
 
 textarea{
-height:100px;
-resize:none;
+
+    min-height:100px;
+
 }
+
+
 
 
 button{
 
-padding:12px 18px;
 
-border:0;
-border-radius:12px;
+    padding:13px;
 
-cursor:pointer;
+    border:0;
 
-font-weight:bold;
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:bold;
 
 }
 
 
-.main-btn{
 
-background:#ff5722;
-color:white;
 
-width:100%;
+.login-btn,
+.save-btn{
+
+
+    width:100%;
+
+    background:#ff5722;
+
+    color:white;
 
 }
 
@@ -92,16 +126,16 @@ width:100%;
 
 .error{
 
-background:#9b2525;
 
-padding:10px;
+    background:#9b2c2c;
 
-border-radius:10px;
+    padding:10px;
 
-margin-top:10px;
+    margin-top:10px;
+
+    border-radius:10px;
 
 }
-
 
 
 
@@ -109,8 +143,11 @@ margin-top:10px;
 
 
 .hidden{
+
 display:none!important;
+
 }
+
 
 
 .layout{
@@ -125,15 +162,17 @@ min-height:100vh;
 
 .sidebar{
 
+
+width:260px;
+
+background:#171d28;
+
+padding:20px;
+
 position:fixed;
 
 height:100vh;
 
-width:260px;
-
-background:#151b24;
-
-padding:20px;
 
 }
 
@@ -141,21 +180,25 @@ padding:20px;
 
 .logo{
 
+
 font-size:26px;
 
 font-weight:bold;
 
-margin-bottom:30px;
+margin-bottom:35px;
+
 
 }
 
 
 
-.nav button{
+
+.menu button{
+
 
 width:100%;
 
-background:#202938;
+background:#232c3b;
 
 color:white;
 
@@ -163,10 +206,12 @@ margin-bottom:10px;
 
 text-align:left;
 
+
 }
 
 
-.nav button:hover{
+
+.menu button:hover{
 
 background:#ff5722;
 
@@ -175,8 +220,8 @@ background:#ff5722;
 
 
 
-
 .content{
+
 
 margin-left:260px;
 
@@ -184,13 +229,17 @@ padding:30px;
 
 width:100%;
 
+
 }
+
+
 
 
 
 .card{
 
-background:#171d27;
+
+background:#191f2b;
 
 padding:25px;
 
@@ -198,13 +247,17 @@ border-radius:22px;
 
 margin-bottom:20px;
 
-box-shadow:0 10px 30px #0006;
+box-shadow:0 10px 30px #0005;
+
 
 }
 
 
 
+
+
 .grid{
+
 
 display:grid;
 
@@ -213,70 +266,79 @@ repeat(auto-fit,minmax(220px,1fr));
 
 gap:20px;
 
+
 }
 
 
+
 .stat{
+
 
 font-size:40px;
 
 font-weight:bold;
 
-}
-
-
-
-.orange{
-
-background:#ff5722;
-color:white;
 
 }
+
+
+
 
 
 .red{
 
-background:#d32f2f;
+
+background:#c62828;
 
 color:white;
+
 
 }
 
 
-
 .green{
+
 
 background:#2e7d32;
 
 color:white;
 
+
 }
+
+
+.orange{
+
+
+background:#ff5722;
+
+color:white;
+
+
+}
+
 
 
 
 .product{
 
-background:#202938;
+
+background:#222b38;
 
 padding:20px;
 
-border-radius:18px;
+border-radius:15px;
 
 margin-top:15px;
 
-}
-
-
-
-.product h2{
-
-margin-top:0;
 
 }
+
 
 
 
 @media(max-width:800px){
+
 
 .sidebar{
 
@@ -302,6 +364,8 @@ display:block;
 
 }
 
+
+
 }
 
 
@@ -313,7 +377,9 @@ display:block;
 <body>
 
 
+
 <!-- ВХОД -->
+
 
 <div id="loginPage">
 
@@ -322,12 +388,15 @@ display:block;
 
 
 <h1>
-🔐 Админ вход
+🔐 Вход
 </h1>
 
 
+
 <input id="email"
+type="email"
 placeholder="Email">
+
 
 
 <input id="password"
@@ -336,12 +405,13 @@ placeholder="Пароль">
 
 
 
-<button class="main-btn"
+<button class="login-btn"
 onclick="login()">
 
 Войти
 
 </button>
+
 
 
 <div id="loginError"></div>
@@ -359,10 +429,13 @@ onclick="login()">
 <!-- АДМИНКА -->
 
 
-<div id="adminPage" class="hidden">
+<div id="adminPage"
+class="hidden">
+
 
 
 <div class="layout">
+
 
 
 <aside class="sidebar">
@@ -376,42 +449,55 @@ onclick="login()">
 
 
 
-<div class="nav">
+<div class="menu">
 
 
 <button onclick="openTab('home')">
+
 🏠 Главная
+
 </button>
+
 
 
 <button onclick="openTab('products')">
+
 🍔 Блюда
+
 </button>
+
 
 
 <button onclick="openTab('reviews')">
+
 ⭐ Отзывы
+
 </button>
+
 
 
 <button onclick="openTab('combos')">
+
 🔥 Комбо
+
 </button>
+
 
 
 <button onclick="openTab('bans')">
+
 🚫 Баны
+
 </button>
 
-
-<button onclick="openTab('stats')">
-📊 Статистика
-</button>
 
 
 <button onclick="logout()">
+
 🚪 Выйти
+
 </button>
+
 
 
 </div>
@@ -423,12 +509,9 @@ onclick="login()">
 
 
 
-
 <main class="content">
 
 
-
-<!-- ГЛАВНАЯ -->
 
 <section id="home">
 
@@ -438,7 +521,9 @@ onclick="login()">
 </h1>
 
 
+
 <div class="grid">
+
 
 
 <div class="card">
@@ -451,7 +536,10 @@ onclick="login()">
 0
 </div>
 
+
 </div>
+
+
 
 
 
@@ -465,7 +553,10 @@ onclick="login()">
 0
 </div>
 
+
 </div>
+
+
 
 
 
@@ -479,10 +570,13 @@ onclick="login()">
 0
 </div>
 
+
 </div>
 
 
+
 </div>
+
 
 
 </section>
@@ -491,10 +585,9 @@ onclick="login()">
 
 
 
-<!-- БЛЮДА -->
+<section id="products"
+class="hidden">
 
-
-<section id="products" class="hidden">
 
 
 <div class="card">
@@ -505,12 +598,13 @@ onclick="login()">
 </h1>
 
 
-<input id="name"
-placeholder="Название блюда">
+
+<input id="productName"
+placeholder="Название">
 
 
 
-<select id="category">
+<select id="productCategory">
 
 <option>
 🍲 Первые блюда
@@ -532,63 +626,63 @@ placeholder="Название блюда">
 🍰 Десерты
 </option>
 
+
 </select>
 
 
 
-<input id="price"
+<input id="productPrice"
 type="number"
 placeholder="Цена ₽">
 
 
 
-<input id="weight"
-placeholder="Вес порции (например 250 г)">
+<input id="productWeight"
+placeholder="Вес">
 
 
 
-<h2>
+<h3>
 🔥 КБЖУ
-</h2>
+</h3>
 
 
-<input id="calories"
+
+<input id="productCalories"
 placeholder="Калории">
 
 
-
-<input id="proteins"
+<input id="productProtein"
 placeholder="Белки">
 
 
-
-<input id="fats"
+<input id="productFat"
 placeholder="Жиры">
 
 
-
-<input id="carbs"
+<input id="productCarbs"
 placeholder="Углеводы">
 
 
 
-<input id="stock"
+<input id="productStock"
 type="number"
-placeholder="Количество порций">
+placeholder="Количество">
 
 
 
-<textarea id="description"
+<textarea id="productDesc"
 placeholder="Описание"></textarea>
 
 
 
-<button class="main-btn"
+<button class="save-btn"
 onclick="addProduct()">
 
-💾 Добавить
+💾 Сохранить
 
 </button>
+
 
 
 </div>
@@ -601,17 +695,18 @@ onclick="addProduct()">
 
 
 <h1>
-Все блюда
+Список блюд
 </h1>
 
 
-<input id="search"
-placeholder="🔎 Поиск блюда"
-oninput="searchProducts()">
+<input id="searchProduct"
+placeholder="🔎 Поиск">
 
 
 
-<div id="productsList"></div>
+<div id="productList">
+
+</div>
 
 
 </div>
@@ -629,18 +724,24 @@ oninput="searchProducts()">
 ⭐ Отзывы
 </h1>
 
-<button class="main-btn"
+
+<button class="orange"
 onclick="loadReviews()">
+
 Обновить отзывы
+
 </button>
 
 
-<div id="reviewsList"></div>
+<div id="reviewList">
+
+</div>
 
 
 </div>
 
 </section>
+
 
 
 
@@ -654,13 +755,14 @@ onclick="loadReviews()">
 <div class="card">
 
 <h1>
-🔥 Комбо наборы
+🔥 Комбо
 </h1>
 
 
 <p>
-Будет конструктор:
+Скоро добавим конструктор:
 </p>
+
 
 <p>
 🍝 Макароны + 🍗 Котлета + 🥤 Компот
@@ -676,6 +778,7 @@ onclick="loadReviews()">
 
 
 
+
 <!-- БАНЫ -->
 
 <section id="bans" class="hidden">
@@ -683,12 +786,13 @@ onclick="loadReviews()">
 
 <div class="card">
 
+
 <h1>
-🚫 Заблокированные пользователи
+🚫 Блокировки
 </h1>
 
 
-<div id="bansList">
+<div id="banList">
 
 Пока пусто
 
@@ -705,41 +809,6 @@ onclick="loadReviews()">
 
 
 
-<!-- СТАТИСТИКА -->
-
-<section id="stats" class="hidden">
-
-
-<div class="card">
-
-<h1>
-📊 Статистика
-</h1>
-
-
-<p>
-Скоро подключим:
-</p>
-
-
-<ul>
-
-<li>Просмотры блюд</li>
-
-<li>Популярные товары</li>
-
-<li>Продажи</li>
-
-</ul>
-
-
-</div>
-
-
-</section>
-
-
-
 </main>
 
 </div>
@@ -750,12 +819,13 @@ onclick="loadReviews()">
 
 
 
+
 <script>
 
 
-// ==========================
+// ============================
 // SUPABASE
-// ==========================
+// ============================
 
 
 const SUPABASE_URL =
@@ -766,6 +836,7 @@ const SUPABASE_KEY =
 "sb_publishable_qvh9ZOOXqlEAsBexdJfdlA_UGu3jsCG";
 
 
+
 const db =
 supabase.createClient(
 SUPABASE_URL,
@@ -774,14 +845,17 @@ SUPABASE_KEY
 
 
 
+
+
 let products=[];
 
 
 
 
-// ==========================
-// ВКЛАДКИ
-// ==========================
+
+// ============================
+// ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+// ============================
 
 
 function openTab(id){
@@ -789,9 +863,9 @@ function openTab(id){
 
 document
 .querySelectorAll(".content section")
-.forEach(x=>{
+.forEach(section=>{
 
-x.classList.add("hidden");
+section.classList.add("hidden");
 
 });
 
@@ -808,17 +882,21 @@ document
 
 
 
-// ==========================
+
+// ============================
 // ВХОД
-// ==========================
+// ============================
 
 
 async function login(){
 
 
+console.log("login работает");
+
+
 
 let email =
-document.getElementById("email").value;
+document.getElementById("email").value.trim();
 
 
 let password =
@@ -826,12 +904,12 @@ document.getElementById("password").value;
 
 
 
-let box =
+let errorBox =
 document.getElementById("loginError");
 
 
 
-box.innerHTML="";
+errorBox.innerHTML="";
 
 
 
@@ -850,17 +928,23 @@ password
 if(error){
 
 
-box.innerHTML=
+errorBox.innerHTML=
 
 `
 <div class="error">
+
 ${error.message}
+
 </div>
 `;
 
+
 return;
 
+
 }
+
+
 
 
 
@@ -868,7 +952,7 @@ let user=data.user;
 
 
 
-const admin=
+const {data:admin,error:adminError}=
 
 await db
 
@@ -887,31 +971,36 @@ user.id
 
 
 
-if(admin.error){
+
+if(adminError || !admin){
+
 
 
 await db.auth.signOut();
 
 
 
-box.innerHTML=
+errorBox.innerHTML=
 
 `
 <div class="error">
 
-Нет доступа администратора
+Нет прав администратора
 
 <br>
 
-${admin.error.message}
+${adminError?.message || ""}
 
 </div>
-
 `;
+
+
 
 return;
 
+
 }
+
 
 
 
@@ -929,8 +1018,8 @@ document
 
 
 
-loadProducts();
 
+loadProducts();
 
 
 loadReviews();
@@ -946,12 +1035,13 @@ loadReviews();
 
 
 
-// ==========================
+
+// ============================
 // ПРОВЕРКА СЕССИИ
-// ==========================
+// ============================
 
 
-async function checkLogin(){
+async function checkSession(){
 
 
 const {data}=
@@ -962,6 +1052,7 @@ await db.auth.getSession();
 
 if(!data.session)
 return;
+
 
 
 
@@ -1001,6 +1092,7 @@ document
 
 loadProducts();
 
+
 loadReviews();
 
 
@@ -1016,9 +1108,9 @@ loadReviews();
 
 
 
-// ==========================
-// ДОБАВЛЕНИЕ БЛЮДА
-// ==========================
+// ============================
+// ДОБАВЛЕНИЕ ТОВАРА
+// ============================
 
 
 async function addProduct(){
@@ -1028,51 +1120,76 @@ async function addProduct(){
 let item={
 
 
+
 name:
-name.value,
+
+document.getElementById("productName").value,
+
 
 
 category:
-category.value,
+
+document.getElementById("productCategory").value,
+
 
 
 price:
-Number(price.value),
+
+Number(
+document.getElementById("productPrice").value
+),
 
 
 
 weight:
-weight.value,
+
+document.getElementById("productWeight").value,
 
 
 
 calories:
-Number(calories.value || 0),
+
+Number(
+document.getElementById("productCalories").value || 0
+),
 
 
 
 proteins:
-Number(proteins.value || 0),
+
+Number(
+document.getElementById("productProtein").value || 0
+),
 
 
 
 fats:
-Number(fats.value || 0),
+
+Number(
+document.getElementById("productFat").value || 0
+),
 
 
 
 carbs:
-Number(carbs.value || 0),
+
+Number(
+document.getElementById("productCarbs").value || 0
+),
 
 
 
 stock:
-Number(stock.value || 0),
+
+Number(
+document.getElementById("productStock").value || 0
+),
 
 
 
 desc:
-description.value,
+
+document.getElementById("productDesc").value,
 
 
 
@@ -1095,8 +1212,8 @@ alert(
 
 return;
 
-
 }
+
 
 
 
@@ -1116,6 +1233,7 @@ await db
 
 
 
+
 if(error){
 
 
@@ -1123,8 +1241,8 @@ alert(
 error.message
 );
 
-
 return;
+
 
 }
 
@@ -1138,41 +1256,9 @@ alert(
 
 
 
-clearForm();
-
-
 loadProducts();
 
 
-
-}
-
-
-
-
-
-function clearForm(){
-
-
-name.value="";
-
-price.value="";
-
-weight.value="";
-
-calories.value="";
-
-proteins.value="";
-
-fats.value="";
-
-carbs.value="";
-
-stock.value="";
-
-description.value="";
-
-
 }
 
 
@@ -1181,23 +1267,21 @@ description.value="";
 
 
 
-
-// ==========================
-// ЗАГРУЗКА БЛЮД
-// ==========================
+// ============================
+// ЗАГРУЗКА ТОВАРОВ
+// ============================
 
 
 async function loadProducts(){
 
 
 
-const box =
-document.getElementById("productsList");
+let box =
+document.getElementById("productList");
 
 
 
-box.innerHTML=
-"Загрузка...";
+box.innerHTML="Загрузка...";
 
 
 
@@ -1226,14 +1310,13 @@ if(error){
 
 
 box.innerHTML=
-
 error.message;
 
 
 return;
 
-}
 
+}
 
 
 
@@ -1242,8 +1325,10 @@ products=data;
 
 
 
-countProducts.innerHTML=
-data.length;
+document
+.getElementById("countProducts")
+.innerText=data.length;
+
 
 
 
@@ -1262,11 +1347,11 @@ function renderProducts(list){
 
 
 let box =
-document.getElementById("productsList");
+document.getElementById("productList");
 
 
 
-box.innerHTML =
+box.innerHTML=
 
 list.map(p=>`
 
@@ -1289,7 +1374,6 @@ ${p.category}
 </h2>
 
 
-
 <p>
 ⚖ ${p.weight || "-"}
 </p>
@@ -1302,23 +1386,13 @@ ${p.category}
 
 <p>
 🥩 ${p.proteins || 0}
-|
 🧈 ${p.fats || 0}
-|
 🍞 ${p.carbs || 0}
 </p>
 
 
-
 <p>
-📦 Остаток:
-${p.stock || 0}
-</p>
-
-
-
-<p>
-${p.desc || ""}
+📦 ${p.stock || 0} шт.
 </p>
 
 
@@ -1329,6 +1403,7 @@ onclick="deleteProduct(${p.id})">
 🗑 Удалить
 
 </button>
+
 
 
 </div>
@@ -1345,40 +1420,11 @@ onclick="deleteProduct(${p.id})">
 
 
 
-
-function searchProducts(){
-
-
-let text =
-search.value.toLowerCase();
-
-
-
-renderProducts(
-
-products.filter(p=>
-
-p.name
-.toLowerCase()
-.includes(text)
-
-)
-
-);
-
-
-}
-
-
-
-
-
-
 async function deleteProduct(id){
 
 
 if(!confirm(
-"Удалить блюдо?"
+"Удалить?"
 ))
 return;
 
@@ -1416,19 +1462,48 @@ loadProducts();
 
 
 }
-  <script>
 
 
-// ==========================
+
+
+
+
+document
+.getElementById("searchProduct")
+.addEventListener(
+"input",
+function(){
+
+let text=this.value.toLowerCase();
+
+
+renderProducts(
+
+products.filter(p=>
+
+p.name
+.toLowerCase()
+.includes(text)
+
+)
+
+);
+
+
+});
+
+
+
+// ============================
 // ОТЗЫВЫ
-// ==========================
+// ============================
 
 
 async function loadReviews(){
 
 
-const box =
-document.getElementById("reviewsList");
+let box =
+document.getElementById("reviewList");
 
 
 box.innerHTML="Загрузка...";
@@ -1458,7 +1533,6 @@ if(error){
 
 
 box.innerHTML=
-
 error.message;
 
 
@@ -1469,18 +1543,23 @@ return;
 
 
 
-countReviews.innerHTML=
-data.length;
 
+
+document
+.getElementById("countReviews")
+.innerText =
+data.length;
 
 
 
 if(!data.length){
 
-box.innerHTML=
-"Отзывов нет";
+
+box.innerHTML="Отзывов нет";
+
 
 return;
+
 
 }
 
@@ -1488,7 +1567,7 @@ return;
 
 
 
-box.innerHTML=
+box.innerHTML =
 
 data.map(r=>`
 
@@ -1543,15 +1622,12 @@ onclick="deleteReview('${r.id}')">
 
 
 
-
-
 async function deleteReview(id){
 
 
 if(!confirm(
 "Удалить отзыв?"
 ))
-
 return;
 
 
@@ -1596,9 +1672,9 @@ loadReviews();
 
 
 
-// ==========================
+// ============================
 // ВЫХОД
-// ==========================
+// ============================
 
 
 async function logout(){
@@ -1618,158 +1694,18 @@ location.reload();
 
 
 
-// ==========================
-// СТАТИСТИКА
-// ==========================
-
-
-async function loadStats(){
-
-
-
-let {count}=
-
-await db
-
-.from("menu_items")
-
-.select(
-"*",
-{
-count:"exact",
-head:true
-}
-);
-
-
-
-countProducts.innerHTML =
-count || 0;
-
-
-
-}
-
-
-
-
-
-
-// ==========================
+// ============================
 // ЗАПУСК
-// ==========================
+// ============================
 
 
-checkLogin();
-
-async function login(){
-
-console.log("Нажата кнопка входа");
-
-
-const email =
-document.getElementById("email").value.trim();
-
-
-const password =
-document.getElementById("password").value;
+checkSession();
 
 
 
-if(!email || !password){
-
-alert("Введите email и пароль");
-
-return;
-
-}
-
-
-
-const {data,error}=await db.auth.signInWithPassword({
-
-email: email,
-
-password: password
-
-});
-
-
-
-if(error){
-
-alert(
-"Ошибка входа:\n"+error.message
-);
-
-return;
-
-}
-
-
-
-const user=data.user;
-
-
-
-const {data:admin,error:adminError}=await db
-
-.from("admin_users")
-
-.select("*")
-
-.eq(
-"user_id",
-user.id
-)
-
-.single();
-
-
-
-
-if(adminError || !admin){
-
-
-await db.auth.signOut();
-
-
-alert(
-"Нет прав администратора"
-);
-
-
-return;
-
-}
-
-
-
-
-document
-.getElementById("loginPage")
-.classList.add("hidden");
-
-
-document
-.getElementById("adminPage")
-.classList.remove("hidden");
-
-
-
-loadProducts();
-
-
-
-loadReviews();
-
-
-
-}
 </script>
 
 
 </body>
 
 </html>
-</body>
