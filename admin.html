@@ -1662,7 +1662,110 @@ count || 0;
 
 checkLogin();
 
+async function login(){
 
+console.log("Нажата кнопка входа");
+
+
+const email =
+document.getElementById("email").value.trim();
+
+
+const password =
+document.getElementById("password").value;
+
+
+
+if(!email || !password){
+
+alert("Введите email и пароль");
+
+return;
+
+}
+
+
+
+const {data,error}=await db.auth.signInWithPassword({
+
+email: email,
+
+password: password
+
+});
+
+
+
+if(error){
+
+alert(
+"Ошибка входа:\n"+error.message
+);
+
+return;
+
+}
+
+
+
+const user=data.user;
+
+
+
+const {data:admin,error:adminError}=await db
+
+.from("admin_users")
+
+.select("*")
+
+.eq(
+"user_id",
+user.id
+)
+
+.single();
+
+
+
+
+if(adminError || !admin){
+
+
+await db.auth.signOut();
+
+
+alert(
+"Нет прав администратора"
+);
+
+
+return;
+
+}
+
+
+
+
+document
+.getElementById("loginPage")
+.classList.add("hidden");
+
+
+document
+.getElementById("adminPage")
+.classList.remove("hidden");
+
+
+
+loadProducts();
+
+
+
+loadReviews();
+
+
+
+}
 </script>
 
 
