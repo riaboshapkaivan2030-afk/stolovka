@@ -1,33 +1,115 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Столовка Admin 2.0</title>
+<title>Столовка Admin</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <style>
-
 
 *{
 box-sizing:border-box;
-font-family:Inter,Arial,sans-serif;
+font-family:Arial,sans-serif;
+}
+
+body{
+margin:0;
+background:#0b0f14;
+color:#fff;
 }
 
 
-body{
+/* LOGIN */
 
-margin:0;
+#loginPage{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
 
-background:#0f1115;
 
+.login-box{
+background:#171d27;
+width:380px;
+padding:30px;
+border-radius:25px;
+box-shadow:0 20px 50px #000;
+}
+
+
+input,select,textarea{
+
+width:100%;
+padding:12px;
+margin:7px 0;
+
+border-radius:12px;
+border:1px solid #3a4555;
+
+background:#222b38;
 color:white;
 
+font-size:15px;
+
+}
+
+
+textarea{
+height:100px;
+resize:none;
+}
+
+
+button{
+
+padding:12px 18px;
+
+border:0;
+border-radius:12px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+}
+
+
+.main-btn{
+
+background:#ff5722;
+color:white;
+
+width:100%;
+
+}
+
+
+
+.error{
+
+background:#9b2525;
+
+padding:10px;
+
+border-radius:10px;
+
+margin-top:10px;
+
+}
+
+
+
+
+/* ADMIN */
+
+
+.hidden{
+display:none!important;
 }
 
 
@@ -41,27 +123,25 @@ min-height:100vh;
 
 
 
-/* САЙДБАР */
-
-
 .sidebar{
-
-width:260px;
-
-background:#171a21;
-
-padding:20px;
 
 position:fixed;
 
 height:100vh;
 
+width:260px;
+
+background:#151b24;
+
+padding:20px;
+
 }
+
 
 
 .logo{
 
-font-size:24px;
+font-size:26px;
 
 font-weight:bold;
 
@@ -70,33 +150,23 @@ margin-bottom:30px;
 }
 
 
+
 .nav button{
-
-background:none;
-
-border:0;
-
-color:white;
-
-padding:14px;
 
 width:100%;
 
+background:#202938;
+
+color:white;
+
+margin-bottom:10px;
+
 text-align:left;
-
-border-radius:12px;
-
-margin-bottom:8px;
-
-cursor:pointer;
-
-font-size:16px;
 
 }
 
 
-.nav button:hover,
-.nav button.active{
+.nav button:hover{
 
 background:#ff5722;
 
@@ -104,10 +174,9 @@ background:#ff5722;
 
 
 
-/* КОНТЕНТ */
 
 
-.main{
+.content{
 
 margin-left:260px;
 
@@ -121,15 +190,15 @@ width:100%;
 
 .card{
 
-background:#181c24;
+background:#171d27;
 
 padding:25px;
 
-border-radius:20px;
+border-radius:22px;
 
 margin-bottom:20px;
 
-box-shadow:0 10px 30px #0005;
+box-shadow:0 10px 30px #0006;
 
 }
 
@@ -147,10 +216,9 @@ gap:20px;
 }
 
 
-
 .stat{
 
-font-size:30px;
+font-size:40px;
 
 font-weight:bold;
 
@@ -158,59 +226,29 @@ font-weight:bold;
 
 
 
-input,
-textarea,
-select{
-
-width:100%;
-
-background:#252b38;
-
-border:1px solid #444;
-
-color:white;
-
-padding:12px;
-
-border-radius:12px;
-
-margin-top:8px;
-
-}
-
-
-
-textarea{
-
-min-height:100px;
-
-}
-
-
-
-button.action{
+.orange{
 
 background:#ff5722;
-
-border:0;
-
 color:white;
 
-padding:12px;
+}
 
-border-radius:12px;
 
-cursor:pointer;
+.red{
 
-font-weight:bold;
+background:#d32f2f;
+
+color:white;
 
 }
 
 
 
-.hidden{
+.green{
 
-display:none;
+background:#2e7d32;
+
+color:white;
 
 }
 
@@ -218,13 +256,21 @@ display:none;
 
 .product{
 
-background:#222834;
+background:#202938;
 
-padding:15px;
+padding:20px;
 
-border-radius:15px;
+border-radius:18px;
 
-margin:10px 0;
+margin-top:15px;
+
+}
+
+
+
+.product h2{
+
+margin-top:0;
 
 }
 
@@ -243,11 +289,12 @@ height:auto;
 }
 
 
-.main{
+.content{
 
 margin-left:0;
 
 }
+
 
 .layout{
 
@@ -260,25 +307,73 @@ display:block;
 
 </style>
 
-
 </head>
 
 
 <body>
 
 
+<!-- ВХОД -->
+
+<div id="loginPage">
+
+
+<div class="login-box">
+
+
+<h1>
+🔐 Админ вход
+</h1>
+
+
+<input id="email"
+placeholder="Email">
+
+
+<input id="password"
+type="password"
+placeholder="Пароль">
+
+
+
+<button class="main-btn"
+onclick="login()">
+
+Войти
+
+</button>
+
+
+<div id="loginError"></div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- АДМИНКА -->
+
+
+<div id="adminPage" class="hidden">
+
+
 <div class="layout">
-
-
-<!-- МЕНЮ -->
 
 
 <aside class="sidebar">
 
 
 <div class="logo">
+
 🍽 Столовка
+
 </div>
+
 
 
 <div class="nav">
@@ -290,7 +385,7 @@ display:block;
 
 
 <button onclick="openTab('products')">
-🍔 Товары
+🍔 Блюда
 </button>
 
 
@@ -299,18 +394,23 @@ display:block;
 </button>
 
 
-<button onclick="openTab('bans')">
-🚫 Баны
-</button>
-
-
 <button onclick="openTab('combos')">
 🔥 Комбо
 </button>
 
 
-<button onclick="openTab('settings')">
-⚙ Настройки
+<button onclick="openTab('bans')">
+🚫 Баны
+</button>
+
+
+<button onclick="openTab('stats')">
+📊 Статистика
+</button>
+
+
+<button onclick="logout()">
+🚪 Выйти
 </button>
 
 
@@ -322,17 +422,19 @@ display:block;
 
 
 
-<main class="main">
 
 
+<main class="content">
+
+
+
+<!-- ГЛАВНАЯ -->
 
 <section id="home">
 
 
-<div class="card">
-
 <h1>
-🏠 Панель
+🏠 Главная
 </h1>
 
 
@@ -341,9 +443,11 @@ display:block;
 
 <div class="card">
 
-Товаров
+<h3>
+🍽 Блюда
+</h3>
 
-<div class="stat">
+<div class="stat" id="countProducts">
 0
 </div>
 
@@ -353,27 +457,27 @@ display:block;
 
 <div class="card">
 
-Отзывы
+<h3>
+⭐ Отзывы
+</h3>
 
-<div class="stat">
+<div class="stat" id="countReviews">
 0
 </div>
 
 </div>
-
 
 
 
 <div class="card">
 
-Комбо
+<h3>
+🔥 Комбо
+</h3>
 
-<div class="stat">
+<div class="stat" id="countCombos">
 0
 </div>
-
-</div>
-
 
 </div>
 
@@ -387,6 +491,9 @@ display:block;
 
 
 
+<!-- БЛЮДА -->
+
+
 <section id="products" class="hidden">
 
 
@@ -394,26 +501,16 @@ display:block;
 
 
 <h1>
-🍔 Товары
+🍔 Добавить блюдо
 </h1>
 
 
-
-<h2>
-➕ Добавить товар
-</h2>
-
-
-<input id="p_name"
-placeholder="Название товара">
+<input id="name"
+placeholder="Название блюда">
 
 
 
-<select id="p_category">
-
-<option value="">
-Выбери категорию
-</option>
+<select id="category">
 
 <option>
 🍲 Первые блюда
@@ -435,62 +532,94 @@ placeholder="Название товара">
 🍰 Десерты
 </option>
 
-
 </select>
 
 
 
-<input id="p_price"
+<input id="price"
 type="number"
-placeholder="Цена">
+placeholder="Цена ₽">
 
 
 
-<input id="p_weight"
-placeholder="Вес (например 250 г)">
+<input id="weight"
+placeholder="Вес порции (например 250 г)">
 
 
 
-<textarea id="p_desc"
+<h2>
+🔥 КБЖУ
+</h2>
+
+
+<input id="calories"
+placeholder="Калории">
+
+
+
+<input id="proteins"
+placeholder="Белки">
+
+
+
+<input id="fats"
+placeholder="Жиры">
+
+
+
+<input id="carbs"
+placeholder="Углеводы">
+
+
+
+<input id="stock"
+type="number"
+placeholder="Количество порций">
+
+
+
+<textarea id="description"
 placeholder="Описание"></textarea>
 
 
 
-<button class="action"
+<button class="main-btn"
 onclick="addProduct()">
 
-Создать товар
+💾 Добавить
 
 </button>
 
 
-
 </div>
+
+
 
 
 
 <div class="card">
 
 
-<h2>
-Все товары
-</h2>
+<h1>
+Все блюда
+</h1>
 
 
-<div id="productList">
+<input id="search"
+placeholder="🔎 Поиск блюда"
+oninput="searchProducts()">
 
-Загрузка...
+
+
+<div id="productsList"></div>
+
 
 </div>
 
-
-</div>
 
 
 </section>
-
-
-
+<!-- ОТЗЫВЫ -->
 
 <section id="reviews" class="hidden">
 
@@ -500,26 +629,13 @@ onclick="addProduct()">
 ⭐ Отзывы
 </h1>
 
-
-<div id="reviewList"></div>
-
-
-</div>
-
-</section>
+<button class="main-btn"
+onclick="loadReviews()">
+Обновить отзывы
+</button>
 
 
-
-<section id="bans" class="hidden">
-
-<div class="card">
-
-<h1>
-🚫 Баны
-</h1>
-
-
-<div id="banList"></div>
+<div id="reviewsList"></div>
 
 
 </div>
@@ -528,55 +644,118 @@ onclick="addProduct()">
 
 
 
+
+
+<!-- КОМБО -->
 
 <section id="combos" class="hidden">
 
-<div class="card">
-
-<h1>
-🔥 Комбо
-</h1>
-
-
-<div id="comboList"></div>
-
-
-</div>
-
-</section>
-
-
-
-<section id="settings" class="hidden">
 
 <div class="card">
 
 <h1>
-⚙ Настройки
+🔥 Комбо наборы
 </h1>
 
 
 <p>
-Настройки сайта будут тут
+Будет конструктор:
+</p>
+
+<p>
+🍝 Макароны + 🍗 Котлета + 🥤 Компот
 </p>
 
 
 </div>
 
+
 </section>
 
+
+
+
+
+<!-- БАНЫ -->
+
+<section id="bans" class="hidden">
+
+
+<div class="card">
+
+<h1>
+🚫 Заблокированные пользователи
+</h1>
+
+
+<div id="bansList">
+
+Пока пусто
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<!-- СТАТИСТИКА -->
+
+<section id="stats" class="hidden">
+
+
+<div class="card">
+
+<h1>
+📊 Статистика
+</h1>
+
+
+<p>
+Скоро подключим:
+</p>
+
+
+<ul>
+
+<li>Просмотры блюд</li>
+
+<li>Популярные товары</li>
+
+<li>Продажи</li>
+
+</ul>
+
+
+</div>
+
+
+</section>
 
 
 
 </main>
 
 </div>
+
+</div>
+
+
+
+
+
 <script>
 
 
-// ===============================
+// ==========================
 // SUPABASE
-// ===============================
+// ==========================
 
 
 const SUPABASE_URL =
@@ -595,17 +774,21 @@ SUPABASE_KEY
 
 
 
+let products=[];
 
-// ===============================
+
+
+
+// ==========================
 // ВКЛАДКИ
-// ===============================
+// ==========================
 
 
 function openTab(id){
 
 
 document
-.querySelectorAll("main section")
+.querySelectorAll(".content section")
 .forEach(x=>{
 
 x.classList.add("hidden");
@@ -623,78 +806,41 @@ document
 
 
 
-// ===============================
-// ТОВАРЫ
-// ===============================
+
+
+// ==========================
+// ВХОД
+// ==========================
+
+
+async function login(){
 
 
 
-async function addProduct(){
+let email =
+document.getElementById("email").value;
+
+
+let password =
+document.getElementById("password").value;
 
 
 
-let name =
-document.getElementById("p_name").value.trim();
+let box =
+document.getElementById("loginError");
 
 
 
-let category =
-document.getElementById("p_category").value;
+box.innerHTML="";
 
 
 
-let price =
-Number(
-document.getElementById("p_price").value
-);
+const {data,error}=
 
+await db.auth.signInWithPassword({
 
-
-let weight =
-document.getElementById("p_weight").value;
-
-
-
-let desc =
-document.getElementById("p_desc").value;
-
-
-
-if(!name || !category || !price){
-
-
-alert(
-"Заполни название, категорию и цену"
-);
-
-
-return;
-
-
-}
-
-
-
-
-
-let {error}=
-
-await db
-
-.from("menu_items")
-
-.insert({
-
-name:name,
-
-category:category,
-
-price:price,
-
-weight:weight,
-
-desc:desc
-
+email,
+password
 
 });
 
@@ -704,11 +850,248 @@ desc:desc
 if(error){
 
 
-alert(
-"Ошибка: "+
-error.message
-);
+box.innerHTML=
 
+`
+<div class="error">
+${error.message}
+</div>
+`;
+
+return;
+
+}
+
+
+
+let user=data.user;
+
+
+
+const admin=
+
+await db
+
+.from("admin_users")
+
+.select("*")
+
+.eq(
+"user_id",
+user.id
+)
+
+.single();
+
+
+
+
+
+if(admin.error){
+
+
+await db.auth.signOut();
+
+
+
+box.innerHTML=
+
+`
+<div class="error">
+
+Нет доступа администратора
+
+<br>
+
+${admin.error.message}
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+
+
+
+document
+.getElementById("loginPage")
+.classList.add("hidden");
+
+
+
+document
+.getElementById("adminPage")
+.classList.remove("hidden");
+
+
+
+loadProducts();
+
+
+
+loadReviews();
+
+
+
+}
+
+
+
+
+
+
+
+
+// ==========================
+// ПРОВЕРКА СЕССИИ
+// ==========================
+
+
+async function checkLogin(){
+
+
+const {data}=
+
+await db.auth.getSession();
+
+
+
+if(!data.session)
+return;
+
+
+
+const check=
+
+await db
+
+.from("admin_users")
+
+.select("*")
+
+.eq(
+"user_id",
+data.session.user.id
+)
+
+.single();
+
+
+
+
+
+if(!check.error){
+
+
+document
+.getElementById("loginPage")
+.classList.add("hidden");
+
+
+
+document
+.getElementById("adminPage")
+.classList.remove("hidden");
+
+
+
+loadProducts();
+
+loadReviews();
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+// ==========================
+// ДОБАВЛЕНИЕ БЛЮДА
+// ==========================
+
+
+async function addProduct(){
+
+
+
+let item={
+
+
+name:
+name.value,
+
+
+category:
+category.value,
+
+
+price:
+Number(price.value),
+
+
+
+weight:
+weight.value,
+
+
+
+calories:
+Number(calories.value || 0),
+
+
+
+proteins:
+Number(proteins.value || 0),
+
+
+
+fats:
+Number(fats.value || 0),
+
+
+
+carbs:
+Number(carbs.value || 0),
+
+
+
+stock:
+Number(stock.value || 0),
+
+
+
+desc:
+description.value,
+
+
+
+is_available:true
+
+
+};
+
+
+
+
+
+
+if(!item.name){
+
+
+alert(
+"Введите название"
+);
 
 return;
 
@@ -717,13 +1100,45 @@ return;
 
 
 
+
+
+
+const {error}=
+
+await db
+
+.from("menu_items")
+
+.insert(item);
+
+
+
+
+
+
+if(error){
+
+
 alert(
-"✅ Товар добавлен"
+error.message
+);
+
+
+return;
+
+}
+
+
+
+
+
+alert(
+"✅ Блюдо добавлено"
 );
 
 
 
-clearProductForm();
+clearForm();
 
 
 loadProducts();
@@ -736,22 +1151,26 @@ loadProducts();
 
 
 
-function clearProductForm(){
+function clearForm(){
 
 
-document.getElementById("p_name").value="";
+name.value="";
 
+price.value="";
 
-document.getElementById("p_category").value="";
+weight.value="";
 
+calories.value="";
 
-document.getElementById("p_price").value="";
+proteins.value="";
 
+fats.value="";
 
-document.getElementById("p_weight").value="";
+carbs.value="";
 
+stock.value="";
 
-document.getElementById("p_desc").value="";
+description.value="";
 
 
 }
@@ -762,17 +1181,18 @@ document.getElementById("p_desc").value="";
 
 
 
+
+// ==========================
+// ЗАГРУЗКА БЛЮД
+// ==========================
+
+
 async function loadProducts(){
 
 
 
-let box =
-document.getElementById("productList");
-
-
-
-if(!box)
-return;
+const box =
+document.getElementById("productsList");
 
 
 
@@ -782,7 +1202,8 @@ box.innerHTML=
 
 
 
-let {data,error}=
+
+const {data,error}=
 
 await db
 
@@ -805,10 +1226,29 @@ if(error){
 
 
 box.innerHTML=
-"❌ "+error.message;
+
+error.message;
 
 
 return;
+
+}
+
+
+
+
+
+products=data;
+
+
+
+countProducts.innerHTML=
+data.length;
+
+
+
+renderProducts(data);
+
 
 
 }
@@ -817,75 +1257,73 @@ return;
 
 
 
-if(!data.length){
-
-
-box.innerHTML=
-"Товаров нет";
-
-
-return;
-
-
-}
+function renderProducts(list){
 
 
 
+let box =
+document.getElementById("productsList");
 
 
-box.innerHTML = data.map(p=>`
 
+box.innerHTML =
+
+list.map(p=>`
 
 
 <div class="product">
 
 
-<h3>
-
+<h2>
 ${p.name}
-
-</h3>
-
-
-<b>
-
-${p.category || "Без категории"}
-
-</b>
+</h2>
 
 
 <p>
+${p.category}
+</p>
 
+
+<h2>
 💰 ${p.price} ₽
+</h2>
 
+
+
+<p>
+⚖ ${p.weight || "-"}
 </p>
 
 
 <p>
-
-${p.weight || ""}
-
+🔥 ${p.calories || 0} ккал
 </p>
 
 
 <p>
+🥩 ${p.proteins || 0}
+|
+🧈 ${p.fats || 0}
+|
+🍞 ${p.carbs || 0}
+</p>
 
+
+
+<p>
+📦 Остаток:
+${p.stock || 0}
+</p>
+
+
+
+<p>
 ${p.desc || ""}
-
 </p>
 
 
 
-<button class="action"
-onclick="editProduct(${p.id})">
-
-✏ Изменить
-
-</button>
-
-
-
-<button class="action"
+<button class="red"
 onclick="deleteProduct(${p.id})">
 
 🗑 Удалить
@@ -906,18 +1344,48 @@ onclick="deleteProduct(${p.id})">
 
 
 
+
+
+function searchProducts(){
+
+
+let text =
+search.value.toLowerCase();
+
+
+
+renderProducts(
+
+products.filter(p=>
+
+p.name
+.toLowerCase()
+.includes(text)
+
+)
+
+);
+
+
+}
+
+
+
+
+
+
 async function deleteProduct(id){
 
 
 if(!confirm(
-"Удалить товар?"
+"Удалить блюдо?"
 ))
-
 return;
 
 
 
-let {error}=
+
+const {error}=
 
 await db
 
@@ -933,52 +1401,6 @@ id
 
 
 
-if(error){
-
-
-alert(error.message);
-
-
-return;
-
-
-}
-
-
-
-loadProducts();
-
-
-}
-
-
-
-
-
-
-
-async function editProduct(id){
-
-
-
-let {data,error}=
-
-await db
-
-.from("menu_items")
-
-.select("*")
-
-.eq(
-"id",
-id
-)
-
-.single();
-
-
-
-
 
 if(error){
 
@@ -990,121 +1412,30 @@ return;
 
 
 
-
-let name =
-prompt(
-"Название:",
-data.name
-);
-
-
-
-if(name===null)
-return;
-
-
-
-let price =
-prompt(
-"Цена:",
-data.price
-);
-
-
-
-let desc =
-prompt(
-"Описание:",
-data.desc || ""
-);
-
-
-
-
-
-let result =
-
-await db
-
-.from("menu_items")
-
-.update({
-
-name:name,
-
-price:Number(price),
-
-desc:desc
-
-
-})
-
-.eq(
-"id",
-id
-);
-
-
-
-
-
-if(result.error){
-
-alert(result.error.message);
-
-
-}else{
-
-
 loadProducts();
 
 
 }
+  <script>
 
 
-
-}
-
-
-
-
-
-
-// ===============================
-// АВТОЗАГРУЗКА
-// ===============================
-
-
-
-loadProducts();
-
-
-</script>
-<script>
-
-
-// =================================
-// ⭐ ОТЗЫВЫ
-// =================================
+// ==========================
+// ОТЗЫВЫ
+// ==========================
 
 
 async function loadReviews(){
 
 
-let box =
-document.getElementById("reviewList");
-
-
-if(!box)
-return;
-
+const box =
+document.getElementById("reviewsList");
 
 
 box.innerHTML="Загрузка...";
 
 
 
-let {data,error}=
+const {data,error}=
 
 await db
 
@@ -1122,25 +1453,38 @@ ascending:false
 
 
 
+
 if(error){
 
+
 box.innerHTML=
-"❌ "+error.message;
+
+error.message;
+
 
 return;
 
+
 }
+
+
+
+countReviews.innerHTML=
+data.length;
+
 
 
 
 if(!data.length){
 
 box.innerHTML=
-"Отзывов пока нет";
+"Отзывов нет";
 
 return;
 
 }
+
+
 
 
 
@@ -1153,43 +1497,37 @@ data.map(r=>`
 
 
 <h3>
-⭐ ${r.author || "Гость"}
+
+${r.author || r.user_name || "Гость"}
+
 </h3>
 
 
 <p>
-${r.text || ""}
+
+${r.text || r.comment || ""}
+
 </p>
 
 
-<div class="small">
+<small>
 
 ${r.created_at || ""}
 
-</div>
+</small>
 
 
 
-<button class="action"
+<br><br>
+
+
+<button class="red"
+
 onclick="deleteReview('${r.id}')">
 
 🗑 Удалить
 
 </button>
-
-
-
-${r.user_id ? `
-
-<button class="action"
-onclick="banUser('${r.user_id}')">
-
-🚫 Забанить
-
-</button>
-
-`:''}
-
 
 
 </div>
@@ -1206,8 +1544,8 @@ onclick="banUser('${r.user_id}')">
 
 
 
-async function deleteReview(id){
 
+async function deleteReview(id){
 
 
 if(!confirm(
@@ -1218,7 +1556,8 @@ return;
 
 
 
-let {error}=
+
+const {error}=
 
 await db
 
@@ -1233,6 +1572,8 @@ id
 
 
 
+
+
 if(error){
 
 alert(error.message);
@@ -1254,62 +1595,19 @@ loadReviews();
 
 
 
-// =================================
-// 🚫 БАНЫ
-// =================================
+
+// ==========================
+// ВЫХОД
+// ==========================
 
 
-
-async function banUser(uid){
-
+async function logout(){
 
 
-let reason =
-prompt(
-"Причина бана:"
-);
+await db.auth.signOut();
 
 
-
-if(!reason)
-return;
-
-
-
-let {error}=
-
-await db
-
-.from("banned_users")
-
-.insert({
-
-user_id:uid,
-
-reason:reason
-
-});
-
-
-
-
-if(error){
-
-alert(error.message);
-
-return;
-
-}
-
-
-
-alert(
-"Пользователь заблокирован"
-);
-
-
-
-loadBans();
+location.reload();
 
 
 }
@@ -1320,99 +1618,33 @@ loadBans();
 
 
 
-async function loadBans(){
+// ==========================
+// СТАТИСТИКА
+// ==========================
+
+
+async function loadStats(){
 
 
 
-let box =
-document.getElementById("banList");
-
-
-
-if(!box)
-return;
-
-
-
-box.innerHTML="Загрузка...";
-
-
-
-
-let {data,error}=
+let {count}=
 
 await db
 
-.from("banned_users")
+.from("menu_items")
 
-.select("*")
-
-.order(
-"created_at",
+.select(
+"*",
 {
-ascending:false
+count:"exact",
+head:true
 }
 );
 
 
 
-
-if(error){
-
-box.innerHTML=
-error.message;
-
-return;
-
-}
-
-
-
-
-if(!data.length){
-
-box.innerHTML=
-"Банов нет";
-
-return;
-
-}
-
-
-
-
-
-box.innerHTML=
-
-data.map(b=>`
-
-
-<div class="product">
-
-
-<h3>
-🚫 ${b.user_id}
-</h3>
-
-
-<p>
-${b.reason || ""}
-</p>
-
-
-
-<button class="action"
-onclick="unban('${b.id}')">
-
-Разбанить
-
-</button>
-
-
-</div>
-
-
-`).join("");
+countProducts.innerHTML =
+count || 0;
 
 
 
@@ -1421,258 +1653,19 @@ onclick="unban('${b.id}')">
 
 
 
-async function unban(id){
 
 
+// ==========================
+// ЗАПУСК
+// ==========================
 
-await db
 
-.from("banned_users")
-
-.delete()
-
-.eq(
-"id",
-id
-);
-
-
-
-loadBans();
-
-
-}
-
-
-
-
-
-
-
-// =================================
-// 🔥 КОМБО
-// =================================
-
-
-
-
-async function loadCombos(){
-
-
-let box =
-document.getElementById("comboList");
-
-
-
-if(!box)
-return;
-
-
-
-box.innerHTML="Загрузка...";
-
-
-
-let {data,error}=
-
-await db
-
-.from("combos")
-
-.select("*")
-
-.order("id");
-
-
-
-
-if(error){
-
-box.innerHTML=
-error.message;
-
-return;
-
-}
-
-
-
-
-box.innerHTML=`
-
-<button class="action"
-onclick="createCombo()">
-
-➕ Создать комбо
-
-</button>
-
-`;
-
-
-data.forEach(c=>{
-
-
-box.innerHTML+=`
-
-<div class="product">
-
-
-<h3>
-🔥 ${c.name}
-</h3>
-
-
-<p>
-${c.description}
-</p>
-
-
-<b>
-${c.price} ₽
-</b>
-
-
-<button class="action"
-onclick="deleteCombo(${c.id})">
-
-🗑
-
-</button>
-
-
-</div>
-
-`;
-
-});
-
-
-}
-
-
-
-
-
-
-async function createCombo(){
-
-
-
-let name =
-prompt(
-"Название комбо:"
-);
-
-
-
-let desc =
-prompt(
-"Состав:"
-);
-
-
-
-let price =
-Number(
-prompt(
-"Цена:"
-)
-);
-
-
-
-
-if(!name || !price)
-return;
-
-
-
-let {error}=
-
-await db
-
-.from("combos")
-
-.insert({
-
-name:name,
-
-description:desc,
-
-price:price
-
-});
-
-
-
-
-if(error){
-
-alert(error.message);
-
-return;
-
-}
-
-
-
-loadCombos();
-
-
-}
-
-
-
-
-async function deleteCombo(id){
-
-
-
-await db
-
-.from("combos")
-
-.delete()
-
-.eq(
-"id",
-id
-);
-
-
-
-loadCombos();
-
-
-}
-
-
-
-
-
-
-// =================================
-// 📊 ОБНОВЛЕНИЕ ПРИ ОТКРЫТИИ
-// =================================
-
-
-
-document.addEventListener(
-"DOMContentLoaded",
-()=>{
-
-
-loadProducts();
-
-loadReviews();
-
-loadBans();
-
-loadCombos();
-
-
-});
+checkLogin();
 
 
 </script>
+
+
+</body>
+
+</html>
