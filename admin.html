@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Админка столовой</title>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Столовка — Админка 2.0</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <style>
 
@@ -18,57 +19,79 @@ font-family:Arial,sans-serif;
 
 body{
 margin:0;
+padding:20px;
 background:#111;
 color:white;
-padding:20px;
+}
+
+
+.container{
+max-width:1200px;
+margin:auto;
 }
 
 
 .card{
-max-width:1200px;
-margin:auto;
-background:#1b1b1b;
-padding:30px;
+background:#1e1e1e;
+padding:25px;
 border-radius:20px;
-box-shadow:0 0 30px #000;
+margin-bottom:20px;
+box-shadow:0 10px 30px #0005;
 }
 
 
-input,textarea,button{
+h1,h2{
+margin-top:0;
+}
+
+
+input,textarea,select{
 
 width:100%;
 padding:12px;
-margin:8px 0;
-border-radius:10px;
-border:0;
-font-size:16px;
-
-}
-
-
-input,textarea{
+margin:7px 0;
 
 background:#303746;
 color:white;
 
+border:1px solid #555;
+border-radius:10px;
+
 }
+
+
+textarea{
+min-height:100px;
+resize:vertical;
+}
+
 
 
 button{
 
-background:#ff572f;
+width:100%;
+padding:13px;
+
+border:0;
+border-radius:12px;
+
+background:#ff5722;
+
 color:white;
-cursor:pointer;
+
 font-weight:bold;
+
+cursor:pointer;
+
+margin-top:8px;
 
 }
 
 
 button:hover{
-
 opacity:.8;
-
 }
+
 
 
 .hidden{
@@ -76,22 +99,35 @@ display:none;
 }
 
 
+
+.success{
+
+background:#087f23;
+padding:12px;
+border-radius:10px;
+
+}
+
+
+
 .error{
 
-background:#7d2222;
+background:#8b1e1e;
 padding:12px;
 border-radius:10px;
 
 }
 
 
-.ok{
 
-background:#1f6b35;
+.info{
+
+background:#333;
 padding:12px;
 border-radius:10px;
 
 }
+
 
 
 
@@ -100,25 +136,50 @@ table{
 width:100%;
 border-collapse:collapse;
 
+margin-top:15px;
+
 }
+
 
 
 td,th{
 
 padding:10px;
+
 border-bottom:1px solid #444;
 
+text-align:left;
+
 }
+
+
+
+.item{
+
+background:#292929;
+
+padding:15px;
+
+border-radius:15px;
+
+margin:10px 0;
+
+}
+
 
 
 .review{
 
-background:#222;
+background:#252525;
+
 padding:15px;
+
+border-radius:15px;
+
 margin:10px 0;
-border-radius:12px;
 
 }
+
 
 
 .small{
@@ -128,7 +189,20 @@ font-size:13px;
 
 }
 
+
+.grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+gap:15px;
+
+}
+
+
 </style>
+
 
 </head>
 
@@ -136,17 +210,24 @@ font-size:13px;
 <body>
 
 
-
-<div class="card" id="login">
-
-
-<h1>🔐 Админ вход</h1>
+<div class="container">
 
 
-<input id="email" placeholder="Email">
+
+<!-- ВХОД -->
 
 
-<input id="password" 
+<div class="card" id="loginBox">
+
+
+<h1>🔐 Вход администратора</h1>
+
+
+<input id="email"
+placeholder="Email">
+
+
+<input id="password"
 type="password"
 placeholder="Пароль">
 
@@ -156,7 +237,9 @@ placeholder="Пароль">
 </button>
 
 
-<div id="msg"></div>
+<div id="loginMessage" class="info">
+Ожидание...
+</div>
 
 
 </div>
@@ -165,24 +248,94 @@ placeholder="Пароль">
 
 
 
-<div class="card hidden" id="panel">
+<!-- ПАНЕЛЬ -->
 
 
-<h1>🍽 Панель управления</h1>
+<div class="hidden" id="adminPanel">
+
+
+<div class="card">
+
+
+<h1>
+🍽 Столовка — Админка 2.0
+</h1>
 
 
 <button onclick="logout()">
-Выйти
+🚪 Выйти
 </button>
 
 
-<h2>Меню</h2>
+<div id="mainMessage" class="info">
+Готово
+</div>
 
 
-<div id="menu"></div>
+</div>
 
 
-<h2>Отзывы</h2>
+
+
+
+<div class="card">
+
+
+<h2>➕ Добавить товар</h2>
+
+
+<input id="newName"
+placeholder="Название">
+
+
+<input id="newPrice"
+type="number"
+placeholder="Цена">
+
+
+<input id="newCategory"
+placeholder="Категория">
+
+
+<textarea id="newDesc"
+placeholder="Описание"></textarea>
+
+
+<button onclick="addProduct()">
+Добавить товар
+</button>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h2>🍲 Меню</h2>
+
+
+<button onclick="loadMenu()">
+Обновить меню
+</button>
+
+
+<div id="menuList"></div>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h2>⭐ Отзывы</h2>
 
 
 <button onclick="loadReviews()">
@@ -190,16 +343,17 @@ placeholder="Пароль">
 </button>
 
 
-<div id="reviews"></div>
+<div id="reviewList"></div>
 
+
+</div>
 
 
 </div>
 
 
 
-
-
+</div>
 <script>
 
 
@@ -211,7 +365,6 @@ const SUPABASE_KEY =
 "sb_publishable_qvh9ZOOXqlEAsBexdJfdlA_UGu3jsCG";
 
 
-
 const db =
 supabase.createClient(
 SUPABASE_URL,
@@ -220,57 +373,76 @@ SUPABASE_KEY
 
 
 
+function show(id,text,type="info"){
 
+let el=document.getElementById(id);
 
-function msg(text,type="error"){
+el.innerHTML=text;
 
-document.querySelector("#msg").innerHTML=
-`
-<div class="${type}">
-${text}
-</div>
-`;
+el.className=type;
 
 }
 
 
 
 
+// ==========================
+// ВХОД
+// ==========================
+
 
 async function login(){
 
 
-msg("Проверка...","ok");
-
-
-let email =
-document.querySelector("#email").value.trim();
-
-
-let password =
-document.querySelector("#password").value;
+show(
+"loginMessage",
+"⏳ Проверяем вход...",
+"info"
+);
 
 
 
-let result =
+let email=
+document.getElementById("email").value.trim();
+
+
+let password=
+document.getElementById("password").value;
+
+
+
+if(!email || !password){
+
+show(
+"loginMessage",
+"Введите email и пароль",
+"error"
+);
+
+return;
+
+}
+
+
+
+let {data,error}=
+
 await db.auth.signInWithPassword({
 
 email,
+
 password
 
 });
 
 
 
-console.log(result);
+if(error){
 
-
-
-if(result.error){
-
-msg(
-"Ошибка входа:<br>"+
-result.error.message
+show(
+"loginMessage",
+"❌ "+error.message,
+"error"
 );
 
 return;
@@ -279,31 +451,52 @@ return;
 
 
 
-let user =
-result.data.user;
+let user=data.user;
 
 
 
-let admin =
-await db
-.from("admin_users")
-.select("*")
-.eq(
-"user_id",
-user.id
+show(
+"loginMessage",
+"Проверяем права...",
+"info"
 );
 
 
 
-console.log(admin);
+
+let admin =
+
+await db
+
+.from("admin_users")
+
+.select("user_id")
+
+.eq(
+"user_id",
+user.id
+)
+
+.maybeSingle();
+
+
+
+
+console.log(
+"ADMIN:",
+admin
+);
+
 
 
 
 if(admin.error){
 
-msg(
-"Ошибка admin_users:<br>"+
-admin.error.message
+show(
+"loginMessage",
+"Ошибка admin_users: "+
+admin.error.message,
+"error"
 );
 
 return;
@@ -312,41 +505,53 @@ return;
 
 
 
-if(!admin.data.length){
+if(!admin.data){
 
 
 await db.auth.signOut();
 
 
-msg(
-"Аккаунт есть, но нет прав администратора"
+show(
+"loginMessage",
+"❌ Нет прав администратора",
+"error"
 );
 
 
 return;
 
+}
+
+
+
+openAdmin();
+
 
 }
 
 
 
-openPanel();
 
 
-}
+function openAdmin(){
 
 
-
-
-function openPanel(){
-
-
-document.querySelector("#login")
+document
+.getElementById("loginBox")
 .classList.add("hidden");
 
 
-document.querySelector("#panel")
+document
+.getElementById("adminPanel")
 .classList.remove("hidden");
+
+
+show(
+"mainMessage",
+"✅ Вход выполнен",
+"success"
+);
+
 
 
 loadMenu();
@@ -360,151 +565,547 @@ loadReviews();
 
 
 
+// ==========================
+// МЕНЮ
+// ==========================
+
+
+
 async function loadMenu(){
 
 
-let box=document.querySelector("#menu");
+let box=
+document.getElementById("menuList");
 
 
 box.innerHTML="Загрузка...";
 
 
 
-let {data,error}=await db
+let {data,error}=
+
+await db
+
 .from("menu_items")
+
 .select("*")
+
 .order("id");
+
 
 
 
 if(error){
 
-box.innerHTML=error.message;
+box.innerHTML=
+"❌ "+error.message;
+
 return;
 
 }
 
 
 
-box.innerHTML=`
 
-<table>
+if(!data.length){
 
-<tr>
-<th>ID</th>
-<th>Название</th>
-<th>Цена</th>
-<th>Описание</th>
-<th></th>
-</tr>
+box.innerHTML=
+"Товаров нет";
 
-${
+return;
+
+}
+
+
+
+
+box.innerHTML=
+
 data.map(x=>`
 
-<tr>
 
-<td>${x.id}</td>
-
-
-<td>
-<input id="n${x.id}" value="${x.name}">
-</td>
+<div class="item">
 
 
-<td>
-<input id="p${x.id}" value="${x.price}">
-</td>
+<h3>${x.name}</h3>
 
 
-<td>
-<textarea id="d${x.id}">
+Цена:
+
+<input 
+id="price_${x.id}"
+value="${x.price||0}"
+type="number"
+>
+
+
+
+Категория:
+
+<input
+id="cat_${x.id}"
+value="${x.category||""}"
+>
+
+
+
+Описание:
+
+<textarea id="desc_${x.id}">
 ${x.desc||""}
 </textarea>
-</td>
 
 
-<td>
 
-<button onclick="saveItem(${x.id})">
-💾
+<button onclick="saveProduct(${x.id})">
+
+💾 Сохранить
+
 </button>
 
-</td>
 
 
-</tr>
+<button onclick="deleteProduct(${x.id})">
+
+🗑 Удалить
+
+</button>
 
 
-`).join("")
+
+</div>
+
+
+`).join("");
+
+
+
 }
 
-</table>
-
-`;
 
 
+
+
+
+
+// ДОБАВЛЕНИЕ ТОВАРА
+
+
+async function addProduct(){
+
+
+let name=
+document.getElementById("newName").value;
+
+
+let price=
+Number(
+document.getElementById("newPrice").value
+);
+
+
+
+let category=
+document.getElementById("newCategory").value;
+
+
+
+let desc=
+document.getElementById("newDesc").value;
+
+
+
+
+if(!name || !price){
+
+alert("Заполни название и цену");
+
+return;
 
 }
 
 
 
 
-async function saveItem(id){
+let {error}=
 
+await db
 
-let {error}=await db
 .from("menu_items")
+
+.insert({
+
+name,
+
+price,
+
+category,
+
+desc
+
+});
+
+
+
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+
+
+alert("✅ Товар добавлен");
+
+
+
+loadMenu();
+
+
+}
+
+
+
+
+
+
+
+// СОХРАНЕНИЕ
+
+
+async function saveProduct(id){
+
+
+
+let {error}=
+
+await db
+
+.from("menu_items")
+
 .update({
 
-name:
-document.querySelector("#n"+id).value,
-
-
 price:
+
 Number(
-document.querySelector("#p"+id).value
+document.getElementById(
+"price_"+id
+).value
 ),
 
 
+category:
+
+document.getElementById(
+"cat_"+id
+).value,
+
+
 desc:
-document.querySelector("#d"+id).value,
+
+document.getElementById(
+"desc_"+id
+).value,
 
 
 updated_at:
+
 new Date()
 
+
 })
-.eq("id",id);
+
+.eq(
+"id",
+id
+);
 
 
 
-if(error)
+
+if(error){
+
 alert(error.message);
 
-else
+}else{
+
 alert("Сохранено");
 
+}
 
 
 }
 
 
+
+
+
+
+// УДАЛЕНИЕ ТОВАРА
+
+
+async function deleteProduct(id){
+
+
+if(!confirm(
+"Удалить товар?"
+))
+
+return;
+
+
+
+let {error}=
+
+await db
+
+.from("menu_items")
+
+.delete()
+
+.eq(
+"id",
+id
+);
+
+
+
+if(error){
+
+alert(error.message);
+
+}else{
+
+loadMenu();
+
+}
+
+
+}
+
+
+
+
+
+// ==========================
+// ОТЗЫВЫ
+// ==========================
 
 
 async function loadReviews(){
 
 
 let box=
-document.querySelector("#reviews");
+document.getElementById("reviewList");
 
 
-box.innerHTML="Загрузка...";
 
+box.innerHTML=
+"Загрузка...";
+
+
+
+let {data,error}=
+
+await db
+
+.from("reviews")
+
+.select("*")
+
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
+
+
+if(error){
+
+box.innerHTML=
+"❌ "+error.message;
+
+return;
+
+}
+
+
+
+
+if(!data.length){
+
+box.innerHTML=
+"Отзывов нет";
+
+return;
+
+}
+
+
+
+
+box.innerHTML=
+
+data.map(r=>`
+
+
+<div class="review">
+
+
+<b>
+${r.author||"Гость"}
+</b>
+
+
+<p>
+${r.text||""}
+</p>
+
+
+<div class="small">
+${r.created_at||""}
+</div>
+
+
+
+<button onclick="deleteReview('${r.id}')">
+
+🗑 Удалить отзыв
+
+</button>
+
+
+</div>
+
+
+
+`).join("");
+
+
+
+}
+
+
+
+
+
+
+async function deleteReview(id){
+
+
+if(!confirm(
+"Удалить отзыв?"
+))
+
+return;
+
+
+
+let {error}=
+
+await db
+
+.from("reviews")
+
+.delete()
+
+.eq(
+"id",
+id
+);
+
+
+
+if(error){
+
+alert(error.message);
+
+}else{
+
+loadReviews();
+
+}
+
+
+}
+
+
+
+
+
+async function logout(){
+
+
+await db.auth.signOut();
+
+
+location.reload();
+
+
+}
+
+
+
+</script>
+<script>
+
+
+// =====================================
+// 🚫 БАН ПОЛЬЗОВАТЕЛЕЙ
+// =====================================
+
+
+
+async function banUser(user_id,reason){
+
+
+let {error}=await db
+
+.from("banned_users")
+
+.insert({
+
+user_id,
+
+reason
+
+});
+
+
+
+if(error){
+
+alert(error.message);
+
+}else{
+
+alert("Пользователь заблокирован");
+
+}
+
+
+}
+
+
+
+
+async function loadBans(){
+
+
+let box=document.getElementById("menuList");
 
 
 let {data,error}=await db
-.from("reviews")
+
+.from("banned_users")
+
 .select("*")
+
 .order(
 "created_at",
 {
@@ -517,38 +1118,36 @@ ascending:false
 if(error){
 
 box.innerHTML=error.message;
+
 return;
 
 }
 
 
 
-box.innerHTML =
-data.map(r=>`
+box.innerHTML=
 
-<div class="review">
+data.map(b=>`
 
-<b>
-${r.author||"Гость"}
-</b>
 
+<div class="item">
+
+<b>🚫 ${b.user_id}</b>
 
 <p>
-${r.text}
+${b.reason||"Без причины"}
 </p>
 
 
-<div class="small">
-${r.created_at}
-</div>
+<button onclick="unban('${b.id}')">
 
+Разблокировать
 
-<button onclick="deleteReview('${r.id}')">
-🗑 Удалить
 </button>
 
 
 </div>
+
 
 `).join("");
 
@@ -558,74 +1157,495 @@ ${r.created_at}
 
 
 
-async function deleteReview(id){
+async function unban(id){
 
 
-if(!confirm("Удалить отзыв?"))
-return;
-
-
-let {error}=await db
-.from("reviews")
-.delete()
-.eq("id",id);
-
-
-
-if(error)
-alert(error.message);
-
-
-else
-loadReviews();
-
-
-
-}
-
-
-
-
-async function logout(){
-
-await db.auth.signOut();
-
-location.reload();
-
-}
-
-
-
-
-
-db.auth.getSession()
-.then(async({data})=>{
-
-if(data.session){
-
-let check =
 await db
-.from("admin_users")
-.select("*")
+
+.from("banned_users")
+
+.delete()
+
 .eq(
-"user_id",
-data.session.user.id
+"id",
+id
 );
 
 
 
-if(check.data.length)
-openPanel();
+loadBans();
+
 
 }
 
+
+
+
+
+
+// =====================================
+// 🛡 АНТИСПАМ
+// =====================================
+
+
+
+const badWords=[
+
+"бля",
+"бляд",
+"хуй",
+"хуе",
+"пизд",
+"говно",
+"сук"
+
+];
+
+
+
+
+
+function checkSpam(text){
+
+
+let t=text.toLowerCase();
+
+
+
+for(let word of badWords){
+
+
+if(t.includes(word)){
+
+return {
+
+ok:false,
+
+reason:"Запрещённые слова"
+
+};
+
+}
+
+
+}
+
+
+
+
+if(text.length>500){
+
+return {
+
+ok:false,
+
+reason:"Слишком длинный отзыв"
+
+};
+
+}
+
+
+
+
+return {
+
+ok:true
+
+};
+
+
+}
+
+
+
+
+
+async function sendReview(user_id,text){
+
+
+
+let spam=
+checkSpam(text);
+
+
+
+if(!spam.ok){
+
+
+alert(
+"❌ "+spam.reason
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+// проверяем бан
+
+
+let ban=
+
+await db
+
+.from("banned_users")
+
+.select("*")
+
+.eq(
+"user_id",
+user_id
+)
+
+.maybeSingle();
+
+
+
+
+
+if(ban.data){
+
+
+alert(
+"Вы заблокированы"
+);
+
+
+return;
+
+
+}
+
+
+
+
+// проверяем повтор
+
+
+let old=
+
+await db
+
+.from("reviews")
+
+.select("*")
+
+.eq(
+"user_id",
+user_id
+)
+
+.order(
+"created_at",
+{
+ascending:false
+}
+)
+
+.limit(3);
+
+
+
+
+if(old.data){
+
+
+for(let r of old.data){
+
+
+if(r.text===text){
+
+
+alert(
+"Не повторяйте один и тот же отзыв"
+);
+
+
+return;
+
+
+}
+
+
+}
+
+
+}
+
+
+
+
+
+await db
+
+.from("reviews")
+
+.insert({
+
+user_id,
+
+text
 
 });
 
 
 
+alert(
+"Отзыв добавлен"
+);
+
+
+
+}
+
+
+
+
+
+// =====================================
+// 🔎 БЛОКИРОВКА ПОИСКА
+// =====================================
+
+
+
+
+function checkSearch(value){
+
+
+let text=value.toLowerCase();
+
+
+
+for(let word of badWords){
+
+
+if(text.includes(word)){
+
+
+return false;
+
+
+}
+
+
+}
+
+
+
+return true;
+
+
+}
+
+
+
+
+
+
+// пример:
+
+// if(!checkSearch(search.value)){
+//    показать "Ничего не найдено"
+// }
+
+
+
+
+
+
+
+
+// =====================================
+// 🍝 КОМБО НАБОРЫ
+// =====================================
+
+
+
+
+async function createCombo(){
+
+
+
+let name=
+
+prompt(
+"Название комбо"
+);
+
+
+
+let desc=
+
+prompt(
+"Состав"
+);
+
+
+
+let price=
+
+Number(
+prompt(
+"Цена"
+)
+);
+
+
+
+
+let {error}=await db
+
+.from("combos")
+
+.insert({
+
+name,
+
+description:desc,
+
+price
+
+});
+
+
+
+
+
+if(error){
+
+alert(error.message);
+
+}else{
+
+alert(
+"Комбо создано"
+);
+
+}
+
+
+
+
+}
+
+
+
+
+async function loadCombos(){
+
+
+
+let box=document.getElementById("menuList");
+
+
+
+let {data,error}=
+
+await db
+
+.from("combos")
+
+.select("*")
+
+.order("id");
+
+
+
+
+
+if(error){
+
+box.innerHTML=error.message;
+
+return;
+
+}
+
+
+
+
+
+box.innerHTML=
+
+`
+
+<button onclick="createCombo()">
+
+➕ Создать комбо
+
+</button>
+
+
+`+
+
+data.map(c=>`
+
+
+<div class="item">
+
+
+<h3>
+${c.name}
+</h3>
+
+
+<p>
+${c.description}
+</p>
+
+
+<b>
+${c.price} ₽
+</b>
+
+
+<button onclick="deleteCombo(${c.id})">
+
+🗑 Удалить
+
+</button>
+
+
+</div>
+
+
+`).join("");
+
+
+
+}
+
+
+
+
+
+async function deleteCombo(id){
+
+
+await db
+
+.from("combos")
+
+.delete()
+
+.eq(
+"id",
+id
+);
+
+
+
+loadCombos();
+
+
+}
+
+
+
 </script>
-
-
-</body>
-</html>
