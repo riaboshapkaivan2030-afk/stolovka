@@ -1676,18 +1676,36 @@ document
 async function saveProduct(){
 
 
-
 let imageUrl=null;
 
 
 
-let file=
+const imageInput =
+document.getElementById("pImage");
 
-document
 
-.getElementById("pImage")
 
-.files[0];
+let file=null;
+
+
+
+if(imageInput){
+
+file=imageInput.files[0];
+
+}
+
+
+
+
+if(file){
+
+
+imageUrl =
+await uploadImage(file);
+
+
+}
 
 
 
