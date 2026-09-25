@@ -4,199 +4,256 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Столовка — Админка 2.0</title>
+<title>Столовка Admin 2.0</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <style>
+
 
 *{
 box-sizing:border-box;
-font-family:Arial,sans-serif;
+font-family:Inter,Arial,sans-serif;
 }
+
 
 body{
+
 margin:0;
+
+background:#0f1115;
+
+color:white;
+
+}
+
+
+.layout{
+
+display:flex;
+
+min-height:100vh;
+
+}
+
+
+
+/* САЙДБАР */
+
+
+.sidebar{
+
+width:260px;
+
+background:#171a21;
+
 padding:20px;
-background:#111;
-color:white;
-}
 
+position:fixed;
 
-.container{
-max-width:1200px;
-margin:auto;
-}
-
-
-.card{
-background:#1e1e1e;
-padding:25px;
-border-radius:20px;
-margin-bottom:20px;
-box-shadow:0 10px 30px #0005;
-}
-
-
-h1,h2{
-margin-top:0;
-}
-
-
-input,textarea,select{
-
-width:100%;
-padding:12px;
-margin:7px 0;
-
-background:#303746;
-color:white;
-
-border:1px solid #555;
-border-radius:10px;
+height:100vh;
 
 }
 
 
-textarea{
-min-height:100px;
-resize:vertical;
-}
+.logo{
 
-
-
-button{
-
-width:100%;
-padding:13px;
-
-border:0;
-border-radius:12px;
-
-background:#ff5722;
-
-color:white;
+font-size:24px;
 
 font-weight:bold;
 
-cursor:pointer;
-
-margin-top:8px;
+margin-bottom:30px;
 
 }
 
 
-button:hover{
-opacity:.8;
-}
+.nav button{
 
+background:none;
 
+border:0;
 
-.hidden{
-display:none;
-}
+color:white;
 
-
-
-.success{
-
-background:#087f23;
-padding:12px;
-border-radius:10px;
-
-}
-
-
-
-.error{
-
-background:#8b1e1e;
-padding:12px;
-border-radius:10px;
-
-}
-
-
-
-.info{
-
-background:#333;
-padding:12px;
-border-radius:10px;
-
-}
-
-
-
-
-table{
+padding:14px;
 
 width:100%;
-border-collapse:collapse;
-
-margin-top:15px;
-
-}
-
-
-
-td,th{
-
-padding:10px;
-
-border-bottom:1px solid #444;
 
 text-align:left;
 
-}
+border-radius:12px;
 
+margin-bottom:8px;
 
+cursor:pointer;
 
-.item{
-
-background:#292929;
-
-padding:15px;
-
-border-radius:15px;
-
-margin:10px 0;
+font-size:16px;
 
 }
 
 
+.nav button:hover,
+.nav button.active{
 
-.review{
-
-background:#252525;
-
-padding:15px;
-
-border-radius:15px;
-
-margin:10px 0;
+background:#ff5722;
 
 }
 
 
 
-.small{
+/* КОНТЕНТ */
 
-color:#aaa;
-font-size:13px;
+
+.main{
+
+margin-left:260px;
+
+padding:30px;
+
+width:100%;
 
 }
+
+
+
+.card{
+
+background:#181c24;
+
+padding:25px;
+
+border-radius:20px;
+
+margin-bottom:20px;
+
+box-shadow:0 10px 30px #0005;
+
+}
+
 
 
 .grid{
 
 display:grid;
 
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
 
-gap:15px;
+gap:20px;
+
+}
+
+
+
+.stat{
+
+font-size:30px;
+
+font-weight:bold;
+
+}
+
+
+
+input,
+textarea,
+select{
+
+width:100%;
+
+background:#252b38;
+
+border:1px solid #444;
+
+color:white;
+
+padding:12px;
+
+border-radius:12px;
+
+margin-top:8px;
+
+}
+
+
+
+textarea{
+
+min-height:100px;
+
+}
+
+
+
+button.action{
+
+background:#ff5722;
+
+border:0;
+
+color:white;
+
+padding:12px;
+
+border-radius:12px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+}
+
+
+
+.hidden{
+
+display:none;
+
+}
+
+
+
+.product{
+
+background:#222834;
+
+padding:15px;
+
+border-radius:15px;
+
+margin:10px 0;
+
+}
+
+
+
+@media(max-width:800px){
+
+.sidebar{
+
+position:relative;
+
+width:100%;
+
+height:auto;
+
+}
+
+
+.main{
+
+margin-left:0;
+
+}
+
+.layout{
+
+display:block;
+
+}
 
 }
 
@@ -210,137 +267,238 @@ gap:15px;
 <body>
 
 
-<div class="container">
+<div class="layout">
 
 
-
-<!-- ВХОД -->
-
-
-<div class="card" id="loginBox">
+<!-- МЕНЮ -->
 
 
-<h1>🔐 Вход администратора</h1>
+<aside class="sidebar">
 
 
-<input id="email"
-placeholder="Email">
+<div class="logo">
+🍽 Столовка
+</div>
 
 
-<input id="password"
-type="password"
-placeholder="Пароль">
+<div class="nav">
 
 
-<button onclick="login()">
-Войти
+<button onclick="openTab('home')">
+🏠 Главная
 </button>
 
 
-<div id="loginMessage" class="info">
-Ожидание...
+<button onclick="openTab('products')">
+🍔 Товары
+</button>
+
+
+<button onclick="openTab('reviews')">
+⭐ Отзывы
+</button>
+
+
+<button onclick="openTab('bans')">
+🚫 Баны
+</button>
+
+
+<button onclick="openTab('combos')">
+🔥 Комбо
+</button>
+
+
+<button onclick="openTab('settings')">
+⚙ Настройки
+</button>
+
+
+</div>
+
+
+</aside>
+
+
+
+
+<main class="main">
+
+
+
+<section id="home">
+
+
+<div class="card">
+
+<h1>
+🏠 Панель
+</h1>
+
+
+<div class="grid">
+
+
+<div class="card">
+
+Товаров
+
+<div class="stat">
+0
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+Отзывы
+
+<div class="stat">
+0
+</div>
+
+</div>
+
+
+
+
+<div class="card">
+
+Комбо
+
+<div class="stat">
+0
+</div>
+
 </div>
 
 
 </div>
 
 
+</div>
+
+
+</section>
 
 
 
-<!-- ПАНЕЛЬ -->
 
 
-<div class="hidden" id="adminPanel">
+<section id="products" class="hidden">
 
 
 <div class="card">
 
 
 <h1>
-🍽 Столовка — Админка 2.0
+🍔 Товары
 </h1>
 
 
-<button onclick="logout()">
-🚪 Выйти
-</button>
+
+<h2>
+➕ Добавить товар
+</h2>
 
 
-<div id="mainMessage" class="info">
-Готово
-</div>
-
-
-</div>
+<input id="p_name"
+placeholder="Название товара">
 
 
 
+<select id="p_category">
+
+<option value="">
+Выбери категорию
+</option>
+
+<option>
+🍲 Первые блюда
+</option>
+
+<option>
+🍗 Вторые блюда
+</option>
+
+<option>
+🥗 Салаты
+</option>
+
+<option>
+🥤 Напитки
+</option>
+
+<option>
+🍰 Десерты
+</option>
 
 
-<div class="card">
+</select>
 
 
-<h2>➕ Добавить товар</h2>
 
-
-<input id="newName"
-placeholder="Название">
-
-
-<input id="newPrice"
+<input id="p_price"
 type="number"
 placeholder="Цена">
 
 
-<input id="newCategory"
-placeholder="Категория">
+
+<input id="p_weight"
+placeholder="Вес (например 250 г)">
 
 
-<textarea id="newDesc"
+
+<textarea id="p_desc"
 placeholder="Описание"></textarea>
 
 
-<button onclick="addProduct()">
-Добавить товар
+
+<button class="action"
+onclick="addProduct()">
+
+Создать товар
+
 </button>
+
 
 
 </div>
 
 
 
-
-
 <div class="card">
 
 
-<h2>🍲 Меню</h2>
+<h2>
+Все товары
+</h2>
 
 
-<button onclick="loadMenu()">
-Обновить меню
-</button>
+<div id="productList">
 
+Загрузка...
 
-<div id="menuList"></div>
+</div>
 
 
 </div>
 
 
+</section>
 
 
+
+
+<section id="reviews" class="hidden">
 
 <div class="card">
 
-
-<h2>⭐ Отзывы</h2>
-
-
-<button onclick="loadReviews()">
-Обновить отзывы
-</button>
+<h1>
+⭐ Отзывы
+</h1>
 
 
 <div id="reviewList"></div>
@@ -348,13 +506,77 @@ placeholder="Описание"></textarea>
 
 </div>
 
+</section>
+
+
+
+<section id="bans" class="hidden">
+
+<div class="card">
+
+<h1>
+🚫 Баны
+</h1>
+
+
+<div id="banList"></div>
+
 
 </div>
 
+</section>
 
+
+
+
+<section id="combos" class="hidden">
+
+<div class="card">
+
+<h1>
+🔥 Комбо
+</h1>
+
+
+<div id="comboList"></div>
+
+
+</div>
+
+</section>
+
+
+
+<section id="settings" class="hidden">
+
+<div class="card">
+
+<h1>
+⚙ Настройки
+</h1>
+
+
+<p>
+Настройки сайта будут тут
+</p>
+
+
+</div>
+
+</section>
+
+
+
+
+</main>
 
 </div>
 <script>
+
+
+// ===============================
+// SUPABASE
+// ===============================
 
 
 const SUPABASE_URL =
@@ -373,190 +595,139 @@ SUPABASE_KEY
 
 
 
-function show(id,text,type="info"){
 
-let el=document.getElementById(id);
+// ===============================
+// ВКЛАДКИ
+// ===============================
 
-el.innerHTML=text;
 
-el.className=type;
+function openTab(id){
+
+
+document
+.querySelectorAll("main section")
+.forEach(x=>{
+
+x.classList.add("hidden");
+
+});
+
+
+document
+.getElementById(id)
+.classList.remove("hidden");
+
 
 }
 
 
 
 
-// ==========================
-// ВХОД
-// ==========================
+// ===============================
+// ТОВАРЫ
+// ===============================
 
 
-async function login(){
+
+async function addProduct(){
 
 
-show(
-"loginMessage",
-"⏳ Проверяем вход...",
-"info"
+
+let name =
+document.getElementById("p_name").value.trim();
+
+
+
+let category =
+document.getElementById("p_category").value;
+
+
+
+let price =
+Number(
+document.getElementById("p_price").value
 );
 
 
 
-let email=
-document.getElementById("email").value.trim();
-
-
-let password=
-document.getElementById("password").value;
+let weight =
+document.getElementById("p_weight").value;
 
 
 
-if(!email || !password){
+let desc =
+document.getElementById("p_desc").value;
 
-show(
-"loginMessage",
-"Введите email и пароль",
-"error"
+
+
+if(!name || !category || !price){
+
+
+alert(
+"Заполни название, категорию и цену"
 );
+
 
 return;
 
+
 }
 
 
 
-let {data,error}=
 
-await db.auth.signInWithPassword({
 
-email,
+let {error}=
 
-password
+await db
+
+.from("menu_items")
+
+.insert({
+
+name:name,
+
+category:category,
+
+price:price,
+
+weight:weight,
+
+desc:desc
+
 
 });
 
 
 
+
 if(error){
 
-show(
-"loginMessage",
-"❌ "+error.message,
-"error"
-);
 
-return;
-
-}
-
-
-
-let user=data.user;
-
-
-
-show(
-"loginMessage",
-"Проверяем права...",
-"info"
-);
-
-
-
-
-let admin =
-
-await db
-
-.from("admin_users")
-
-.select("user_id")
-
-.eq(
-"user_id",
-user.id
-)
-
-.maybeSingle();
-
-
-
-
-console.log(
-"ADMIN:",
-admin
-);
-
-
-
-
-if(admin.error){
-
-show(
-"loginMessage",
-"Ошибка admin_users: "+
-admin.error.message,
-"error"
-);
-
-return;
-
-}
-
-
-
-if(!admin.data){
-
-
-await db.auth.signOut();
-
-
-show(
-"loginMessage",
-"❌ Нет прав администратора",
-"error"
+alert(
+"Ошибка: "+
+error.message
 );
 
 
 return;
 
-}
-
-
-
-openAdmin();
-
 
 }
 
 
 
-
-
-function openAdmin(){
-
-
-document
-.getElementById("loginBox")
-.classList.add("hidden");
-
-
-document
-.getElementById("adminPanel")
-.classList.remove("hidden");
-
-
-show(
-"mainMessage",
-"✅ Вход выполнен",
-"success"
+alert(
+"✅ Товар добавлен"
 );
 
 
 
-loadMenu();
+clearProductForm();
 
-loadReviews();
+
+loadProducts();
+
 
 
 }
@@ -565,20 +736,49 @@ loadReviews();
 
 
 
-// ==========================
-// МЕНЮ
-// ==========================
+function clearProductForm(){
+
+
+document.getElementById("p_name").value="";
+
+
+document.getElementById("p_category").value="";
+
+
+document.getElementById("p_price").value="";
+
+
+document.getElementById("p_weight").value="";
+
+
+document.getElementById("p_desc").value="";
+
+
+}
 
 
 
-async function loadMenu(){
 
 
-let box=
-document.getElementById("menuList");
 
 
-box.innerHTML="Загрузка...";
+async function loadProducts(){
+
+
+
+let box =
+document.getElementById("productList");
+
+
+
+if(!box)
+return;
+
+
+
+box.innerHTML=
+"Загрузка...";
+
 
 
 
@@ -590,87 +790,107 @@ await db
 
 .select("*")
 
-.order("id");
+.order(
+"id",
+{
+ascending:false
+}
+);
+
 
 
 
 
 if(error){
 
+
 box.innerHTML=
 "❌ "+error.message;
 
+
 return;
 
+
 }
+
 
 
 
 
 if(!data.length){
 
+
 box.innerHTML=
 "Товаров нет";
 
+
 return;
+
 
 }
 
 
 
 
-box.innerHTML=
 
-data.map(x=>`
-
-
-<div class="item">
-
-
-<h3>${x.name}</h3>
-
-
-Цена:
-
-<input 
-id="price_${x.id}"
-value="${x.price||0}"
-type="number"
->
+box.innerHTML = data.map(p=>`
 
 
 
-Категория:
-
-<input
-id="cat_${x.id}"
-value="${x.category||""}"
->
+<div class="product">
 
 
+<h3>
 
-Описание:
+${p.name}
 
-<textarea id="desc_${x.id}">
-${x.desc||""}
-</textarea>
-
+</h3>
 
 
-<button onclick="saveProduct(${x.id})">
+<b>
 
-💾 Сохранить
+${p.category || "Без категории"}
+
+</b>
+
+
+<p>
+
+💰 ${p.price} ₽
+
+</p>
+
+
+<p>
+
+${p.weight || ""}
+
+</p>
+
+
+<p>
+
+${p.desc || ""}
+
+</p>
+
+
+
+<button class="action"
+onclick="editProduct(${p.id})">
+
+✏ Изменить
 
 </button>
 
 
 
-<button onclick="deleteProduct(${x.id})">
+<button class="action"
+onclick="deleteProduct(${p.id})">
 
 🗑 Удалить
 
 </button>
-
 
 
 </div>
@@ -684,167 +904,6 @@ ${x.desc||""}
 
 
 
-
-
-
-
-// ДОБАВЛЕНИЕ ТОВАРА
-
-
-async function addProduct(){
-
-
-let name=
-document.getElementById("newName").value;
-
-
-let price=
-Number(
-document.getElementById("newPrice").value
-);
-
-
-
-let category=
-document.getElementById("newCategory").value;
-
-
-
-let desc=
-document.getElementById("newDesc").value;
-
-
-
-
-if(!name || !price){
-
-alert("Заполни название и цену");
-
-return;
-
-}
-
-
-
-
-let {error}=
-
-await db
-
-.from("menu_items")
-
-.insert({
-
-name,
-
-price,
-
-category,
-
-desc
-
-});
-
-
-
-
-if(error){
-
-alert(error.message);
-
-return;
-
-}
-
-
-
-alert("✅ Товар добавлен");
-
-
-
-loadMenu();
-
-
-}
-
-
-
-
-
-
-
-// СОХРАНЕНИЕ
-
-
-async function saveProduct(id){
-
-
-
-let {error}=
-
-await db
-
-.from("menu_items")
-
-.update({
-
-price:
-
-Number(
-document.getElementById(
-"price_"+id
-).value
-),
-
-
-category:
-
-document.getElementById(
-"cat_"+id
-).value,
-
-
-desc:
-
-document.getElementById(
-"desc_"+id
-).value,
-
-
-updated_at:
-
-new Date()
-
-
-})
-
-.eq(
-"id",
-id
-);
-
-
-
-
-if(error){
-
-alert(error.message);
-
-}else{
-
-alert("Сохранено");
-
-}
-
-
-}
-
-
-
-
-
-
-// УДАЛЕНИЕ ТОВАРА
 
 
 async function deleteProduct(id){
@@ -873,38 +932,175 @@ id
 
 
 
+
+if(error){
+
+
+alert(error.message);
+
+
+return;
+
+
+}
+
+
+
+loadProducts();
+
+
+}
+
+
+
+
+
+
+
+async function editProduct(id){
+
+
+
+let {data,error}=
+
+await db
+
+.from("menu_items")
+
+.select("*")
+
+.eq(
+"id",
+id
+)
+
+.single();
+
+
+
+
+
 if(error){
 
 alert(error.message);
 
+return;
+
+}
+
+
+
+
+let name =
+prompt(
+"Название:",
+data.name
+);
+
+
+
+if(name===null)
+return;
+
+
+
+let price =
+prompt(
+"Цена:",
+data.price
+);
+
+
+
+let desc =
+prompt(
+"Описание:",
+data.desc || ""
+);
+
+
+
+
+
+let result =
+
+await db
+
+.from("menu_items")
+
+.update({
+
+name:name,
+
+price:Number(price),
+
+desc:desc
+
+
+})
+
+.eq(
+"id",
+id
+);
+
+
+
+
+
+if(result.error){
+
+alert(result.error.message);
+
+
 }else{
 
-loadMenu();
+
+loadProducts();
+
 
 }
 
 
+
 }
 
 
 
 
 
-// ==========================
-// ОТЗЫВЫ
-// ==========================
+
+// ===============================
+// АВТОЗАГРУЗКА
+// ===============================
+
+
+
+loadProducts();
+
+
+</script>
+<script>
+
+
+// =================================
+// ⭐ ОТЗЫВЫ
+// =================================
 
 
 async function loadReviews(){
 
 
-let box=
+let box =
 document.getElementById("reviewList");
 
 
+if(!box)
+return;
 
-box.innerHTML=
-"Загрузка...";
+
+
+box.innerHTML="Загрузка...";
 
 
 
@@ -925,6 +1121,7 @@ ascending:false
 
 
 
+
 if(error){
 
 box.innerHTML=
@@ -936,16 +1133,14 @@ return;
 
 
 
-
 if(!data.length){
 
 box.innerHTML=
-"Отзывов нет";
+"Отзывов пока нет";
 
 return;
 
 }
-
 
 
 
@@ -954,34 +1149,50 @@ box.innerHTML=
 data.map(r=>`
 
 
-<div class="review">
+<div class="product">
 
 
-<b>
-${r.author||"Гость"}
-</b>
+<h3>
+⭐ ${r.author || "Гость"}
+</h3>
 
 
 <p>
-${r.text||""}
+${r.text || ""}
 </p>
 
 
 <div class="small">
-${r.created_at||""}
+
+${r.created_at || ""}
+
 </div>
 
 
 
-<button onclick="deleteReview('${r.id}')">
+<button class="action"
+onclick="deleteReview('${r.id}')">
 
-🗑 Удалить отзыв
+🗑 Удалить
 
 </button>
 
 
-</div>
 
+${r.user_id ? `
+
+<button class="action"
+onclick="banUser('${r.user_id}')">
+
+🚫 Забанить
+
+</button>
+
+`:''}
+
+
+
+</div>
 
 
 `).join("");
@@ -996,6 +1207,7 @@ ${r.created_at||""}
 
 
 async function deleteReview(id){
+
 
 
 if(!confirm(
@@ -1025,12 +1237,14 @@ if(error){
 
 alert(error.message);
 
-}else{
+return;
+
+}
+
+
 
 loadReviews();
 
-}
-
 
 }
 
@@ -1038,43 +1252,44 @@ loadReviews();
 
 
 
-async function logout(){
 
 
-await db.auth.signOut();
-
-
-location.reload();
-
-
-}
+// =================================
+// 🚫 БАНЫ
+// =================================
 
 
 
-</script>
-<script>
-
-
-// =====================================
-// 🚫 БАН ПОЛЬЗОВАТЕЛЕЙ
-// =====================================
+async function banUser(uid){
 
 
 
-async function banUser(user_id,reason){
+let reason =
+prompt(
+"Причина бана:"
+);
 
 
-let {error}=await db
+
+if(!reason)
+return;
+
+
+
+let {error}=
+
+await db
 
 .from("banned_users")
 
 .insert({
 
-user_id,
+user_id:uid,
 
-reason
+reason:reason
 
 });
+
 
 
 
@@ -1082,14 +1297,25 @@ if(error){
 
 alert(error.message);
 
-}else{
-
-alert("Пользователь заблокирован");
+return;
 
 }
 
 
+
+alert(
+"Пользователь заблокирован"
+);
+
+
+
+loadBans();
+
+
 }
+
+
+
 
 
 
@@ -1097,10 +1323,25 @@ alert("Пользователь заблокирован");
 async function loadBans(){
 
 
-let box=document.getElementById("menuList");
+
+let box =
+document.getElementById("banList");
 
 
-let {data,error}=await db
+
+if(!box)
+return;
+
+
+
+box.innerHTML="Загрузка...";
+
+
+
+
+let {data,error}=
+
+await db
 
 .from("banned_users")
 
@@ -1115,13 +1356,29 @@ ascending:false
 
 
 
+
 if(error){
 
-box.innerHTML=error.message;
+box.innerHTML=
+error.message;
 
 return;
 
 }
+
+
+
+
+if(!data.length){
+
+box.innerHTML=
+"Банов нет";
+
+return;
+
+}
+
+
 
 
 
@@ -1130,18 +1387,24 @@ box.innerHTML=
 data.map(b=>`
 
 
-<div class="item">
+<div class="product">
 
-<b>🚫 ${b.user_id}</b>
+
+<h3>
+🚫 ${b.user_id}
+</h3>
+
 
 <p>
-${b.reason||"Без причины"}
+${b.reason || ""}
 </p>
 
 
-<button onclick="unban('${b.id}')">
 
-Разблокировать
+<button class="action"
+onclick="unban('${b.id}')">
+
+Разбанить
 
 </button>
 
@@ -1157,7 +1420,9 @@ ${b.reason||"Без причины"}
 
 
 
+
 async function unban(id){
+
 
 
 await db
@@ -1183,356 +1448,10 @@ loadBans();
 
 
 
-// =====================================
-// 🛡 АНТИСПАМ
-// =====================================
 
-
-
-const badWords=[
-
-"бля",
-"бляд",
-"хуй",
-"хуе",
-"пизд",
-"говно",
-"сук"
-
-];
-
-
-
-
-
-function checkSpam(text){
-
-
-let t=text.toLowerCase();
-
-
-
-for(let word of badWords){
-
-
-if(t.includes(word)){
-
-return {
-
-ok:false,
-
-reason:"Запрещённые слова"
-
-};
-
-}
-
-
-}
-
-
-
-
-if(text.length>500){
-
-return {
-
-ok:false,
-
-reason:"Слишком длинный отзыв"
-
-};
-
-}
-
-
-
-
-return {
-
-ok:true
-
-};
-
-
-}
-
-
-
-
-
-async function sendReview(user_id,text){
-
-
-
-let spam=
-checkSpam(text);
-
-
-
-if(!spam.ok){
-
-
-alert(
-"❌ "+spam.reason
-);
-
-
-return;
-
-
-}
-
-
-
-
-
-// проверяем бан
-
-
-let ban=
-
-await db
-
-.from("banned_users")
-
-.select("*")
-
-.eq(
-"user_id",
-user_id
-)
-
-.maybeSingle();
-
-
-
-
-
-if(ban.data){
-
-
-alert(
-"Вы заблокированы"
-);
-
-
-return;
-
-
-}
-
-
-
-
-// проверяем повтор
-
-
-let old=
-
-await db
-
-.from("reviews")
-
-.select("*")
-
-.eq(
-"user_id",
-user_id
-)
-
-.order(
-"created_at",
-{
-ascending:false
-}
-)
-
-.limit(3);
-
-
-
-
-if(old.data){
-
-
-for(let r of old.data){
-
-
-if(r.text===text){
-
-
-alert(
-"Не повторяйте один и тот же отзыв"
-);
-
-
-return;
-
-
-}
-
-
-}
-
-
-}
-
-
-
-
-
-await db
-
-.from("reviews")
-
-.insert({
-
-user_id,
-
-text
-
-});
-
-
-
-alert(
-"Отзыв добавлен"
-);
-
-
-
-}
-
-
-
-
-
-// =====================================
-// 🔎 БЛОКИРОВКА ПОИСКА
-// =====================================
-
-
-
-
-function checkSearch(value){
-
-
-let text=value.toLowerCase();
-
-
-
-for(let word of badWords){
-
-
-if(text.includes(word)){
-
-
-return false;
-
-
-}
-
-
-}
-
-
-
-return true;
-
-
-}
-
-
-
-
-
-
-// пример:
-
-// if(!checkSearch(search.value)){
-//    показать "Ничего не найдено"
-// }
-
-
-
-
-
-
-
-
-// =====================================
-// 🍝 КОМБО НАБОРЫ
-// =====================================
-
-
-
-
-async function createCombo(){
-
-
-
-let name=
-
-prompt(
-"Название комбо"
-);
-
-
-
-let desc=
-
-prompt(
-"Состав"
-);
-
-
-
-let price=
-
-Number(
-prompt(
-"Цена"
-)
-);
-
-
-
-
-let {error}=await db
-
-.from("combos")
-
-.insert({
-
-name,
-
-description:desc,
-
-price
-
-});
-
-
-
-
-
-if(error){
-
-alert(error.message);
-
-}else{
-
-alert(
-"Комбо создано"
-);
-
-}
-
-
-
-
-}
+// =================================
+// 🔥 КОМБО
+// =================================
 
 
 
@@ -1540,8 +1459,17 @@ alert(
 async function loadCombos(){
 
 
+let box =
+document.getElementById("comboList");
 
-let box=document.getElementById("menuList");
+
+
+if(!box)
+return;
+
+
+
+box.innerHTML="Загрузка...";
 
 
 
@@ -1558,10 +1486,10 @@ await db
 
 
 
-
 if(error){
 
-box.innerHTML=error.message;
+box.innerHTML=
+error.message;
 
 return;
 
@@ -1570,28 +1498,28 @@ return;
 
 
 
+box.innerHTML=`
 
-box.innerHTML=
-
-`
-
-<button onclick="createCombo()">
+<button class="action"
+onclick="createCombo()">
 
 ➕ Создать комбо
 
 </button>
 
-
-`+
-
-data.map(c=>`
+`;
 
 
-<div class="item">
+data.forEach(c=>{
+
+
+box.innerHTML+=`
+
+<div class="product">
 
 
 <h3>
-${c.name}
+🔥 ${c.name}
 </h3>
 
 
@@ -1605,18 +1533,19 @@ ${c.price} ₽
 </b>
 
 
-<button onclick="deleteCombo(${c.id})">
+<button class="action"
+onclick="deleteCombo(${c.id})">
 
-🗑 Удалить
+🗑
 
 </button>
 
 
 </div>
 
+`;
 
-`).join("");
-
+});
 
 
 }
@@ -1625,7 +1554,79 @@ ${c.price} ₽
 
 
 
+
+async function createCombo(){
+
+
+
+let name =
+prompt(
+"Название комбо:"
+);
+
+
+
+let desc =
+prompt(
+"Состав:"
+);
+
+
+
+let price =
+Number(
+prompt(
+"Цена:"
+)
+);
+
+
+
+
+if(!name || !price)
+return;
+
+
+
+let {error}=
+
+await db
+
+.from("combos")
+
+.insert({
+
+name:name,
+
+description:desc,
+
+price:price
+
+});
+
+
+
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+
+
+loadCombos();
+
+
+}
+
+
+
+
 async function deleteCombo(id){
+
 
 
 await db
@@ -1646,6 +1647,32 @@ loadCombos();
 
 }
 
+
+
+
+
+
+// =================================
+// 📊 ОБНОВЛЕНИЕ ПРИ ОТКРЫТИИ
+// =================================
+
+
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+
+loadProducts();
+
+loadReviews();
+
+loadBans();
+
+loadCombos();
+
+
+});
 
 
 </script>
