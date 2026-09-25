@@ -2,13 +2,12 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
 <title>Админка столовой</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 body{
 margin:0;
 background:#111;
@@ -17,10 +16,10 @@ color:white;
 padding:30px;
 }
 
-.box{
-max-width:1100px;
+.card{
+max-width:900px;
 margin:auto;
-background:#1c1c1c;
+background:#1e1e1e;
 padding:30px;
 border-radius:20px;
 }
@@ -29,47 +28,45 @@ input,textarea{
 width:100%;
 padding:12px;
 margin:8px 0;
-border-radius:10px;
 background:#303747;
 color:white;
 border:1px solid #555;
+border-radius:10px;
 }
 
 button{
-padding:14px;
 width:100%;
-border:0;
-border-radius:12px;
+padding:14px;
 background:#ff5722;
 color:white;
+border:0;
+border-radius:12px;
 font-weight:bold;
 cursor:pointer;
-margin-top:10px;
 }
 
 button:hover{
 opacity:.8;
 }
 
-.hidden{
+.hide{
 display:none;
 }
 
 .status{
-margin-top:15px;
 padding:12px;
+margin-top:15px;
 border-radius:10px;
 background:#333;
 }
 
-.ok{
-background:#087f23;
-}
-
-.err{
+.error{
 background:#8b1e1e;
 }
 
+.good{
+background:#087f23;
+}
 
 table{
 width:100%;
@@ -90,13 +87,12 @@ border-bottom:1px solid #444;
 <body>
 
 
-<div class="box" id="login">
+<div class="card" id="login">
 
 <h1>🔐 Админ вход</h1>
 
 
 <input id="email"
-value="riaboshapkaiwan2030@gmail.com"
 placeholder="Email">
 
 
@@ -110,7 +106,7 @@ placeholder="Пароль">
 </button>
 
 
-<div id="loginStatus" class="status">
+<div id="info" class="status">
 Ожидание...
 </div>
 
@@ -120,11 +116,11 @@ placeholder="Пароль">
 
 
 
-<div class="box hidden" id="admin">
+
+<div class="card hide" id="panel">
 
 
-<h1>🍽 Панель администратора</h1>
-
+<h1>🍽 Админка</h1>
 
 <button onclick="logout()">
 Выйти
@@ -140,18 +136,15 @@ placeholder="Пароль">
 <table>
 
 <thead>
-
 <tr>
 <th>ID</th>
 <th>Название</th>
 <th>Цена</th>
-<th>Описание</th>
 </tr>
-
 </thead>
 
 
-<tbody id="menu"></tbody>
+<tbody id="items"></tbody>
 
 
 </table>
@@ -164,62 +157,69 @@ placeholder="Пароль">
 <script>
 
 
-const SUPABASE_URL =
+const URL =
 "https://lzbhpdievyemsioluvyc.supabase.co";
 
 
-const SUPABASE_KEY =
-"sb_publishable_qvh9ZOOXqlEAsBexdJfdlA_UGu3jsCG";
+const KEY =
+"ТВОЙ_SB_PUBLISHABLE_KEY";
 
 
-const db =
-supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
+const supabase =
+window.supabase.createClient(
+URL,
+KEY
 );
 
 
 
-function msg(id,text,type=""){
-let el=document.getElementById(id);
-el.innerHTML=text;
-el.className="status "+type;
+function text(id,msg,type=""){
+
+let e=document.getElementById(id);
+
+e.innerHTML=msg;
+
+e.className="status "+type;
+
 }
+
 
 
 
 async function login(){
 
 
-msg(
-"loginStatus",
-"⏳ Авторизация..."
+text(
+"info",
+"⏳ Вход..."
 );
 
 
-let email=
+
+let email =
 document.getElementById("email").value;
 
 
-let password=
+let password =
 document.getElementById("password").value;
 
 
 
-let res=
-await db.auth.signInWithPassword({
+let {data,error}=await supabase.auth.signInWithPassword({
+
 email,
 password
+
 });
 
 
 
-if(res.error){
+if(error){
 
-msg(
-"loginStatus",
-"❌ "+res.error.message,
-"err"
+text(
+"info",
+"❌ "+error.message,
+"error"
 );
 
 return;
@@ -228,46 +228,34 @@ return;
 
 
 
-msg(
-"loginStatus",
-"Проверяем права..."
+let uid=data.user.id;
+
+
+text(
+"info",
+"Проверяем UID: "+uid
 );
 
 
 
-let user=
-res.data.user;
-
-
-
-console.log(
-"USER:",
-user.id
-);
-
-
-
-let check=
-await db
+let admin =
+await supabase
 .from("admin_users")
-.select("user_id")
-.eq(
-"user_id",
-user.id
-);
+.select("*")
+.eq("user_id",uid);
 
 
 
-console.log(check);
+console.log(admin);
 
 
 
-if(check.error){
+if(admin.error){
 
-msg(
-"loginStatus",
-"❌ Ошибка admin_users: "+check.error.message,
-"err"
+text(
+"info",
+"❌ "+admin.error.message,
+"error"
 );
 
 return;
@@ -276,74 +264,62 @@ return;
 
 
 
-if(!check.data.length){
+if(admin.data.length===0){
 
-await db.auth.signOut();
-
-
-msg(
-"loginStatus",
-"❌ Нет доступа. UID не найден",
-"err"
+text(
+"info",
+"❌ UID нет в admin_users",
+"error"
 );
-
 
 return;
 
 }
 
 
-
-openAdmin();
-
-
-}
-
-
-
-
-function openAdmin(){
 
 document
 .getElementById("login")
-.classList.add("hidden");
+.classList.add("hide");
 
 
 document
-.getElementById("admin")
-.classList.remove("hidden");
+.getElementById("panel")
+.classList.remove("hide");
 
 
 loadMenu();
 
+
 }
+
+
 
 
 
 async function loadMenu(){
 
 
-msg(
+text(
 "status",
-"Загрузка меню..."
+"Загрузка..."
 );
 
 
 
-let r=
-await db
+let {data,error}=await supabase
 .from("menu_items")
 .select("*")
 .order("id");
 
 
 
-if(r.error){
+if(error){
 
-msg(
+text(
 "status",
-"❌ "+r.error.message,
-"err"
+error.message,
+"error"
 );
 
 return;
@@ -353,39 +329,29 @@ return;
 
 
 document
-.getElementById("menu")
+.getElementById("items")
 .innerHTML =
-r.data.map(x=>`
+data.map(x=>`
 
 <tr>
 
 <td>${x.id}</td>
 
-<td>
-<input value="${x.name}">
-</td>
+<td>${x.name}</td>
 
-<td>
-<input value="${x.price}">
-</td>
-
-
-<td>
-<textarea>${x.desc||""}</textarea>
-</td>
-
+<td>${x.price} ₽</td>
 
 </tr>
-
 
 `).join("");
 
 
 
-msg(
+text(
 "status",
-"✅ Загружено "+r.data.length
-,"ok");
+"✅ Загружено "+data.length,
+"good"
+);
 
 
 }
@@ -395,16 +361,15 @@ msg(
 
 async function logout(){
 
-await db.auth.signOut();
+await supabase.auth.signOut();
 
 location.reload();
 
 }
 
 
-
 </script>
 
 
 </body>
-</html>а
+</html>
