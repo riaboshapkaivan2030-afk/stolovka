@@ -789,13 +789,22 @@ box.innerHTML=items.map(x=>`
 <div class="card">
 
 
+${
+x.image_url
+
+?
+
+`
 <img
-
-src="${x.image_url || 'https://via.placeholder.com/400'}"
-
-onerror="this.src='https://via.placeholder.com/400'"
-
+src="${x.image_url}"
 >
+`
+
+:
+
+""
+
+}
 
 
 
@@ -1616,7 +1625,7 @@ reviewMessage(
 
 
 }
-// =================================
+  // =================================
 // ЗАГРУЗКА ОТЗЫВОВ
 // =================================
 
