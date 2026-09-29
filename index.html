@@ -1010,7 +1010,7 @@ async function adminLogin(){
 async function saveAdminChanges(){
   if(!supabaseClient){showToast('Supabase не настроен');return;}
   const {data:{session}}=await supabaseClient.auth.getSession();
-  if(!session){setAdminLoggedIn(false);showToast('Нужен вход администратора');return;}
+  if(!session||session.user.is_anonymous){setAdminLoggedIn(false);showToast('Нужен вход администратора');return;}
   const updates=[];
   $$('#adminRows tr').forEach(row=>{
     const id=Number(row.dataset.adminId),dish=database.find(item=>item.id===id);
@@ -1048,7 +1048,22 @@ async function logoutAdmin(){
 }
 
 
+let reviewUid=null;
+let sessionReady=Promise.resolve();
+async function ensureReviewSession(){
+  if(!supabaseClient)return;
+  try{
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(session){reviewUid=session.user.id;return;}
+    const {data,error}=await supabaseClient.auth.signInAnonymously();
+    if(error){console.warn('anon sign-in',error);return;}
+    reviewUid=data.user.id;
+  }catch(e){console.warn(e);}
+}
+if(supabaseClient)sessionReady=ensureReviewSession();
+
 function getReviewUserId(){
+  if(supabaseClient&&reviewUid)return reviewUid;
   let id=localStorage.getItem("stolovkaReviewUserId");
   if(!id){
     id=(globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() :
@@ -1062,6 +1077,7 @@ function ratingKey(id){return `stolovkaRating_${id}`;}
 
 async function getRemoteRatings(id){
   if(!supabaseClient)return [];
+  await sessionReady;
   const {data,error}=await supabaseClient
     .from('reviews')
     .select('*')
@@ -1150,7 +1166,9 @@ async function submitRating(id){
   if(reviewWords(text).filter(word=>word.length>=2).length<5){showToast('Отзыв должен содержать минимум 5 слов');return;}
   if(containsProhibitedLanguage(`${author} ${text}`)){showToast('Недопустимый текст');return;}
 
+  await sessionReady;
   const userId=getReviewUserId();
+  if(supabaseClient&&!reviewUid){showToast('Не удалось войти как гость, обнови страницу');return;}
   if(supabaseClient){
     const {error}=await supabaseClient.from('reviews').upsert({
       dish_id:id,user_id:userId,author,text,stars,updated_at:new Date().toISOString()
@@ -1169,6 +1187,7 @@ async function submitRating(id){
 }
 
 async function deleteRating(id){
+  await sessionReady;
   const userId=getReviewUserId();
   if(supabaseClient){
     const {error}=await supabaseClient.from('reviews').delete().eq('dish_id',id).eq('user_id',userId);
@@ -1356,7 +1375,21 @@ $('#resetMenuBtn')?.addEventListener('click',resetMenuChanges);
 $('#adminLoginBtn')?.addEventListener('click',adminLogin);
 $('#logoutAdminBtn')?.addEventListener('click',logoutAdmin);
 $('#adminPassword')?.addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
-if(supabaseClient){supabaseClient.auth.onAuthStateChange((_event,session)=>setAdminLoggedIn(Boolean(session)));}
+if(supabaseClient){
+  supabaseClient.auth.onAuthStateChange((event,session)=>{
+    if(!session){
+      setAdminLoggedIn(false);
+      // после выхода из админки снова становимся анонимным гостем (для отзывов)
+      if(event==='SIGNED_OUT'){
+        reviewUid=null;
+        setTimeout(()=>{sessionReady=ensureReviewSession();},0);
+      }
+      return;
+    }
+    reviewUid=session.user.id;
+    setTimeout(()=>refreshAdminAuth(),0);
+  });
+}
 
 renderCatalog();renderFavorites();renderToday();renderAdmin();
 setAdminLoggedIn(false);
