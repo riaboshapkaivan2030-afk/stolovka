@@ -1074,6 +1074,15 @@ function getReviewUserId(){
   return id;
 }
 
+function reviewErrorText(error){
+  const m=String(error?.message||'');
+  if(m.includes('REVIEW_TEMP_BLOCKED'))return 'Вы временно заблокированы за спам. Попробуйте позже';
+  if(m.includes('REVIEW_RATE_LIMIT'))return 'Слишком часто. Подождите несколько минут';
+  if(m.includes('REVIEW_DUPLICATE_SPAM'))return 'Такой отзыв уже отправлен';
+  if(m.includes('REVIEW_CONTENT_BLOCKED'))return 'Ссылки и недопустимые слова запрещены';
+  if(m.includes('row-level security'))return 'Нет доступа: включи анонимный вход в Supabase';
+  return 'Ошибка сохранения: '+m.slice(0,80);
+}
 function ratingKey(id){return `stolovkaRating_${id}`;}
 
 async function getRemoteRatings(id){
@@ -1174,7 +1183,7 @@ async function submitRating(id){
     const {error}=await supabaseClient.from('reviews').upsert({
       dish_id:id,user_id:userId,author,text,stars,updated_at:new Date().toISOString()
     },{onConflict:'dish_id,user_id'});
-    if(error){console.warn(error);showToast('Ошибка сохранения');return;}
+    if(error){console.warn(error);showToast(reviewErrorText(error));return;}
   } else {
     const list=getRatings(id);
     const index=list.findIndex(r=>r.userId===userId);
