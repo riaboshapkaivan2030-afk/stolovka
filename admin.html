@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Столовка — Админка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap&subset=cyrillic" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0e1013;--side:#14171c;--card:#1a1e25;--card2:#222731;--line:#2c333f;--ink:#f2f4f7;--mut:#9aa4b2;--acc:#ff6a3d;--acc2:#ff8f6b;--ok:#3ecf8e;--bad:#ef4444}
@@ -57,6 +58,45 @@ h2{margin:0 0 18px;font-size:1.5rem}
 .foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
 #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#000c;border:1px solid var(--line);padding:12px 18px;border-radius:14px;z-index:99;backdrop-filter:blur(8px)}
 @media(max-width:760px){aside{position:static;width:100%;flex-direction:row;overflow-x:auto;padding:10px}.logo,.grow{display:none}.layout{flex-direction:column}main{margin:0;width:100%;padding:16px}.row3{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}}
+/* ===== 2026 REDESIGN: admin ===== */
+:root{--bg:#f3eee5;--side:#173b2d;--card:#fffdf8;--card2:#f0ebe2;--line:#ddd4c7;--ink:#18211d;--mut:#747c77;--acc:#e85d3f;--acc2:#ff7a59;--ok:#27845c;--bad:#c84538}
+body{background:radial-gradient(circle at 100% 0,rgba(242,193,78,.16),transparent 28rem),var(--bg);color:var(--ink);font-family:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif}
+input,select,textarea{padding:12px 13px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 7px 18px -18px rgba(0,0,0,.45)}
+input:focus,select:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 4px rgba(232,93,63,.11)}
+label{color:var(--mut);font-weight:700;letter-spacing:.01em}
+.btn{border:1px solid var(--line);border-radius:13px;padding:10px 15px;background:var(--card);color:var(--ink);transition:transform .16s,border-color .16s,background .16s}
+.btn:hover{filter:none;transform:translateY(-1px);border-color:var(--acc)}
+.btn.pri{border-color:var(--ink);background:var(--ink);color:#fff;box-shadow:0 10px 24px -18px rgba(0,0,0,.8)}
+.btn.pri:hover{background:var(--acc);border-color:var(--acc)}
+.btn.del{background:#fff2ef;color:var(--bad);border-color:#f1c8c1}
+#login{background:linear-gradient(135deg,#173b2d 0 46%,var(--bg) 46% 100%)}
+.lbox{max-width:410px;background:rgba(255,253,248,.96);border:1px solid rgba(255,255,255,.5);border-radius:28px;padding:34px;box-shadow:0 34px 80px -45px rgba(0,0,0,.7);backdrop-filter:blur(18px)}
+.lbox h1{font-family:"Unbounded",system-ui,sans-serif;font-size:1.45rem;letter-spacing:-.04em}.lbox p{color:var(--mut);margin-bottom:18px}
+.err{background:#fff1ee;color:#ad392f;border:1px solid #efc1ba;border-radius:12px}
+aside{width:252px;background:var(--side);border-right:0;padding:22px 14px 18px;gap:7px;box-shadow:20px 0 60px -48px rgba(0,0,0,.8)}
+.logo{font-family:"Unbounded",system-ui,sans-serif;font-size:1.16rem;color:#fff;padding:8px 12px 24px}.logo span{color:#f2c14e}
+.nav{padding:12px 14px;border-radius:14px;color:rgba(255,255,255,.7);font-weight:700;transition:.16s}
+.nav:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav.on{background:#fffdf8;color:#173b2d;box-shadow:0 12px 25px -20px #000}
+main{margin-left:252px;padding:36px 36px 60px;width:calc(100% - 252px);max-width:1500px}
+h2{font-family:"Unbounded",system-ui,sans-serif;font-size:1.65rem;letter-spacing:-.04em;margin-bottom:24px}
+.stats{gap:16px}.stat{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 18px 45px -40px rgba(23,32,28,.75)}
+.stat b{font-family:"Unbounded",system-ui,sans-serif;font-size:2.35rem;color:var(--acc);letter-spacing:-.05em}.stat span{color:var(--mut);font-weight:600}
+.bar{gap:10px;margin-bottom:22px}.bar select{min-width:180px}
+.grid{grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:17px}
+.dish{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 42px -38px rgba(0,0,0,.75);transition:transform .18s,border-color .18s}
+.dish:hover{transform:translateY(-3px);border-color:rgba(232,93,63,.55)}
+.dish .ph{height:156px;background-color:var(--card2);font-size:2.6rem}
+.dish .in{padding:16px}.dish h4{font-size:1rem;margin-bottom:7px}.dish small{color:var(--mut);line-height:1.45}.dish .pr{color:var(--acc);font-size:1.12rem}.dish .ac{padding:0 16px 16px}
+.badge{background:#f0ebe2;color:var(--mut);border:1px solid var(--line)}
+.rev{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 16px 34px -34px rgba(0,0,0,.7)}.rev p{color:#4f5953}.stars{color:#e2aa24}
+.modal{background:rgba(16,24,20,.68);backdrop-filter:blur(8px)}
+.mbox{background:var(--card);border:1px solid var(--line);border-radius:26px;max-width:680px;padding:28px;box-shadow:0 34px 90px -48px #000}
+.mbox h3{font-family:"Unbounded",system-ui,sans-serif;font-size:1.25rem;letter-spacing:-.035em}
+.pv{width:118px;height:90px;border-radius:15px;background-color:var(--card2);border:1px solid var(--line)}
+#toast{background:#17201ce8;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:999px;box-shadow:0 18px 40px -28px #000}
+@media(max-width:760px){aside{width:100%;padding:10px;background:var(--side)}main{padding:20px 14px 40px}.nav{white-space:nowrap}.lbox{padding:27px}.grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}}
+
 </style>
 </head>
 <body>
