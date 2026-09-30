@@ -832,7 +832,7 @@ const database = [
 // 3) Выполни файл supabase_setup.sql, который я дал вместе с этим HTML.
 const SUPABASE_URL = 'https://lzbhpdievyemsioluvyc.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_qvh9ZOOXqlEAsBexdJfdlA_UGu3jsCG';
-const supabaseConfigured = SUPABASE_URL.startsWith('http') && !SUPABASE_ANON_KEY.startsWith('ВСТАВЬ_');
+const supabaseConfigured = SUPABASE_URL.startsWith('http') && !SUPABASE_ANON_KEY.startsWith('ВСТАВЬ_') && Boolean(window.supabase?.createClient);
 const supabaseClient = supabaseConfigured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const publicMenuTable = 'menu_items';
 
@@ -848,6 +848,16 @@ function readJsonStorage(key,fallback){
   }catch{
     return fallback;
   }
+}
+
+function safeStorageGet(key,fallback=''){
+  try{return localStorage.getItem(key)??fallback;}catch{return fallback;}
+}
+function safeStorageSet(key,value){
+  try{localStorage.setItem(key,value);return true;}catch{return false;}
+}
+function safeStorageRemove(key){
+  try{localStorage.removeItem(key);return true;}catch{return false;}
 }
 
 function copyDish(d){
@@ -926,7 +936,7 @@ function applyMenuOverrides(payload){
 }
 
 const defaultDatabase=database.map(copyDish);
-try{localStorage.removeItem(menuStorageKey)}catch{} // старые локальные цены больше не используются
+safeStorageRemove(menuStorageKey); // старые локальные цены больше не используются
 
 const categoryImages={
   soup:'https://images.unsplash.com/photo-1608949621308-c54d112c808a?auto=format&fit=crop&w=900&q=82',
@@ -974,17 +984,17 @@ function applyTheme(theme){
 }
 function toggleTheme(){
   const theme=document.body.classList.contains('dark')?'light':'dark';
-  localStorage.setItem(themeKey,theme);
+  safeStorageSet(themeKey,theme);
   applyTheme(theme);
 }
-applyTheme(localStorage.getItem(themeKey)||'light');
+applyTheme(safeStorageGet(themeKey,'light')||'light');
 
 function showToast(text){
   els.toast.textContent=text;els.toast.classList.add('show');
   clearTimeout(showToast.t);showToast.t=setTimeout(()=>els.toast.classList.remove('show'),2200);
 }
-function saveFavorites(){localStorage.setItem('stolovkaFavorites',JSON.stringify([...state.favorites]));}
-function saveRecent(){localStorage.setItem('stolovkaRecent',JSON.stringify(state.recent));}
+function saveFavorites(){safeStorageSet('stolovkaFavorites',JSON.stringify([...state.favorites]));}
+function saveRecent(){safeStorageSet('stolovkaRecent',JSON.stringify(state.recent));}
 function rememberRecent(id){
   state.recent=[id,...state.recent.filter(x=>x!==id)].slice(0,4);
   saveRecent();
@@ -996,7 +1006,7 @@ function renderRecent(){
   if(!strip||!mount)return;
   const items=state.recent.map(id=>database.find(d=>d.id===id)).filter(Boolean);
   strip.hidden=!items.length;
-  mount.innerHTML=items.map(d=>`<button type="button" class="recent-item" data-open="${d.id}"><img src="${dishImage(d)}" alt="" loading="lazy"><span><b>${d.name}</b><small>${d.price==null?'Цена не опубликована':d.price+' ₽'}</small></span><i>↗</i></button>`).join('');
+  mount.innerHTML=items.map(d=>`<button type="button" class="recent-item" data-open="${Number(d.id)}"><img src="${escapeHtml(dishImage(d))}" alt="" loading="lazy"><span><b>${escapeHtml(d.name)}</b><small>${d.price==null?'Цена не опубликована':escapeHtml(d.price+' ₽')}</small></span><i>↗</i></button>`).join('');
 }
 
 function switchTab(id,{scroll=true}={}){
@@ -1215,14 +1225,16 @@ function displayDishDescription(d){
 
 function renderCard(d,fromFavorites=false){
   const hot=d.popularity>=95?'<span class="badge">🔥 ХИТ</span>':'';
-  const remove=fromFavorites&&state.favorites.has(d.id)?`<button type="button" class="favorite-remove" title="Удалить из избранного" aria-label="Удалить ${d.name} из избранного" data-remove-fav="${d.id}">×</button>`:'';
-  return `<article class="dish-card" data-open="${d.id}">
-    ${hot}${remove}<img class="dish-img" src="${dishImage(d)}" alt="${d.name}" loading="lazy">
+  const name=escapeHtml(d.name);
+  const description=displayDishDescription(d);
+  const remove=fromFavorites&&state.favorites.has(d.id)?`<button type="button" class="favorite-remove" title="Удалить из избранного" aria-label="Удалить ${name} из избранного" data-remove-fav="${Number(d.id)}">×</button>`:'';
+  return `<article class="dish-card" data-open="${Number(d.id)}">
+    ${hot}${remove}<img class="dish-img" src="${escapeHtml(dishImage(d))}" alt="${name}" loading="lazy">
     <div class="dish-info">
-      <div class="dish-name">${d.name}</div>
-      <div class="dish-price">${d.price==null?'Цена не опубликована':d.price+' ₽'}</div>
-      <div class="dish-short">${displayDishDescription(d).slice(0,96)}${displayDishDescription(d).length>96?'…':''}</div>
-      <div class="card-bottom"><button class="open-btn" data-open="${d.id}">Подробнее</button></div>
+      <div class="dish-name">${name}</div>
+      <div class="dish-price">${d.price==null?'Цена не опубликована':escapeHtml(d.price+' ₽')}</div>
+      <div class="dish-short">${escapeHtml(description.slice(0,96))}${description.length>96?'…':''}</div>
+      <div class="card-bottom"><button class="open-btn" data-open="${Number(d.id)}">Подробнее</button></div>
     </div>
   </article>`;
 }
@@ -1242,14 +1254,14 @@ function renderCatalogSpotlight(){
       <div class="spotlight-shade"></div>
       <div class="spotlight-copy">
         <span class="spotlight-label">Выбор каталога</span>
-        <h4>${lead.name}</h4>
-        <p>${displayDishDescription(lead).slice(0,118)}</p>
-        <div class="spotlight-cta"><strong><small>Цена</small>${lead.price==null?'Не опубликована':lead.price+' ₽'}</strong><button type="button" data-open="${lead.id}">Подробнее →</button></div>
+        <h4>${escapeHtml(lead.name)}</h4>
+        <p>${escapeHtml(displayDishDescription(lead).slice(0,118))}</p>
+        <div class="spotlight-cta"><strong><small>Цена</small>${lead.price==null?'Не опубликована':escapeHtml(lead.price+' ₽')}</strong><button type="button" data-open="${lead.id}">Подробнее →</button></div>
       </div>
     </article>
     <div class="spotlight-side">
       ${secondary.map((d,i)=>`<article class="spotlight-mini" data-open="${d.id}" style="--mini-img:url('${dishImage(d)}')">
-        <div class="spotlight-mini-copy"><span>${i===0?'К обеду':'Что-нибудь ещё'}</span><h4>${d.name}</h4><strong>${d.price==null?'Цена не опубликована':d.price+' ₽'}</strong></div>
+        <div class="spotlight-mini-copy"><span>${i===0?'К обеду':'Что-нибудь ещё'}</span><h4>${escapeHtml(d.name)}</h4><strong>${d.price==null?'Цена не опубликована':escapeHtml(d.price+' ₽')}</strong></div>
       </article>`).join('')}
     </div>`;
 }
@@ -1279,10 +1291,10 @@ function renderCatalog(){
   if(spotlight)spotlight.classList.toggle('is-hidden',Boolean(q)||selectedCat!=='all');
   const hint=document.getElementById('smartSearchHint');
   if(hint){
-    if(q&&intent&&selectedCat==='all')hint.innerHTML=`<span>↳</span><span>По запросу <b>«${rawQ.trim()}»</b> показываю категорию <b>${categoryLabel(intent)}</b>.</span>`;
+    if(q&&intent&&selectedCat==='all')hint.innerHTML=`<span>↳</span><span>По запросу <b>«${escapeHtml(rawQ.trim())}»</b> показываю категорию <b>${escapeHtml(categoryLabel(intent))}</b>.</span>`;
     else if(q&&items.length){
       const first=items[0];
-      hint.innerHTML=`<span>↳</span><span>Лучшее совпадение: <b>${first.name}</b>. Поиск учитывает опечатки и разговорные слова.</span>`;
+      hint.innerHTML=`<span>↳</span><span>Лучшее совпадение: <b>${escapeHtml(first.name)}</b>. Поиск учитывает опечатки и разговорные слова.</span>`;
     }else hint.innerHTML='<span>⌁</span><span>Можно по-человечески: <b>«сушняк»</b> → напитки, <b>«катлета»</b> → котлета, <b>«макороны»</b> → макароны.</span>';
   }
   renderCategoryPills();
@@ -1446,6 +1458,13 @@ async function logoutAdmin(){
 
 let reviewUid=null;
 let sessionReady=Promise.resolve();
+async function restoreReviewSession(){
+  if(!supabaseClient)return;
+  try{
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(session)reviewUid=session.user.id;
+  }catch(e){console.warn('review session restore',e);}
+}
 async function ensureReviewSession(){
   if(!supabaseClient)return;
   try{
@@ -1456,15 +1475,15 @@ async function ensureReviewSession(){
     reviewUid=data.user.id;
   }catch(e){console.warn(e);}
 }
-if(supabaseClient)sessionReady=ensureReviewSession();
+if(supabaseClient)sessionReady=restoreReviewSession();
 
 function getReviewUserId(){
   if(supabaseClient&&reviewUid)return reviewUid;
-  let id=localStorage.getItem("stolovkaReviewUserId");
+  let id=safeStorageGet("stolovkaReviewUserId","");
   if(!id){
     id=(globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() :
       "u_"+Date.now()+"_"+Math.random().toString(36).slice(2));
-    localStorage.setItem("stolovkaReviewUserId",id);
+    safeStorageSet("stolovkaReviewUserId",id);
   }
   return id;
 }
@@ -1509,12 +1528,12 @@ function warmDishDetail(id){
   if(!dish)return;
   const src=dishImage(dish);
   if(src){const img=new Image();img.decoding='async';img.src=src;}
-  getRemoteRatings(Number(id)).catch(()=>{});
 }
+
 
 function getRatings(id){
   try{
-    const list=JSON.parse(localStorage.getItem(ratingKey(id))||"[]");
+    const list=JSON.parse(safeStorageGet(ratingKey(id),"[]")||"[]");
     return Array.isArray(list)?list:[];
   }catch{return [];}
 }
@@ -1540,7 +1559,7 @@ function escapeHtml(value){
 }
 
 function reviewName(){
-  return localStorage.getItem('stolovkaReviewName')||'';
+  return safeStorageGet('stolovkaReviewName','')||'';
 }
 
 const prohibitedReviewStems=['хуй','хуе','хуя','пизд','еба','ебл','бля','сука','гандон','долбоеб','дебил','идиот','мраз','урод','шлюх','наци','расист'];
@@ -1553,15 +1572,22 @@ function containsProhibitedLanguage(text){
     .some(word=>prohibitedReviewStems.some(stem=>word.startsWith(stem)));
 }
 
-function getUserReviewForDish(id){
-  return getRatings(id).find(r=>r.userId===getReviewUserId())||null;
+function getUserReviewForDish(id,remoteList=[]){
+  const knownUserId=reviewUid||safeStorageGet("stolovkaReviewUserId","")||null;
+  if(knownUserId){
+    const remote=remoteList.find(r=>r.userId===knownUserId);
+    if(remote)return remote;
+    const local=getRatings(id).find(r=>r.userId===knownUserId);
+    if(local)return local;
+  }
+  return null;
 }
 
 async function renderRatingBox(d){
   const list=await getRemoteRatings(d.id);
   const avg=ratingAverage(list);
   const recent=list.slice(0,5);
-  const mine=getUserReviewForDish(d.id);
+  const mine=getUserReviewForDish(d.id,list);
   const formHtml=`<div class="review-form">
     <input id="reviewName" class="field" maxlength="32" value="${escapeHtml(mine?.author||reviewName())}" placeholder="Твоё имя или никнейм (от 2 символов)">
     <div style="color:var(--muted);font-size:.82rem">Твоя оценка:</div>
@@ -1570,14 +1596,17 @@ async function renderRatingBox(d){
     <button class="action primary" data-submit-rating="${d.id}">${mine?'Обновить отзыв':'Опубликовать отзыв'}</button>
   </div>`;
 
+  const knownUserId=reviewUid||safeStorageGet("stolovkaReviewUserId","")||null;
   return `<div class="rating-box">
     <div class="rating-summary"><strong>Отзывы о блюде</strong><span class="rating-value">${avg?avg.toFixed(1):"—"}</span><span>${starsView(avg)}</span><span style="color:var(--muted)">${list.length} отзывов</span></div>
     ${formHtml}
-    <div class="review-list">${recent.length?recent.map(r=>`<div class="review"><div class="review-head"><strong>${escapeHtml(r.author||'Гость')}</strong><span>${starsView(r.stars)} · ${new Date(r.date).toLocaleDateString("ru-RU")}</span></div><div class="review-body">${escapeHtml(r.text||"Без комментария")}</div>${r.userId===getReviewUserId()?`<div class="review-actions"><button class="review-action" type="button" data-edit-rating="${d.id}">Изменить</button><button class="review-action" type="button" data-delete-rating="${d.id}">Удалить</button></div>`:''}</div>`).join(""):"<div style='color:var(--muted);margin-top:10px'>Отзывов пока нет — оставьте первый.</div>"}</div>
+    <div class="review-list">${recent.length?recent.map(r=>`<div class="review"><div class="review-head"><strong>${escapeHtml(r.author||'Гость')}</strong><span>${starsView(r.stars)} · ${new Date(r.date).toLocaleDateString("ru-RU")}</span></div><div class="review-body">${escapeHtml(r.text||"Без комментария")}</div>${knownUserId&&r.userId===knownUserId?`<div class="review-actions"><button class="review-action" type="button" data-edit-rating="${d.id}">Изменить</button><button class="review-action" type="button" data-delete-rating="${d.id}">Удалить</button></div>`:''}</div>`).join(""):"<div style='color:var(--muted);margin-top:10px'>Отзывов пока нет — оставьте первый.</div>"}</div>
   </div>`;
 }
 
+const reviewSubmitBusy=new Set();
 async function submitRating(id){
+  if(reviewSubmitBusy.has(id))return;
   const box=document.querySelector(`[data-starbox="${id}"]`);
   const stars=Number(box?.dataset.value||0);
   if(!stars){showToast("Сначала выбери листочки 🍁");return;}
@@ -1587,36 +1616,47 @@ async function submitRating(id){
   if(reviewWords(text).filter(word=>word.length>=2).length<5){showToast('Отзыв должен содержать минимум 5 слов');return;}
   if(containsProhibitedLanguage(`${author} ${text}`)){showToast('Недопустимый текст');return;}
 
-  await sessionReady;
-  const userId=getReviewUserId();
-  if(supabaseClient&&!reviewUid){showToast('Не удалось войти как гость, обнови страницу');return;}
-  if(supabaseClient){
-    const {error}=await supabaseClient.from('reviews').upsert({
+  reviewSubmitBusy.add(id);
+  const submitButton=document.querySelector(`[data-submit-rating="${id}"]`);
+  if(submitButton)submitButton.disabled=true;
+  try{
+    await sessionReady;
+    if(supabaseClient&&!reviewUid)await ensureReviewSession();
+    const userId=getReviewUserId();
+    if(supabaseClient&&!reviewUid){showToast('Не удалось войти как гость, обнови страницу');return;}
+    if(supabaseClient){
+      const {error}=await supabaseClient.from('reviews').upsert({
       dish_id:id,user_id:userId,author,text,stars,updated_at:new Date().toISOString()
     },{onConflict:'dish_id,user_id'});
-    if(error){console.warn(error);showToast(reviewErrorText(error));return;}
-  } else {
-    const list=getRatings(id);
+      if(error){console.warn(error);showToast(reviewErrorText(error));return;}
+    } else {
+      const list=getRatings(id);
     const index=list.findIndex(r=>r.userId===userId);
     const review={stars,text,author,date:Date.now(),userId};
     if(index>=0)list[index]=review;else list.push(review);
-    localStorage.setItem(ratingKey(id),JSON.stringify(list));
+      safeStorageSet(ratingKey(id),JSON.stringify(list));
+    }
+    safeStorageSet('stolovkaReviewName',author);
+    reviewCache.delete(id);
+    await renderDetail(id,{scroll:false});
+    showToast('Спасибо за отзыв 🍁');
+  }finally{
+    reviewSubmitBusy.delete(id);
+    const currentButton=document.querySelector(`[data-submit-rating="${id}"]`);
+    if(currentButton)currentButton.disabled=false;
   }
-  localStorage.setItem('stolovkaReviewName',author);
-  reviewCache.delete(id);
-  await renderDetail(id,{scroll:false});
-  showToast('Спасибо за отзыв 🍁');
 }
 
 async function deleteRating(id){
   await sessionReady;
+  if(supabaseClient&&!reviewUid)await ensureReviewSession();
   const userId=getReviewUserId();
   if(supabaseClient){
     const {error}=await supabaseClient.from('reviews').delete().eq('dish_id',id).eq('user_id',userId);
     if(error){console.warn(error);showToast('Ошибка удаления');return;}
   } else {
     const list=getRatings(id).filter(r=>r.userId!==userId);
-    localStorage.setItem(ratingKey(id),JSON.stringify(list));
+    safeStorageSet(ratingKey(id),JSON.stringify(list));
   }
   reviewCache.delete(id);
   await renderDetail(id,{scroll:false});
@@ -1626,31 +1666,32 @@ async function deleteRating(id){
 
 function detailMarkup(d,ratingHtml){
   const closeLabel=state.detailOrigin==='combo'?'← Вернуться к комбо':state.detailOrigin==='favorites'?'← Вернуться в избранное':'Закрыть';
-  return `<button class="detail-backdrop" type="button" data-close-detail aria-label="Закрыть карточку блюда"></button><section class="detail" role="dialog" aria-modal="true" aria-label="${d.name}">
+  const name=escapeHtml(d.name),description=escapeHtml(displayDishDescription(d));
+  return `<button class="detail-backdrop" type="button" data-close-detail aria-label="Закрыть карточку блюда"></button><section class="detail" role="dialog" aria-modal="true" aria-label="${name}">
     <div class="detail-top">
       <div class="detail-media">
-        <img class="detail-img" src="${dishImage(d)}" alt="${d.name}" decoding="async" fetchpriority="high">
+        <img class="detail-img" src="${escapeHtml(dishImage(d))}" alt="${name}" decoding="async" fetchpriority="high">
         <div class="detail-reviews">${ratingHtml}</div>
       </div>
       <div class="detail-content">
-        <span class="kicker">${categoryLabel(d.category)}</span>
-        <h2>${d.name}</h2>
-        <div class="detail-desc">${displayDishDescription(d)}</div>
+        <span class="kicker">${escapeHtml(categoryLabel(d.category))}</span>
+        <h2>${name}</h2>
+        <div class="detail-desc">${description}</div>
         <div class="bju">
-          <div class="bju-item"><span class="bju-label">Белки</span><span class="bju-val">${d.b} г</span></div>
-          <div class="bju-item"><span class="bju-label">Жиры</span><span class="bju-val">${d.j} г</span></div>
-          <div class="bju-item"><span class="bju-label">Углеводы</span><span class="bju-val">${d.u} г</span></div>
-          <div class="bju-item"><span class="bju-label">Калории</span><span class="bju-val">${d.kcal} ккал</span></div>
+          <div class="bju-item"><span class="bju-label">Белки</span><span class="bju-val">${escapeHtml(d.b)} г</span></div>
+          <div class="bju-item"><span class="bju-label">Жиры</span><span class="bju-val">${escapeHtml(d.j)} г</span></div>
+          <div class="bju-item"><span class="bju-label">Углеводы</span><span class="bju-val">${escapeHtml(d.u)} г</span></div>
+          <div class="bju-item"><span class="bju-label">Калории</span><span class="bju-val">${escapeHtml(d.kcal)} ккал</span></div>
         </div>
         <div class="meta-row">
-          <div class="meta-box"><span>Цена</span><strong>${d.price==null?'Не опубликована':d.price+' ₽'}</strong></div>
+          <div class="meta-box"><span>Цена</span><strong>${d.price==null?'Не опубликована':escapeHtml(d.price+' ₽')}</strong></div>
         </div>
         <div class="actions" style="margin-top:14px">
-          <button class="action primary" data-fav="${d.id}">${state.favorites.has(d.id)?'★ В избранном':'☆ В избранное'}</button>
+          <button class="action primary" data-fav="${Number(d.id)}">${state.favorites.has(d.id)?'★ В избранном':'☆ В избранное'}</button>
           <button class="action" data-close-detail>${closeLabel}</button>
         </div>
-        <div class="info-strip">${d.fact||'Карточка содержит справочную информацию о блюде.'}</div>
-        <div class="info-strip" style="margin-top:10px">${d.fun||'Интересная информация появится здесь.'}</div>
+        <div class="info-strip">${escapeHtml(d.fact||'Карточка содержит справочную информацию о блюде.')}</div>
+        <div class="info-strip" style="margin-top:10px">${escapeHtml(d.fun||'Интересная информация появится здесь.')}</div>
       </div>
     </div>
   </section>`;
@@ -1659,11 +1700,11 @@ function detailMarkup(d,ratingHtml){
 async function renderDetail(id,{scroll=false}={}){
   const d=database.find(x=>x.id===id);if(!d)return;
   state.selectedId=id;
-  rememberRecent(id);
   const loadingHtml=`<div class="reviews-loading"><strong>Отзывы загружаются…</strong><span>Покажем оценки и комментарии через мгновение.</span></div>`;
   els.detail.innerHTML=detailMarkup(d,loadingHtml);
   els.detail.classList.add('open');
   document.body.classList.add('detail-open');
+  queueMicrotask(()=>rememberRecent(id));
   const detailBox=els.detail.querySelector('.detail');
   if(scroll) detailBox?.scrollTo({top:0,behavior:'auto'});
   try{
@@ -1698,10 +1739,10 @@ function toggleFavorite(id){
 }
 
 function buildBudgetCombos(amount){
-  const mains=database.filter(d=>d.category==='main'&&Number.isFinite(Number(d.price)));
-  const garnishes=database.filter(d=>d.category==='garnish'&&Number.isFinite(Number(d.price)));
-  const drinks=database.filter(d=>d.category==='drink'&&Number.isFinite(Number(d.price)));
-  const extras=database.filter(d=>(d.category==='salad'||d.category==='dessert')&&Number.isFinite(Number(d.price)));
+  const mains=database.filter(d=>d.category==='main'&&d.is_available!==false&&Number.isFinite(Number(d.price)));
+  const garnishes=database.filter(d=>d.category==='garnish'&&d.is_available!==false&&Number.isFinite(Number(d.price)));
+  const drinks=database.filter(d=>d.category==='drink'&&d.is_available!==false&&Number.isFinite(Number(d.price)));
+  const extras=database.filter(d=>(d.category==='salad'||d.category==='dessert')&&d.is_available!==false&&Number.isFinite(Number(d.price)));
   const combos=[];
   for(const main of mains)for(const garnish of garnishes)for(const drink of drinks){
     const core=[main,garnish,drink];
@@ -1724,7 +1765,7 @@ function comboMarkup(combo,index){
   const kcal=combo.items.reduce((sum,d)=>sum+(Number(d.kcal)||0),0);
   return `<article class="budget-combo ${index===0?'best':''}">
     <div class="budget-combo-top"><span>${index===0?'Лучший вариант':'Ещё вариант'}</span><strong>${combo.total} ₽</strong></div>
-    <div class="budget-combo-items">${combo.items.map(d=>`<button type="button" data-budget-open="${d.id}"><img src="${dishImage(d)}" alt=""><span>${d.name}</span></button>`).join('')}</div>
+    <div class="budget-combo-items">${combo.items.map(d=>`<button type="button" data-budget-open="${Number(d.id)}"><img src="${escapeHtml(dishImage(d))}" alt=""><span>${escapeHtml(d.name)}</span></button>`).join('')}</div>
     <small>${combo.items.length} позиции • около ${kcal} ккал</small>
   </article>`;
 }
@@ -1766,11 +1807,11 @@ function renderToday(){
 }
 
 function randomDish(){
-  const available=database.filter(d=>Number.isFinite(Number(d.price)));
+  const available=database.filter(d=>d.is_available!==false&&Number.isFinite(Number(d.price)));
   const box=$('#randomResult');
   if(!available.length){box.textContent='Пока нет блюд с опубликованной ценой.';box.classList.add('show');return;}
   const dish=available[Math.floor(Math.random()*available.length)];
-  box.innerHTML=`<div class="random-dish-card"><img src="${dishImage(dish)}" alt=""><div><span>🎲 Выпало</span><strong>${dish.name}</strong><small>${dish.price} ₽ • около ${Number(dish.kcal)||0} ккал</small><button class="action" data-random-open="${dish.id}">Открыть блюдо</button></div></div>`;
+  box.innerHTML=`<div class="random-dish-card"><img src="${escapeHtml(dishImage(dish))}" alt=""><div><span>🎲 Выпало</span><strong>${escapeHtml(dish.name)}</strong><small>${escapeHtml(dish.price)} ₽ • около ${Number(dish.kcal)||0} ккал</small><button class="action" data-random-open="${Number(dish.id)}">Открыть блюдо</button></div></div>`;
   box.classList.add('show');
 }
 
@@ -1861,10 +1902,10 @@ if(supabaseClient){
   supabaseClient.auth.onAuthStateChange((event,session)=>{
     if(!session){
       setAdminLoggedIn(false);
-      // после выхода из админки снова становимся анонимным гостем (для отзывов)
+      // Анонимную сессию создаём только при отправке/удалении отзыва, а не при каждом просмотре сайта.
       if(event==='SIGNED_OUT'){
         reviewUid=null;
-        setTimeout(()=>{sessionReady=ensureReviewSession();},0);
+        sessionReady=Promise.resolve();
       }
       return;
     }

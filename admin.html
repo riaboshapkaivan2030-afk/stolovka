@@ -238,6 +238,14 @@ function preferredPhoto(p){
   return pool[0];
 }
 function cardPhoto(p){return p?.image_url||preferredPhoto(p)}
+function safeRemotePhotoUrl(value){
+  const raw=String(value||'').trim();
+  if(!raw)return '';
+  try{
+    const url=new URL(raw,location.href);
+    return ['https:','http:'].includes(url.protocol)?url.href:'';
+  }catch{return '';}
+}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 let products=[],reviews=[],editing=null,file=null,photo=null;
@@ -294,7 +302,7 @@ function renderDishes(){
     </div>`).join(""):'<p style="color:var(--mut)">Ничего не найдено</p>';
 }
 function setPv(url){const e=$("pv");e.style.backgroundImage=url?`url('${url}')`:"";e.textContent=url?"":"🍽"}
-function setPhotoUrl(url){file=null;photo=String(url||"").trim()||null;setPv(photo)}
+function setPhotoUrl(url){file=null;const clean=safeRemotePhotoUrl(url);photo=clean||null;setPv(photo)}
 function suggestPhoto(){
   const p={name:$("f_name").value.trim(),category:$("f_cat").value};
   const pool=PHOTO_LIBRARY[p.category]||PHOTO_LIBRARY.main;
@@ -320,7 +328,7 @@ function openForm(id){
 }
 function closeForm(){$("modal").classList.add("hidden");document.body.classList.remove("modal-open");$("merr").innerHTML="";}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("modal").classList.contains("hidden"))closeForm();});
-function pickFile(){const f=$("file").files[0];if(!f)return;file=f;$("f_image_url").value="";setPv(URL.createObjectURL(f))}
+function pickFile(){const f=$("file").files[0];if(!f)return;if(!String(f.type||'').startsWith('image/')){toast('Нужен файл изображения');$("file").value='';return}if(f.size>12*1024*1024){toast('Фото слишком большое — максимум 12 МБ');$("file").value='';return}file=f;$("f_image_url").value="";setPv(URL.createObjectURL(f))}
 function dropPhoto(){file=null;photo=null;$("file").value="";$("f_image_url").value="";setPv(null)}
 async function shrink(f){
   const img=await createImageBitmap(f),k=Math.min(1,1000/Math.max(img.width,img.height));
@@ -402,7 +410,7 @@ async function loadReviews(quiet=false){
       const stars=Math.max(0,Math.min(5,Number(r.stars)||0));
       const dt=r.created_at?new Date(r.created_at).toLocaleString("ru-RU"):'дата не указана';
       return `<div class="rev"><div>
-        <b>${esc(r.author||"Без имени")}</b> <span class="stars">${"★".repeat(stars)}${"☆".repeat(5-stars)}</span>
+        <b>${esc(r.author||"Без имени")}</b> <span class="stars" aria-label="${stars} из 5">${"🍁".repeat(stars)}${"🍂".repeat(5-stars)}</span>
         <span class="badge">${esc(dishName(r.dish_id))}</span> <span class="badge">${esc(dt)}</span>
         <p>${esc(r.text||"")}</p></div>
         <button class="btn del sm" type="button" onclick="delReview(${Number(r.id)})">Удалить</button></div>`;
