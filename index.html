@@ -236,6 +236,74 @@ body.detail-open{overflow:hidden}
 @media(max-width:820px){.container{padding-inline:16px}.topbar{padding-top:18px}.brand p{max-width:48vw}.hero{grid-template-columns:1fr;border-radius:28px;min-height:0}.hero>div:first-child{padding:34px 27px 30px}.hero h2{max-width:13ch}.hero-art{min-height:190px;border-left:0;border-top:1px solid rgba(255,255,255,.13)}.catalog-spotlight{grid-template-columns:1fr}.spotlight-side{grid-template-columns:1fr 1fr}.spotlight-main,.spotlight-copy{min-height:290px}.spotlight-copy{max-width:78%}.catalog-toolbar{grid-template-columns:1fr}.catalog-counter{justify-self:start}.leaf-b{display:none}.detail-top{grid-template-columns:1fr}.detail-img{max-height:290px}.status{display:none}}
 @media(max-width:560px){.container{padding:0 12px 96px}.topbar{align-items:flex-start}.brand{gap:10px}.brand-icon{width:44px;height:44px;border-radius:15px;font-size:21px}.brand h1{font-size:.96rem}.brand p{display:none}.tabs{margin-bottom:20px}.tab-btn{padding:9px 13px;font-size:.83rem}.hero{border-radius:24px}.hero>div:first-child{padding:29px 21px 26px}.hero h2{font-size:clamp(1.85rem,10vw,2.55rem)}.hero p{font-size:.92rem}.hero-art{min-height:150px}.tool-card,.card{padding:20px;border-radius:20px}.catalog-spotlight{gap:10px}.spotlight-side{grid-template-columns:1fr 1fr;gap:10px}.spotlight-main,.spotlight-copy{min-height:255px}.spotlight-copy{max-width:90%;padding:21px}.spotlight-copy p{display:none}.spotlight-mini{min-height:132px}.spotlight-mini>div{padding:14px}.spotlight-mini h4{font-size:.86rem}.catalog-search{height:54px;border-radius:16px}.catalog-search kbd{display:none}.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.dish-card{border-radius:18px}.dish-info{padding:11px 11px 12px}.dish-name{font-size:.86rem}.dish-price{font-size:1.05rem}.open-btn{font-size:.82rem;padding:9px}.badge{font-size:.64rem}.random-dish-card{grid-template-columns:76px 1fr}.random-dish-card img{width:76px;height:76px}.autumn-leaf:nth-child(1),.autumn-leaf:nth-child(4),.autumn-leaf:nth-child(6){display:none}.autumn-leaf:nth-child(2){right:-8px;top:16%;font-size:36px}.autumn-leaf:nth-child(3){font-size:42px}.autumn-leaf:nth-child(5){font-size:34px}.detail{right:0;left:0;top:auto;bottom:0;width:100%;max-height:92dvh;border-radius:26px 26px 0 0;padding:18px;transform:translateY(26px)}#detailMount.open .detail{transform:none}.detail .actions{bottom:-18px;padding-bottom:2px}.bju{grid-template-columns:repeat(2,1fr)}.quick-nav{right:11px;bottom:11px}.quick-nav button{width:42px;height:42px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* ===== 2026 V5 — contrast, dark mode & interaction fixes ===== */
+body.dark{
+  --bg:#15100e;--paper:#211814;--ink:#fff3e8;--muted:#c4ad9d;--line:#49362d;
+  --accent:#e27b52;--accent-2:#b95334;--mint:#32241e;--gold:#efb760;--hot:#ff9b73;
+  --clay:#df7550;--sage:#9c9b78;--grid:rgba(239,183,96,.055);
+  --shadow:0 24px 70px -42px rgba(0,0,0,.92)
+}
+body.dark{background-color:#15100e;background-image:
+  linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+  radial-gradient(circle at 8% 2%,rgba(239,183,96,.11),transparent 27rem),
+  radial-gradient(circle at 96% 8%,rgba(226,123,82,.13),transparent 25rem),
+  radial-gradient(circle at 80% 82%,rgba(156,155,120,.07),transparent 30rem)}
+body.dark .status{color:#f5cf8f;background:#2d211a;border-color:#543d2f}
+body.dark .tabs,body.dark .catalog-search,body.dark .catalog-counter,body.dark .category-pill,body.dark .smart-search-hint,body.dark .footer-note{background:rgba(33,24,20,.84);border-color:rgba(239,183,96,.12)}
+body.dark .tool-card,body.dark .card,body.dark .dish-card,body.dark .budget-combo{background:rgba(33,24,20,.96);border-color:rgba(239,183,96,.11)}
+body.dark .icon-bubble{background:#35261f;border-color:#4c372c}
+body.dark .favorites-empty{background:rgba(33,24,20,.56)}
+body.dark .field,body.dark .controls input,body.dark .controls select,body.dark .review-textarea{background:#1b1411;border-color:#49362d}
+body.dark .theme-toggle,body.dark .quick-nav button{background:rgba(33,24,20,.94);border-color:#4b382f}
+body.dark .review{background:#1a1310;border-color:#443128}
+body.dark .detail-backdrop{background:rgba(16,10,8,.68);backdrop-filter:blur(7px)}
+body.dark .detail{background:#211814;border-color:#4b372e;box-shadow:0 40px 110px -34px rgba(0,0,0,.96)}
+body.dark .meta-box,body.dark .bju-item{background:#2b201b;border-color:#4a362c}
+body.dark .info-strip{background:#30231d;color:#f1dfd2}
+body.dark .action{background:#281d18;border-color:#4b372e}
+body.dark .action:hover{background:#30221c}
+body.dark .action.primary,body.dark .open-btn,body.dark .tab-btn.active,body.dark .category-pill.active{background:linear-gradient(135deg,#c85e3d,#e7835c);border-color:#d46a48;color:#fff}
+body.dark .dish-price,body.dark .meta-box strong,body.dark .budget-combo-top strong{color:#ffad83}
+body.dark .kicker{background:#4a3524;color:#ffd99d}
+
+/* Каталог: текст и цена больше не теряются на фото */
+.spotlight-main{background-color:#6b3a2a}
+.spotlight-shade{background:linear-gradient(90deg,rgba(44,24,17,.52),rgba(44,24,17,.10) 60%,rgba(44,24,17,.06))}
+.spotlight-copy{position:absolute;left:22px;bottom:22px;min-height:0;max-width:min(610px,72%);padding:21px 22px;margin:0;border-radius:22px;border:1px solid rgba(255,255,255,.20);background:rgba(49,27,19,.78);box-shadow:0 22px 50px -30px rgba(0,0,0,.7);backdrop-filter:blur(13px) saturate(1.1)}
+.spotlight-copy h4{margin:10px 0 6px;text-shadow:0 1px 1px rgba(0,0,0,.22)}
+.spotlight-copy p{color:rgba(255,248,242,.82)}
+.spotlight-cta{display:flex;align-items:center;gap:12px;margin-top:15px}
+.spotlight-cta strong{display:inline-flex;align-items:baseline;gap:7px;padding:8px 11px;border-radius:12px;background:#fff5e9;color:#6b3021;font-size:1.13rem;box-shadow:0 9px 24px -18px rgba(0,0,0,.55)}
+.spotlight-cta strong small{font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:#9a6a58}
+.spotlight-cta button{margin-left:auto;white-space:nowrap}
+.spotlight-mini::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(39,21,15,.88) 100%)}
+.spotlight-mini-copy{width:calc(100% - 20px);margin:10px;padding:13px 14px!important;border:1px solid rgba(255,255,255,.16);border-radius:16px;background:rgba(45,25,18,.66);backdrop-filter:blur(8px);box-shadow:0 18px 38px -28px rgba(0,0,0,.8)}
+.spotlight-mini-copy strong{display:inline-block;margin-top:2px;padding:5px 8px;border-radius:9px;background:#fff4e7;color:#753824;font-size:.92rem}
+
+/* Детали блюда: отзывы идут прямо под фотографией */
+.detail-media{min-width:0}.detail-content{min-width:0}.detail-reviews .rating-box{margin-top:15px;padding:16px;border:1px solid var(--line);border-radius:18px;background:color-mix(in srgb,var(--paper) 90%,var(--mint));box-shadow:0 16px 34px -34px rgba(75,41,24,.45)}
+.detail-reviews .rating-summary{margin-bottom:11px}.detail-reviews .review-form{margin-bottom:12px}.detail-reviews .review{padding:11px 12px}.detail-reviews .review-list{gap:8px}
+
+/* Избранное: кнопка удаления заметнее и не открывает карточку */
+.favorite-remove{display:grid;place-items:center;width:34px;height:34px;top:10px;right:10px;background:rgba(49,27,19,.86);border:1px solid rgba(255,255,255,.22);box-shadow:0 10px 22px -14px rgba(0,0,0,.65);transition:transform .18s,background .18s}
+.favorite-remove:hover{transform:scale(1.06);background:#a9472f}
+
+/* Комбо: товары открываются поверх подбора — набор под ними не пропадает */
+.budget-combo-items button{transition:transform .18s,border-color .18s,background .18s;position:relative}
+.budget-combo-items button:hover{transform:translateY(-2px);border-color:var(--accent);background:var(--paper)}
+.budget-combo-items button::after{content:"Подробнее";display:block;margin-top:5px;font-size:.62rem;font-weight:800;color:var(--accent);opacity:.9}
+body.dark .budget-combo-items button{background:#1a1310;border-color:#49362d}
+
+/* Новая фишка: недавно просмотренные блюда */
+.recent-strip{margin:4px 0 18px;padding:15px;border:1px solid var(--line);border-radius:22px;background:rgba(255,250,244,.64);box-shadow:0 18px 42px -38px rgba(84,44,24,.42);backdrop-filter:blur(8px)}
+.recent-strip[hidden]{display:none}.recent-strip-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:10px}.recent-strip-head h4{font-size:1rem;letter-spacing:-.025em}.recent-strip-head .eyebrow{margin-bottom:3px}.recent-clear{border:0;background:transparent;color:var(--muted);font-size:.78rem;font-weight:750;cursor:pointer;padding:6px 7px;border-radius:9px}.recent-clear:hover{background:var(--mint);color:var(--ink)}
+.recent-items{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.recent-item{min-width:0;display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:9px;text-align:left;border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:7px;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.recent-item:hover{transform:translateY(-2px);border-color:rgba(185,85,52,.35);box-shadow:0 12px 28px -24px rgba(84,44,24,.55)}.recent-item img{width:48px;height:48px;border-radius:10px;object-fit:cover}.recent-item span{min-width:0}.recent-item b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.78rem}.recent-item small{display:block;color:var(--muted);font-size:.7rem;margin-top:2px}.recent-item i{font-style:normal;color:var(--accent);font-size:.85rem}
+body.dark .recent-strip{background:rgba(33,24,20,.72);border-color:#49362d}body.dark .recent-item{background:#1b1411;border-color:#49362d}
+
+@media(max-width:820px){.spotlight-copy{left:16px;bottom:16px;max-width:calc(100% - 32px)}.recent-items{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-top{grid-template-columns:1fr}.detail-media{display:contents}.detail-img{order:0}.detail-reviews{order:1}.detail-content{order:2}.detail-top{display:flex;flex-direction:column}.detail-reviews{width:100%}}
+@media(max-width:560px){.spotlight-copy{left:12px;bottom:12px;max-width:calc(100% - 24px);padding:16px}.spotlight-cta{gap:7px}.spotlight-cta strong{font-size:.95rem;padding:7px 9px}.spotlight-cta button{font-size:.75rem;padding:8px 10px}.spotlight-mini-copy{width:calc(100% - 12px);margin:6px;padding:10px!important}.recent-strip{padding:12px;border-radius:18px}.recent-items{grid-template-columns:1fr 1fr}.recent-item{grid-template-columns:42px minmax(0,1fr)}.recent-item img{width:42px;height:42px}.recent-item i{display:none}.detail-reviews .rating-box{padding:13px}}
+@media(max-width:720px){.tabs,.spotlight-copy,.spotlight-mini-copy,.recent-strip,.detail-backdrop{backdrop-filter:none!important}.dish-card:hover,.tool-card:hover,.card:hover,.spotlight-main:hover,.spotlight-mini:hover{transform:none}.autumn-layer{contain:strict}}
 </style>
 </head>
 <body>
@@ -288,6 +356,11 @@ body.detail-open{overflow:hidden}
         </div>
 
         <div class="catalog-spotlight" id="catalogSpotlight" aria-label="Рекомендации каталога"></div>
+
+        <section class="recent-strip" id="recentStrip" hidden aria-label="Недавно просмотренные блюда">
+          <div class="recent-strip-head"><div><span class="eyebrow">БЫСТРЫЙ ВОЗВРАТ</span><h4>Недавно смотрели</h4></div><button type="button" class="recent-clear" id="recentClear">Очистить</button></div>
+          <div class="recent-items" id="recentItems"></div>
+        </section>
 
         <div class="catalog-toolbar">
           <label class="catalog-search" for="search">
@@ -772,7 +845,8 @@ function suggestedDishPhoto(d){
 function dishImage(d){return d.image_url||suggestedDishPhoto(d)||d.img;}
 
 const favoriteIds=readJsonStorage('stolovkaFavorites',[]);
-const state={selectedId:null, favorites:new Set(Array.isArray(favoriteIds)?favoriteIds.map(Number).filter(Number.isFinite):[]), searchTimer:null};
+const recentIds=readJsonStorage('stolovkaRecent',[]);
+const state={selectedId:null, detailOrigin:null, favorites:new Set(Array.isArray(favoriteIds)?favoriteIds.map(Number).filter(Number.isFinite):[]), recent:Array.isArray(recentIds)?recentIds.map(Number).filter(Number.isFinite).slice(0,4):[], searchTimer:null};
 const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 const els={tabs:$('#tabs'),search:$('#search'),category:$('#category'),catalog:$('#catalogGrid'),
@@ -794,14 +868,27 @@ function toggleTheme(){
   localStorage.setItem(themeKey,theme);
   applyTheme(theme);
 }
-applyTheme(localStorage.getItem(themeKey)||
-  (window.matchMedia?.('(prefers-color-scheme: dark)').matches?'dark':'light'));
+applyTheme(localStorage.getItem(themeKey)||'light');
 
 function showToast(text){
   els.toast.textContent=text;els.toast.classList.add('show');
   clearTimeout(showToast.t);showToast.t=setTimeout(()=>els.toast.classList.remove('show'),2200);
 }
 function saveFavorites(){localStorage.setItem('stolovkaFavorites',JSON.stringify([...state.favorites]));}
+function saveRecent(){localStorage.setItem('stolovkaRecent',JSON.stringify(state.recent));}
+function rememberRecent(id){
+  state.recent=[id,...state.recent.filter(x=>x!==id)].slice(0,4);
+  saveRecent();
+  renderRecent();
+}
+function renderRecent(){
+  const strip=document.getElementById('recentStrip');
+  const mount=document.getElementById('recentItems');
+  if(!strip||!mount)return;
+  const items=state.recent.map(id=>database.find(d=>d.id===id)).filter(Boolean);
+  strip.hidden=!items.length;
+  mount.innerHTML=items.map(d=>`<button type="button" class="recent-item" data-open="${d.id}"><img src="${dishImage(d)}" alt="" loading="lazy"><span><b>${d.name}</b><small>${d.price==null?'Цена не опубликована':d.price+' ₽'}</small></span><i>↗</i></button>`).join('');
+}
 
 function switchTab(id,{scroll=true}={}){
   $$('.panel').forEach(p=>p.classList.toggle('active',p.id===id));
@@ -1019,7 +1106,7 @@ function displayDishDescription(d){
 
 function renderCard(d,fromFavorites=false){
   const hot=d.popularity>=95?'<span class="badge">🔥 ХИТ</span>':'';
-  const remove=fromFavorites&&state.favorites.has(d.id)?`<button class="favorite-remove" title="Удалить из избранного" data-remove-fav="${d.id}">×</button>`:'';
+  const remove=fromFavorites&&state.favorites.has(d.id)?`<button type="button" class="favorite-remove" title="Удалить из избранного" aria-label="Удалить ${d.name} из избранного" data-remove-fav="${d.id}">×</button>`:'';
   return `<article class="dish-card" data-open="${d.id}">
     ${hot}${remove}<img class="dish-img" src="${dishImage(d)}" alt="${d.name}" loading="lazy">
     <div class="dish-info">
@@ -1048,12 +1135,12 @@ function renderCatalogSpotlight(){
         <span class="spotlight-label">Выбор каталога</span>
         <h4>${lead.name}</h4>
         <p>${displayDishDescription(lead).slice(0,118)}</p>
-        <div><strong>${lead.price==null?'Цена не опубликована':lead.price+' ₽'}</strong><button type="button" data-open="${lead.id}">Посмотреть →</button></div>
+        <div class="spotlight-cta"><strong><small>Цена</small>${lead.price==null?'Не опубликована':lead.price+' ₽'}</strong><button type="button" data-open="${lead.id}">Подробнее →</button></div>
       </div>
     </article>
     <div class="spotlight-side">
       ${secondary.map((d,i)=>`<article class="spotlight-mini" data-open="${d.id}" style="--mini-img:url('${dishImage(d)}')">
-        <div><span>${i===0?'К обеду':'Что-нибудь ещё'}</span><h4>${d.name}</h4><strong>${d.price==null?'—':d.price+' ₽'}</strong></div>
+        <div class="spotlight-mini-copy"><span>${i===0?'К обеду':'Что-нибудь ещё'}</span><h4>${d.name}</h4><strong>${d.price==null?'Цена не опубликована':d.price+' ₽'}</strong></div>
       </article>`).join('')}
     </div>`;
 }
@@ -1149,7 +1236,7 @@ async function loadRemoteMenu(){
       const row=byId.get(dish.id);
       if(row)Object.assign(dish,normalizeMenuPatch(row,dish));
     }
-    renderCatalog();renderPopular();renderFavorites();renderToday();
+    renderCatalog();renderPopular();renderFavorites();renderRecent();renderToday();
     if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
   }
 }
@@ -1207,7 +1294,7 @@ async function saveAdminChanges(){
     showToast('Не удалось опубликовать');
     return;
   }
-  renderCatalogSpotlight();renderCatalog();renderFavorites();renderToday();renderAdmin();
+  renderCatalogSpotlight();renderCatalog();renderFavorites();renderRecent();renderToday();renderAdmin();
   if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
   if(els.adminStatus)els.adminStatus.textContent='Опубликовано для всех посетителей.';
   showToast('Меню опубликовано');
@@ -1392,10 +1479,16 @@ async function deleteRating(id){
 async function renderDetail(id,{scroll=false}={}){
   const d=database.find(x=>x.id===id);if(!d)return;
   state.selectedId=id;
+  rememberRecent(id);
+  const ratingHtml=await renderRatingBox(d);
+  const closeLabel=state.detailOrigin==='combo'?'← Вернуться к комбо':state.detailOrigin==='favorites'?'← Вернуться в избранное':'Закрыть';
   els.detail.innerHTML=`<button class="detail-backdrop" type="button" data-close-detail aria-label="Закрыть карточку блюда"></button><section class="detail" role="dialog" aria-modal="true" aria-label="${d.name}">
     <div class="detail-top">
-      <img class="detail-img" src="${dishImage(d)}" alt="${d.name}">
-      <div>
+      <div class="detail-media">
+        <img class="detail-img" src="${dishImage(d)}" alt="${d.name}">
+        <div class="detail-reviews">${ratingHtml}</div>
+      </div>
+      <div class="detail-content">
         <span class="kicker">${categoryLabel(d.category)}</span>
         <h2>${d.name}</h2>
         <div class="detail-desc">${displayDishDescription(d)}</div>
@@ -1407,15 +1500,13 @@ async function renderDetail(id,{scroll=false}={}){
         </div>
         <div class="meta-row">
           <div class="meta-box"><span>Цена</span><strong>${d.price==null?'Не опубликована':d.price+' ₽'}</strong></div>
-          
         </div>
         <div class="actions" style="margin-top:14px">
           <button class="action primary" data-fav="${d.id}">${state.favorites.has(d.id)?'★ В избранном':'☆ В избранное'}</button>
-          <button class="action" data-close-detail>Закрыть</button>
+          <button class="action" data-close-detail>${closeLabel}</button>
         </div>
         <div class="info-strip">${d.fact||'Карточка содержит справочную информацию о блюде.'}</div>
         <div class="info-strip" style="margin-top:10px">${d.fun||'Интересная информация появится здесь.'}</div>
-        ${await renderRatingBox(d)}
       </div>
     </div>
   </section>`;
@@ -1428,6 +1519,7 @@ function closeDetail(){
   els.detail.classList.remove('open');
   document.body.classList.remove('detail-open');
   state.selectedId=null;
+  state.detailOrigin=null;
   setTimeout(()=>{if(!els.detail.classList.contains('open'))els.detail.innerHTML='';},230);
 }
 
@@ -1522,15 +1614,18 @@ els.tabs.addEventListener('click',e=>{
   const btn=e.target.closest('[data-tab]');if(btn)switchTab(btn.dataset.tab);
 });
 document.addEventListener('click',e=>{
+  const removeFav=e.target.closest('[data-remove-fav]');
+  if(removeFav){e.preventDefault();e.stopPropagation();toggleFavorite(Number(removeFav.dataset.removeFav));return;}
+  const fav=e.target.closest('[data-fav]');
+  if(fav){e.preventDefault();e.stopPropagation();toggleFavorite(Number(fav.dataset.fav));return;}
   const open=e.target.closest('[data-open]');
-  if(open){switchTab('catalog',{scroll:false});renderDetail(Number(open.dataset.open));return;}
+  if(open){
+    state.detailOrigin=open.closest('#favorites')?'favorites':'catalog';
+    renderDetail(Number(open.dataset.open));
+    return;
+  }
   const go=e.target.closest('[data-go]');
   if(go){switchTab(go.dataset.go);if(go.dataset.go==='features')setTimeout(randomDish,280);return;}
-  const fav=e.target.closest('[data-fav]');
-  if(fav){e.stopPropagation();toggleFavorite(Number(fav.dataset.fav));return;}
-
-  const removeFav=e.target.closest('[data-remove-fav]');
-  if(removeFav){e.stopPropagation();toggleFavorite(Number(removeFav.dataset.removeFav));return;}
   const star=e.target.closest('[data-star-id]');
   if(star){
     e.stopPropagation();
@@ -1552,9 +1647,9 @@ document.addEventListener('click',e=>{
   const close=e.target.closest('[data-close-detail]');
   if(close){closeDetail();return;}
   const ro=e.target.closest('[data-random-open]');
-  if(ro){switchTab('catalog',{scroll:false});renderDetail(Number(ro.dataset.randomOpen));return;}
+  if(ro){state.detailOrigin='random';renderDetail(Number(ro.dataset.randomOpen));return;}
   const bo=e.target.closest('[data-budget-open]');
-  if(bo){switchTab('catalog',{scroll:false});renderDetail(Number(bo.dataset.budgetOpen));return;}
+  if(bo){state.detailOrigin='combo';renderDetail(Number(bo.dataset.budgetOpen));return;}
 });
 function runSearch(){
   const count=renderCatalog();
@@ -1579,6 +1674,7 @@ document.getElementById('categoryPills')?.addEventListener('click',e=>{const btn
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.selectedId)closeDetail();});
 $('#randomBtn').addEventListener('click',randomDish);
 $('#budgetBtn').addEventListener('click',renderBudget);
+document.getElementById('recentClear')?.addEventListener('click',()=>{state.recent=[];saveRecent();renderRecent();showToast('История просмотров очищена');});
 els.themeToggle.addEventListener('click',toggleTheme);
 $('#saveMenuBtn')?.addEventListener('click',saveAdminChanges);
 $('#resetMenuBtn')?.addEventListener('click',resetMenuChanges);
