@@ -324,8 +324,19 @@ async function shrink(f){
   return new Promise(r=>c.toBlob(r,"image/jpeg",.85));
 }
 async function saveDish(){
-  const name=$("f_name").value.trim(),n=id=>Number($(id).value)||0;
+  const name=$("f_name").value.trim();
+  const numberValue=id=>Number($(id).value);
+  const priceRaw=$("f_price").value.trim();
+  const price=Number(priceRaw);
   if(!name){$("merr").innerHTML='<div class="err">Введите название</div>';return}
+  if(priceRaw===''||!Number.isFinite(price)||price<0){$("merr").innerHTML='<div class="err">Укажи корректную цену</div>';return}
+
+  const {data:{user},error:userError}=await db.auth.getUser();
+  if(userError||!user||!await isAdmin(user)){
+    $("merr").innerHTML='<div class="err">Сессия администратора истекла. Войди заново.</div>';
+    return;
+  }
+
   const btn=$("saveBtn");btn.disabled=true;btn.textContent="Сохраняю…";
   try{
     let url=photo;
@@ -335,13 +346,22 @@ async function saveDish(){
       if(error)throw new Error("Фото: "+error.message);
       url=db.storage.from("menu-images").getPublicUrl(path).data.publicUrl;
     }
-    const kcal=n("f_kcal"),b=n("f_b"),j=n("f_j"),u=n("f_u"),desc=$("f_desc").value.trim(),av=$("f_av").checked;
-    const row={name,category:$("f_cat").value,price:n("f_price"),weight:$("f_weight").value.trim(),stock:n("f_stock"),
+    const kcal=Math.max(0,numberValue("f_kcal")||0),b=Math.max(0,numberValue("f_b")||0),j=Math.max(0,numberValue("f_j")||0),u=Math.max(0,numberValue("f_u")||0);
+    const desc=$("f_desc").value.trim(),av=$("f_av").checked;
+    const stock=Math.max(0,Math.round(numberValue("f_stock")||0));
+    const row={name,category:$("f_cat").value,price:Math.round(price*100)/100,weight:$("f_weight").value.trim(),stock,
       kcal,calories:Math.round(kcal),b,j,u,proteins:b,fats:j,carbs:u,desc,description:desc,
       is_available:av,available:av,image_url:url,updated_at:new Date().toISOString()};
-    const q=editing?db.from("menu_items").update(row).eq("id",editing.id):db.from("menu_items").insert(row);
-    const {error}=await q;if(error)throw error;
-    closeForm();toast("✅ Сохранено");await loadDishes();
+
+    let data,error;
+    if(editing){
+      ({data,error}=await db.from("menu_items").update(row).eq("id",editing.id).select("*").maybeSingle());
+      if(!error&&!data)throw new Error("Supabase не обновил строку. Проверь RLS и права администратора.");
+    }else{
+      ({data,error}=await db.from("menu_items").insert(row).select("*").single());
+    }
+    if(error)throw error;
+    closeForm();toast(editing?"✅ Изменения сохранены":"✅ Блюдо добавлено");await loadDishes();
   }catch(e){$("merr").innerHTML=`<div class="err">${esc(e.message)}</div>`}
   btn.disabled=false;btn.textContent="Сохранить";
 }

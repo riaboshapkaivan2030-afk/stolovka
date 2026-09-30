@@ -789,22 +789,64 @@ function copyDish(d){
 
 function normalizeMenuPatch(raw,original){
   const patch={};
-  const name=String(raw?.name??original.name).trim();
+  const name=String(raw?.name??original.name??'').trim();
   if(name)patch.name=name.slice(0,120);
-  const desc=String(raw?.desc??original.desc).trim();
+  const desc=String(raw?.desc??raw?.description??original.desc??original.description??'').trim();
   patch.desc=desc.slice(0,500);
-  const category=String(raw?.category??original.category);
-  patch.category=allowedCategories.has(category)?category:original.category;
-  for(const field of ['b','j','u','kcal','popularity']){
+  const category=String(raw?.category??original.category??'');
+  patch.category=allowedCategories.has(category)?category:(allowedCategories.has(original.category)?original.category:'main');
+  for(const field of ['b','j','u','kcal']){
+    const fallback=Number(original?.[field]??0);
     const value=Number(raw?.[field]);
-    if(Number.isFinite(value)&&value>=0)patch[field]=field==='popularity'?Math.min(100,Math.round(value)):value;
+    patch[field]=Number.isFinite(value)&&value>=0?value:(Number.isFinite(fallback)?fallback:0);
   }
-  if(raw&&typeof raw.image_url==='string'&&raw.image_url.trim())patch.image_url=raw.image_url.trim();
+  const pop=Number(raw?.popularity??original?.popularity??50);
+  patch.popularity=Number.isFinite(pop)?Math.max(0,Math.min(100,Math.round(pop))):50;
+  if(raw&&typeof raw.image_url==='string')patch.image_url=raw.image_url.trim();
+  if(raw&&Object.prototype.hasOwnProperty.call(raw,'weight'))patch.weight=String(raw.weight??'').trim();
+  if(raw&&Object.prototype.hasOwnProperty.call(raw,'stock')){
+    const stock=Number(raw.stock); if(Number.isFinite(stock)&&stock>=0)patch.stock=Math.round(stock);
+  }
+  if(raw&&Object.prototype.hasOwnProperty.call(raw,'is_available'))patch.is_available=raw.is_available!==false;
   if(raw&&Object.prototype.hasOwnProperty.call(raw,'price')){
-    if(raw.price===null||raw.price==='')patch.price=null;
-    else{const price=Number(raw.price);if(Number.isFinite(price)&&price>=0)patch.price=Math.round(price*100)/100;}
+    const price=Number(raw.price);
+    if(Number.isFinite(price)&&price>=0)patch.price=Math.round(price*100)/100;
+  }else if(Number.isFinite(Number(original?.price))){
+    patch.price=Math.round(Number(original.price)*100)/100;
   }
   return patch;
+}
+
+function normalizeRemoteDish(row,base={}){
+  const kcal=Number(row?.kcal ?? row?.calories ?? base.kcal ?? base.calories ?? 0);
+  const b=Number(row?.b ?? row?.proteins ?? base.b ?? base.proteins ?? 0);
+  const j=Number(row?.j ?? row?.fats ?? base.j ?? base.fats ?? 0);
+  const u=Number(row?.u ?? row?.carbs ?? base.u ?? base.carbs ?? 0);
+  const price=Number(row?.price);
+  const popularity=Number(row?.popularity ?? base.popularity ?? 50);
+  const available=row?.is_available ?? row?.available ?? base.is_available ?? base.available ?? true;
+  return {
+    ...base,
+    ...row,
+    id:Number(row.id),
+    name:String(row.name??base.name??'Без названия'),
+    category:allowedCategories.has(String(row.category))?String(row.category):(base.category||'main'),
+    price:Number.isFinite(price)?Math.round(price*100)/100:null,
+    kcal:Number.isFinite(kcal)?kcal:0,
+    calories:Number.isFinite(kcal)?Math.round(kcal):0,
+    b:Number.isFinite(b)?b:0,
+    proteins:Number.isFinite(b)?b:0,
+    j:Number.isFinite(j)?j:0,
+    fats:Number.isFinite(j)?j:0,
+    u:Number.isFinite(u)?u:0,
+    carbs:Number.isFinite(u)?u:0,
+    desc:String(row?.desc ?? row?.description ?? base.desc ?? base.description ?? ''),
+    description:String(row?.description ?? row?.desc ?? base.description ?? base.desc ?? ''),
+    is_available:available!==false,
+    available:available!==false,
+    popularity:Number.isFinite(popularity)?Math.max(0,Math.min(100,Math.round(popularity))):50,
+    history:Array.isArray(base.history)?[...base.history]:[]
+  };
 }
 
 function applyMenuOverrides(payload){
@@ -817,7 +859,7 @@ function applyMenuOverrides(payload){
 }
 
 const defaultDatabase=database.map(copyDish);
-applyMenuOverrides(readJsonStorage(menuStorageKey,[]));
+try{localStorage.removeItem(menuStorageKey)}catch{} // старые локальные цены больше не используются
 
 const categoryImages={
   soup:'https://images.unsplash.com/photo-1608949621308-c54d112c808a?auto=format&fit=crop&w=900&q=82',
@@ -1227,17 +1269,24 @@ async function loadRemoteMenu(){
   const {data,error}=await supabaseClient.from(publicMenuTable).select('*').order('id');
   if(error){
     console.warn('Не удалось загрузить меню из базы:',error);
-    if(els.adminStatus)els.adminStatus.textContent='Не удалось загрузить общую базу; показаны исходные данные.';
+    if(els.adminStatus)els.adminStatus.textContent='Не удалось загрузить общую базу; показаны резервные данные.';
     return;
   }
   if(Array.isArray(data)&&data.length){
-    const byId=new Map(data.map(item=>[Number(item.id),item]));
-    for(const dish of database){
-      const row=byId.get(dish.id);
-      if(row)Object.assign(dish,normalizeMenuPatch(row,dish));
-    }
-    renderCatalog();renderPopular();renderFavorites();renderRecent();renderToday();
-    if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
+    // Supabase — единственный источник цен и изменяемых полей.
+    // Локальный массив используется только для декоративных метаданных: aliases/fun/fact/history.
+    const baseById=new Map(defaultDatabase.map(item=>[Number(item.id),item]));
+    const baseByName=new Map(defaultDatabase.map(item=>[normalizeText(item.name),item]));
+    const remote=data
+      .filter(row=>Number.isFinite(Number(row?.id)))
+      .map(row=>normalizeRemoteDish(row,baseById.get(Number(row.id))||baseByName.get(normalizeText(row.name))||{}));
+    database.splice(0,database.length,...remote);
+    renderCatalogSpotlight();renderCatalog();renderPopular();renderFavorites();renderRecent();renderToday();
+    if(state.selectedId&&!database.some(d=>d.id===state.selectedId))closeDetail();
+    else if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
+    if(els.adminStatus)els.adminStatus.textContent=`Загружено из Supabase: ${remote.length} позиций.`;
+  }else if(els.adminStatus){
+    els.adminStatus.textContent='В Supabase пока нет блюд; показаны резервные данные.';
   }
 }
 
@@ -1277,25 +1326,39 @@ async function saveAdminChanges(){
   if(!supabaseClient){showToast('Supabase не настроен');return;}
   const {data:{session}}=await supabaseClient.auth.getSession();
   if(!session||session.user.is_anonymous){setAdminLoggedIn(false);showToast('Нужен вход администратора');return;}
+  const {data:isAdmin,error:adminError}=await supabaseClient.rpc('is_menu_admin');
+  if(adminError||!isAdmin){setAdminLoggedIn(false);showToast('У аккаунта нет прав администратора');return;}
+
   const updates=[];
+  let invalid='';
   $$('#adminRows tr').forEach(row=>{
+    if(invalid)return;
     const id=Number(row.dataset.adminId),dish=database.find(item=>item.id===id);
     if(!dish)return;
     const raw={};
     editableFields.forEach(field=>{raw[field]=$( `[data-admin-field="${field}"]`,row)?.value;});
+    const price=Number(raw.price);
+    if(raw.price===''||!Number.isFinite(price)||price<0){invalid=`Проверь цену у блюда «${dish.name}»`;return;}
     const patch=normalizeMenuPatch(raw,dish);
-    Object.assign(dish,patch);
-    updates.push({id,...patch,updated_at:new Date().toISOString()});
+    updates.push({id,...patch,
+      calories:Math.round(patch.kcal),proteins:patch.b,fats:patch.j,carbs:patch.u,
+      description:patch.desc,updated_at:new Date().toISOString()});
   });
+  if(invalid){if(els.adminStatus)els.adminStatus.textContent=invalid;showToast(invalid);return;}
+
   if(els.adminStatus)els.adminStatus.textContent='Публикую…';
-  const {error}=await supabaseClient.from(publicMenuTable).upsert(updates,{onConflict:'id'});
-  if(error){
-    if(els.adminStatus)els.adminStatus.textContent='Ошибка публикации: '+error.message;
-    showToast('Не удалось опубликовать');
-    return;
+  for(const update of updates){
+    const {id,...patch}=update;
+    const {data,error}=await supabaseClient.from(publicMenuTable).update(patch).eq('id',id).select('id').maybeSingle();
+    if(error||!data){
+      const message=error?.message||`Строка #${id} не обновилась`;
+      if(els.adminStatus)els.adminStatus.textContent='Ошибка публикации: '+message;
+      showToast('Не удалось сохранить изменения');
+      return;
+    }
   }
-  renderCatalogSpotlight();renderCatalog();renderFavorites();renderRecent();renderToday();renderAdmin();
-  if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
+  await loadRemoteMenu();
+  renderAdmin();
   if(els.adminStatus)els.adminStatus.textContent='Опубликовано для всех посетителей.';
   showToast('Меню опубликовано');
 }
