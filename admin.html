@@ -62,7 +62,7 @@ h2{margin:0 0 18px;font-size:1.5rem}
 :root{--bg:#f4eee7;--side:#4b2b24;--card:#fffaf4;--card2:#efe3d7;--line:#dfd0c1;--ink:#2b211c;--mut:#786b62;--acc:#b95534;--acc2:#d67d4f;--gold:#d59a3b;--sage:#7f8568;--ok:#4f7f62;--bad:#b64b3f;--shadow:0 22px 58px -44px rgba(76,42,24,.48)}
 body{background-color:var(--bg);background-image:linear-gradient(rgba(111,75,50,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(111,75,50,.05) 1px,transparent 1px),radial-gradient(circle at 10% 2%,rgba(213,154,59,.17),transparent 25rem),radial-gradient(circle at 94% 5%,rgba(185,85,52,.14),transparent 24rem);background-size:40px 40px,40px 40px,auto,auto;color:var(--ink);font-family:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
 body:before,body:after{position:fixed;pointer-events:none;z-index:0;font-size:64px;opacity:.11;filter:saturate(.75) drop-shadow(0 12px 20px rgba(77,42,23,.08))}body:before{content:"🍂";left:12px;bottom:22px;transform:rotate(-16deg)}body:after{content:"🍁";right:18px;top:70px;transform:rotate(17deg)}
-.layout,#login,.modal,#toast{position:relative;z-index:1}button,input,select,textarea{font:inherit;color:inherit}input,select,textarea{background:#fffdf9;border-color:var(--line);border-radius:13px;box-shadow:none;transition:border-color .18s,box-shadow .18s}input:focus,select:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 4px rgba(185,85,52,.10)}label{color:var(--mut);font-weight:700}.btn{background:#fffdf9;border:1px solid var(--line);border-radius:12px;box-shadow:none;transition:transform .18s,border-color .18s,background .18s,box-shadow .18s}.btn:hover{filter:none;transform:translateY(-1px);border-color:#cfae96;box-shadow:0 10px 24px -21px rgba(70,39,23,.55)}.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 12px 26px -20px rgba(185,85,52,.75)}.btn.pri:hover{background:#9f452b;border-color:#9f452b}.btn.del{background:#fff2ef;border-color:#efcbc4;color:var(--bad)}
+.layout,#login{position:relative;z-index:1}.modal{position:fixed!important;inset:0!important;z-index:1000!important}.modal.hidden{display:none!important}#toast{position:fixed!important;z-index:1100!important}body.modal-open{overflow:hidden}button,input,select,textarea{font:inherit;color:inherit}input,select,textarea{background:#fffdf9;border-color:var(--line);border-radius:13px;box-shadow:none;transition:border-color .18s,box-shadow .18s}input:focus,select:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 4px rgba(185,85,52,.10)}label{color:var(--mut);font-weight:700}.btn{background:#fffdf9;border:1px solid var(--line);border-radius:12px;box-shadow:none;transition:transform .18s,border-color .18s,background .18s,box-shadow .18s}.btn:hover{filter:none;transform:translateY(-1px);border-color:#cfae96;box-shadow:0 10px 24px -21px rgba(70,39,23,.55)}.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 12px 26px -20px rgba(185,85,52,.75)}.btn.pri:hover{background:#9f452b;border-color:#9f452b}.btn.del{background:#fff2ef;border-color:#efcbc4;color:var(--bad)}
 #login{background:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px),radial-gradient(circle at 18% 15%,rgba(213,154,59,.17),transparent 20rem),linear-gradient(135deg,#4b2b24,#7c3d2c);background-size:38px 38px,38px 38px,auto,auto}.lbox{background:rgba(255,250,244,.97);border:1px solid rgba(255,255,255,.64);border-radius:26px;padding:34px;box-shadow:0 38px 90px -50px rgba(49,25,16,.72)}.lbox:before{content:"🍂  ПАНЕЛЬ ЛИЦЕЯ";display:inline-flex;margin-bottom:15px;background:#f5e5c7;color:#855322;border:1px solid #e8ce9f;letter-spacing:.11em;border-radius:999px;padding:6px 10px;font-size:.7rem;font-weight:800}.lbox h1{color:var(--ink);font-family:"Unbounded",system-ui,sans-serif;letter-spacing:-.04em}.lbox p{color:var(--mut)}
 aside{background:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(180deg,#4b2b24,#321d19);background-size:34px 34px,34px 34px,auto;width:258px;border-right:0;box-shadow:20px 0 55px -50px rgba(57,29,19,.82)}.logo{font-family:"Unbounded",system-ui,sans-serif;color:#fff}.logo span{color:#f0b65c}.logo:after{content:"МАОУ • Муравленко";display:block;margin-top:7px;font-family:"Onest",sans-serif;font-size:.65rem;color:rgba(255,255,255,.48);font-weight:700;letter-spacing:.06em;text-transform:uppercase}.nav{color:rgba(255,255,255,.72);transition:transform .18s,background .18s,color .18s}.nav:hover{background:rgba(255,255,255,.08);color:#fff;transform:translateX(2px)}.nav.on{background:#fff8ef;color:#5f3024;box-shadow:0 14px 30px -23px #26120d}
 main{margin-left:258px;width:calc(100% - 258px);max-width:1540px;padding:36px 36px 60px}h2{font-family:"Unbounded",system-ui,sans-serif;letter-spacing:-.04em}.overview-hero{background:linear-gradient(rgba(116,78,51,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(116,78,51,.04) 1px,transparent 1px),radial-gradient(circle at 78% 20%,rgba(185,85,52,.11),transparent 18rem),linear-gradient(135deg,#fffaf4,#f5eadf);background-size:32px 32px,32px 32px,auto,auto;border-color:var(--line);border-radius:26px;box-shadow:var(--shadow);padding:27px}.overview-hero:after{content:"🍂";font-size:4.8rem;opacity:.16;right:30px;top:16px;transform:rotate(15deg)}.season-pill{background:#f7ead0;border-color:#ead2a7;color:#825020;letter-spacing:.06em}.school-card{background:linear-gradient(145deg,#723929,#4b2b24);border:1px solid rgba(255,255,255,.09);box-shadow:0 20px 40px -32px rgba(74,35,23,.9)}
@@ -132,7 +132,7 @@ section:not(.hidden){animation:sectionIn .3s cubic-bezier(.2,.75,.25,1)}@keyfram
 
     <section id="reviews" class="hidden">
       <h2>Отзывы</h2>
-      <div class="bar"><button class="btn" onclick="loadReviews()">↻ Обновить</button></div>
+      <div class="bar"><button class="btn" onclick="loadReviews()">↻ Обновить из Supabase</button><span class="badge">Источник: public.reviews</span></div>
       <div id="rlist"></div>
     </section>
   </main>
@@ -303,18 +303,23 @@ function suggestPhoto(){
   photo=options[Math.floor(Math.random()*options.length)];file=null;$("file").value="";$("f_image_url").value=photo;setPv(photo);toast("🍁 Фото подобрано");
 }
 function openForm(id){
-  editing=id?products.find(p=>p.id===id):null;file=null;$("file").value="";$("merr").innerHTML="";
+  editing=id!=null?products.find(p=>String(p.id)===String(id)):null;
+  if(id!=null&&!editing){toast("Не удалось найти блюдо. Обновляю список…");loadDishes();return;}
+  file=null;$("file").value="";$("merr").innerHTML="";
   const p=editing||{category:"main",is_available:true};
   $("mt").textContent=editing?"Изменить блюдо":"Новое блюдо";
   $("f_name").value=p.name||"";$("f_cat").value=CATS[p.category]?p.category:"main";
   $("f_price").value=p.price??"";$("f_weight").value=p.weight||"";$("f_stock").value=p.stock??0;
   $("f_kcal").value=p.kcal??p.calories??0;$("f_b").value=p.b??p.proteins??0;$("f_j").value=p.j??p.fats??0;$("f_u").value=p.u??p.carbs??0;
-  $("f_desc").value=p.desc||p.description||"";$("f_av").checked=p.is_available!==false;
+  $("f_desc").value=p.desc||p.description||"";$("f_av").checked=(p.is_available??p.available)!==false;
   photo=p.image_url||preferredPhoto(p);$("f_image_url").value=photo||"";setPv(photo);
   $("delBtn").classList.toggle("hidden",!editing);
   $("modal").classList.remove("hidden");
+  document.body.classList.add("modal-open");
+  requestAnimationFrame(()=>$("f_name").focus({preventScroll:true}));
 }
-function closeForm(){$("modal").classList.add("hidden")}
+function closeForm(){$("modal").classList.add("hidden");document.body.classList.remove("modal-open");$("merr").innerHTML="";}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("modal").classList.contains("hidden"))closeForm();});
 function pickFile(){const f=$("file").files[0];if(!f)return;file=f;$("f_image_url").value="";setPv(URL.createObjectURL(f))}
 function dropPhoto(){file=null;photo=null;$("file").value="";$("f_image_url").value="";setPv(null)}
 async function shrink(f){
@@ -362,8 +367,13 @@ async function saveDish(){
     }
     if(error)throw error;
     closeForm();toast(editing?"✅ Изменения сохранены":"✅ Блюдо добавлено");await loadDishes();
-  }catch(e){$("merr").innerHTML=`<div class="err">${esc(e.message)}</div>`}
-  btn.disabled=false;btn.textContent="Сохранить";
+  }catch(e){
+    console.error("saveDish",e);
+    const details=[e?.message,e?.details,e?.hint,e?.code].filter(Boolean).join(" · ");
+    $("merr").innerHTML=`<div class="err"><b>Не удалось сохранить.</b><br>${esc(details||String(e))}</div>`;
+  }finally{
+    btn.disabled=false;btn.textContent="Сохранить";
+  }
 }
 async function delDish(){
   if(!editing||!confirm(`Удалить «${editing.name}»?`))return;
@@ -373,17 +383,36 @@ async function delDish(){
 }
 
 // ---------- отзывы ----------
-async function loadReviews(quiet){
-  const {data,error}=await db.from("reviews").select("*").order("created_at",{ascending:false});
-  if(error){if(!quiet)$("rlist").innerHTML=`<div class="err">${esc(error.message)}</div>`;return}
-  reviews=data;$("cR").textContent=data.length;
-  const name=id=>(products.find(p=>p.id===id)||{}).name||"Блюдо #"+id;
-  $("rlist").innerHTML=data.length?data.map(r=>`
-    <div class="rev"><div>
-      <b>${esc(r.author)}</b> <span class="stars">${"★".repeat(r.stars)}${"☆".repeat(5-r.stars)}</span>
-      <span class="badge">${esc(name(r.dish_id))}</span> <span class="badge">${new Date(r.created_at).toLocaleDateString("ru-RU")}</span>
-      <p>${esc(r.text)}</p></div>
-      <button class="btn del sm" onclick="delReview(${r.id})">Удалить</button></div>`).join(""):'<p style="color:var(--mut)">Отзывов пока нет</p>';
+async function loadReviews(quiet=false){
+  const host=$("rlist");
+  if(!quiet)host.innerHTML='<p style="color:var(--mut)">Загружаю отзывы из Supabase…</p>';
+  try{
+    const {data,error,count}=await db.from("reviews")
+      .select("id,dish_id,user_id,author,stars,text,created_at,updated_at",{count:"exact"})
+      .order("created_at",{ascending:false});
+    if(error)throw error;
+    reviews=Array.isArray(data)?data:[];
+    $("cR").textContent=count??reviews.length;
+    const dishName=id=>(products.find(p=>String(p.id)===String(id))||{}).name||"Блюдо #"+id;
+    if(!reviews.length){
+      host.innerHTML='<div class="autumn-note"><b>В таблице reviews сейчас 0 записей.</b><br>Если на основном сайте видны отзывы, обнови страницу сайта и админки после деплоя этой версии: обе страницы должны смотреть в один Supabase-проект.</div>';
+      return;
+    }
+    host.innerHTML=reviews.map(r=>{
+      const stars=Math.max(0,Math.min(5,Number(r.stars)||0));
+      const dt=r.created_at?new Date(r.created_at).toLocaleString("ru-RU"):'дата не указана';
+      return `<div class="rev"><div>
+        <b>${esc(r.author||"Без имени")}</b> <span class="stars">${"★".repeat(stars)}${"☆".repeat(5-stars)}</span>
+        <span class="badge">${esc(dishName(r.dish_id))}</span> <span class="badge">${esc(dt)}</span>
+        <p>${esc(r.text||"")}</p></div>
+        <button class="btn del sm" type="button" onclick="delReview(${Number(r.id)})">Удалить</button></div>`;
+    }).join("");
+  }catch(e){
+    console.error("loadReviews",e);
+    $("cR").textContent="—";
+    host.innerHTML=`<div class="err"><b>Не удалось загрузить отзывы из Supabase.</b><br>${esc(e.message||e)}<br><small>Проверь SQL-файл supabase_admin_fix_v3.sql из архива.</small></div>`;
+    if(!quiet)toast("Ошибка загрузки отзывов");
+  }
 }
 async function delReview(id){
   if(!confirm("Удалить отзыв?"))return;
