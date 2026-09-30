@@ -132,10 +132,12 @@ body.dark .action.primary{color:#0b1a12}
 .rating-box{margin-top:22px;padding-top:18px;border-top:1.5px solid var(--line)}
 .rating-summary{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
 .rating-value{font-family:var(--f-head);font-size:1.6rem;font-weight:700}
-.stars{display:inline-flex;gap:2px}
-.star-btn{border:0;background:none;padding:2px;font-size:1.9rem;line-height:1;color:var(--line);cursor:pointer;transition:transform .1s}
-.star-btn:hover{transform:scale(1.15)}
-.star-btn.active{color:var(--gold)}
+.stars,.leaf-rating{display:inline-flex;gap:4px;align-items:center;flex-wrap:wrap}
+.star-btn{border:0;background:none;padding:2px;font-size:1.35rem;line-height:1;cursor:pointer;transition:transform .12s,opacity .12s;opacity:.42;filter:saturate(.88)}
+.star-btn:hover{transform:translateY(-1px) scale(1.08);opacity:.78}
+.star-btn.active{opacity:1;filter:none}
+.leaf-rating .leaf{font-size:1.05rem;line-height:1;opacity:.34;filter:saturate(.8)}
+.leaf-rating .leaf.active{opacity:1;filter:none}
 .review-form{display:grid;gap:10px;margin-bottom:16px}
 .review-textarea{min-height:100px;resize:vertical}
 .review-list{display:grid;gap:10px}
@@ -230,7 +232,7 @@ body.detail-open{overflow:hidden}
 .catalog-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:22px}.catalog-search{height:58px;display:flex;align-items:center;gap:11px;padding:0 14px 0 17px;background:rgba(255,250,244,.86);border:1px solid var(--line);border-radius:19px;box-shadow:0 16px 38px -34px rgba(88,48,27,.56)}body.dark .catalog-search{background:rgba(36,28,24,.88)}.catalog-search>span{font-size:1.65rem;color:var(--accent);line-height:1;transform:rotate(-18deg)}.catalog-search input{flex:1;min-width:0;border:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;font-size:1rem}.catalog-search input:focus{outline:none}.catalog-search kbd{font-family:inherit;font-size:.69rem;color:var(--muted);border:1px solid var(--line);padding:5px 8px;border-radius:8px;background:var(--bg)}.catalog-counter{font-size:.82rem;font-weight:800;color:var(--muted);padding:10px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,250,244,.72)}body.dark .catalog-counter{background:rgba(36,28,24,.75)}.category-pills{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 7px;scrollbar-width:none}.category-pills::-webkit-scrollbar{display:none}.category-pill{flex:none;border:1px solid var(--line);background:rgba(255,250,244,.74);color:var(--ink);padding:9px 13px;border-radius:999px;font-weight:750;cursor:pointer;transition:transform .18s,border-color .18s,background .18s}.category-pill:hover{transform:translateY(-1px);border-color:#cfad95}.category-pill.active{background:var(--accent-2);border-color:var(--accent-2);color:#fff;box-shadow:0 10px 23px -17px rgba(125,52,40,.72)}body.dark .category-pill{background:rgba(36,28,24,.82)}body.dark .category-pill.active{background:var(--accent);color:#fff}.visually-hidden-select{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}.smart-search-hint{display:flex;align-items:flex-start;gap:9px;margin:7px 0 14px;padding:10px 13px;border-left:3px solid var(--clay);border-radius:0 12px 12px 0;background:rgba(255,250,244,.58);font-size:.8rem;color:var(--muted)}body.dark .smart-search-hint{background:rgba(36,28,24,.58)}.smart-search-hint>span:first-child{color:var(--clay);font-weight:900}
 .catalog-grid{grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:15px}.dish-card{border-radius:22px;border:1px solid rgba(140,93,61,.15);background:var(--paper);box-shadow:0 22px 50px -43px rgba(84,44,24,.5);transform:translateZ(0);transition:transform .26s cubic-bezier(.2,.8,.2,1),box-shadow .26s ease,border-color .2s}.dish-card:hover{transform:translateY(-5px);border-color:rgba(185,85,52,.35);box-shadow:0 29px 58px -41px rgba(84,44,24,.48)}.dish-card img,.dish-img{aspect-ratio:1.22/1;transition:transform .34s ease,filter .34s ease}.dish-card:hover img{transform:scale(1.025);filter:saturate(1.03)}.dish-info{padding:15px 16px 16px}.dish-name{font-size:.98rem}.dish-price{color:var(--accent-2)}.badge{background:#efc870;color:#4c3218}.open-btn{background:var(--accent-2);border-color:var(--accent-2);transition:transform .18s,background .18s}.open-btn:hover{background:var(--accent);transform:translateY(-1px)}body.dark .open-btn{color:#fff}.favorite-remove{background:rgba(56,32,23,.72)}.favorites-empty{background:rgba(255,250,244,.48)}
 .action{border:1px solid var(--line);border-radius:14px;padding:11px 17px;transition:transform .18s,background .18s,border-color .18s,box-shadow .18s}.action:hover{border-color:var(--accent);transform:translateY(-1px)}.action.primary{background:var(--accent-2);border-color:var(--accent-2);color:#fff}.action.primary:hover{background:var(--accent);border-color:var(--accent)}body.dark .action.primary{background:var(--accent);border-color:var(--accent);color:#fff}.info-strip{border-left:0;border-radius:14px;background:var(--mint);box-shadow:inset 4px 0 0 var(--gold)}.bju-item{background:var(--mint);border:1px solid var(--line)}.meta-box{background:var(--paper)}.review{background:rgba(245,239,231,.72)}body.dark .review{background:rgba(25,20,17,.72)}
-#detailMount{position:fixed;inset:0;z-index:80;pointer-events:none;opacity:0;transition:opacity .22s ease}#detailMount.open{pointer-events:auto;opacity:1}.detail-backdrop{position:absolute;inset:0;border:0;background:rgba(59,35,23,.42);backdrop-filter:blur(4px);cursor:default}.detail{position:absolute;right:18px;top:18px;bottom:18px;width:min(720px,calc(100vw - 36px));margin:0;padding:26px;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:28px;box-shadow:0 40px 100px -44px rgba(47,25,16,.72);transform:translateX(24px) scale(.985);opacity:0;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .22s ease;overscroll-behavior:contain}#detailMount.open .detail{transform:none;opacity:1}.detail-top{grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);gap:26px}.detail-img{position:static;border-radius:20px;box-shadow:0 20px 46px -38px rgba(59,31,20,.7)}.detail h2{font-size:clamp(1.65rem,3vw,2.2rem);letter-spacing:-.04em}.detail-desc{line-height:1.62}.detail .actions{position:sticky;bottom:-26px;background:linear-gradient(180deg,transparent 0,var(--paper) 25%);padding:24px 0 4px;z-index:4}
+#detailMount{position:fixed;inset:0;z-index:80;pointer-events:none;opacity:0;transition:opacity .16s ease}#detailMount.open{pointer-events:auto;opacity:1}.detail-backdrop{position:absolute;inset:0;border:0;background:rgba(59,35,23,.34);backdrop-filter:blur(2px);cursor:default}.detail{position:absolute;right:18px;top:18px;bottom:18px;width:min(720px,calc(100vw - 36px));margin:0;padding:26px;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:28px;box-shadow:0 40px 100px -44px rgba(47,25,16,.72);transform:translateX(12px);opacity:0;transition:transform .18s cubic-bezier(.2,.8,.2,1),opacity .14s ease;overscroll-behavior:contain}#detailMount.open .detail{transform:none;opacity:1}.detail-top{grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);gap:26px}.detail-img{position:static;border-radius:20px;box-shadow:0 20px 46px -38px rgba(59,31,20,.7)}.detail h2{font-size:clamp(1.65rem,3vw,2.2rem);letter-spacing:-.04em}.detail-desc{line-height:1.62}.detail .actions{position:sticky;bottom:-26px;background:linear-gradient(180deg,transparent 0,var(--paper) 25%);padding:24px 0 4px;z-index:4}
 .random-result{border-radius:16px;border:1px solid var(--line)}.random-dish-card{display:grid;grid-template-columns:92px 1fr;gap:13px;align-items:center}.random-dish-card img{width:92px;height:92px;object-fit:cover;border-radius:15px}.random-dish-card>div{display:grid;gap:5px}.random-dish-card span{font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em}.random-dish-card strong{font-size:1.02rem}.random-dish-card small{color:var(--muted)}.random-dish-card .action{justify-self:start;margin-top:3px;padding:8px 11px}.budget-summary{display:grid;gap:3px;margin-bottom:10px}.budget-summary span{color:var(--muted);font-size:.8rem}.budget-combo{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:9px}.budget-combo.best{border-color:rgba(185,85,52,.34);box-shadow:inset 3px 0 0 var(--accent)}.budget-combo-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.budget-combo-top span{font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.07em}.budget-combo-top strong{color:var(--accent-2)}.budget-combo-items{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px}.budget-combo-items button{flex:0 0 118px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:6px;text-align:left;cursor:pointer}.budget-combo-items img{width:100%;height:64px;object-fit:cover;border-radius:8px}.budget-combo-items span{display:block;margin-top:5px;font-size:.72rem;line-height:1.2}.budget-combo small{display:block;margin-top:8px;color:var(--muted)}
 .admin-note{border-radius:16px;border:1px solid var(--line)}.admin-table-wrap{border:1px solid var(--line);border-radius:18px}.admin-table th{background:var(--mint)}.footer-note{margin-top:46px;padding:16px;border:1px solid rgba(126,83,54,.10);border-radius:18px;background:rgba(255,250,244,.42);font-size:.78rem}.quick-nav{right:18px;bottom:18px;gap:10px}.quick-nav button{width:46px;height:46px;border:1px solid var(--line);border-radius:50%;background:rgba(255,250,244,.9);box-shadow:0 12px 30px -22px rgba(70,39,23,.55);transition:transform .18s,border-color .18s}.quick-nav button:hover{transform:translateY(-2px);border-color:var(--accent)}body.dark .quick-nav button{background:rgba(36,28,24,.9)}.toast{border-radius:999px;padding:12px 20px;box-shadow:0 18px 35px -24px rgba(0,0,0,.75)}
 @media(max-width:820px){.container{padding-inline:16px}.topbar{padding-top:18px}.brand p{max-width:48vw}.hero{grid-template-columns:1fr;border-radius:28px;min-height:0}.hero>div:first-child{padding:34px 27px 30px}.hero h2{max-width:13ch}.hero-art{min-height:190px;border-left:0;border-top:1px solid rgba(255,255,255,.13)}.catalog-spotlight{grid-template-columns:1fr}.spotlight-side{grid-template-columns:1fr 1fr}.spotlight-main,.spotlight-copy{min-height:290px}.spotlight-copy{max-width:78%}.catalog-toolbar{grid-template-columns:1fr}.catalog-counter{justify-self:start}.leaf-b{display:none}.detail-top{grid-template-columns:1fr}.detail-img{max-height:290px}.status{display:none}}
@@ -249,23 +251,25 @@ body.dark{background-color:#15100e;background-image:
   radial-gradient(circle at 8% 2%,rgba(239,183,96,.11),transparent 27rem),
   radial-gradient(circle at 96% 8%,rgba(226,123,82,.13),transparent 25rem),
   radial-gradient(circle at 80% 82%,rgba(156,155,120,.07),transparent 30rem)}
-body.dark .status{color:#f5cf8f;background:#2d211a;border-color:#543d2f}
-body.dark .tabs,body.dark .catalog-search,body.dark .catalog-counter,body.dark .category-pill,body.dark .smart-search-hint,body.dark .footer-note{background:rgba(33,24,20,.84);border-color:rgba(239,183,96,.12)}
-body.dark .tool-card,body.dark .card,body.dark .dish-card,body.dark .budget-combo{background:rgba(33,24,20,.96);border-color:rgba(239,183,96,.11)}
-body.dark .icon-bubble{background:#35261f;border-color:#4c372c}
-body.dark .favorites-empty{background:rgba(33,24,20,.56)}
-body.dark .field,body.dark .controls input,body.dark .controls select,body.dark .review-textarea{background:#1b1411;border-color:#49362d}
-body.dark .theme-toggle,body.dark .quick-nav button{background:rgba(33,24,20,.94);border-color:#4b382f}
-body.dark .review{background:#1a1310;border-color:#443128}
-body.dark .detail-backdrop{background:rgba(16,10,8,.68);backdrop-filter:blur(7px)}
-body.dark .detail{background:#211814;border-color:#4b372e;box-shadow:0 40px 110px -34px rgba(0,0,0,.96)}
-body.dark .meta-box,body.dark .bju-item{background:#2b201b;border-color:#4a362c}
-body.dark .info-strip{background:#30231d;color:#f1dfd2}
-body.dark .action{background:#281d18;border-color:#4b372e}
-body.dark .action:hover{background:#30221c}
-body.dark .action.primary,body.dark .open-btn,body.dark .tab-btn.active,body.dark .category-pill.active{background:linear-gradient(135deg,#c85e3d,#e7835c);border-color:#d46a48;color:#fff}
-body.dark .dish-price,body.dark .meta-box strong,body.dark .budget-combo-top strong{color:#ffad83}
-body.dark .kicker{background:#4a3524;color:#ffd99d}
+body.dark .status{color:#ffe0a7;background:#534236;border-color:#6a564a}
+body.dark .hero{background:linear-gradient(135deg,#5f352b 0%,#7f4937 52%,#a86643 100%)}
+body.dark .tabs,body.dark .catalog-search,body.dark .catalog-counter,body.dark .category-pill,body.dark .smart-search-hint,body.dark .footer-note{background:rgba(58,50,46,.84);border-color:rgba(255,224,196,.12)}
+body.dark .tool-card,body.dark .card,body.dark .dish-card,body.dark .budget-combo{background:rgba(58,50,46,.96);border-color:rgba(255,224,196,.12)}
+body.dark .catalog-search input::placeholder{color:#c6b4a8}
+body.dark .icon-bubble{background:#564740;border-color:#6b5950}
+body.dark .favorites-empty{background:rgba(58,50,46,.58)}
+body.dark .field,body.dark .controls input,body.dark .controls select,body.dark .review-textarea{background:#332b27;border-color:#5c4d45}
+body.dark .theme-toggle,body.dark .quick-nav button{background:rgba(58,50,46,.94);border-color:#6a5951}
+body.dark .review{background:#342b27;border-color:#5b4b43}
+body.dark .detail-backdrop{background:rgba(28,20,17,.52);backdrop-filter:blur(5px)}
+body.dark .detail{background:#3b332f;border-color:#65554c;box-shadow:0 42px 108px -44px rgba(0,0,0,.54)}
+body.dark .meta-box,body.dark .bju-item{background:#493d37;border-color:#65564e}
+body.dark .info-strip{background:#4b3d36;color:#f6e8de}
+body.dark .action{background:#433731;border-color:#64544b}
+body.dark .action:hover{background:#4b3d37}
+body.dark .action.primary,body.dark .open-btn,body.dark .tab-btn.active,body.dark .category-pill.active{background:linear-gradient(135deg,#c96c49,#e78c62);border-color:#d97854;color:#fff}
+body.dark .dish-price,body.dark .meta-box strong,body.dark .budget-combo-top strong{color:#ffbf9b}
+body.dark .kicker{background:#6a5138;color:#ffe0a7}
 
 /* Каталог: текст и цена больше не теряются на фото */
 .spotlight-main{background-color:#6b3a2a}
@@ -299,11 +303,74 @@ body.dark .budget-combo-items button{background:#1a1310;border-color:#49362d}
 .recent-strip{margin:4px 0 18px;padding:15px;border:1px solid var(--line);border-radius:22px;background:rgba(255,250,244,.64);box-shadow:0 18px 42px -38px rgba(84,44,24,.42);backdrop-filter:blur(8px)}
 .recent-strip[hidden]{display:none}.recent-strip-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:10px}.recent-strip-head h4{font-size:1rem;letter-spacing:-.025em}.recent-strip-head .eyebrow{margin-bottom:3px}.recent-clear{border:0;background:transparent;color:var(--muted);font-size:.78rem;font-weight:750;cursor:pointer;padding:6px 7px;border-radius:9px}.recent-clear:hover{background:var(--mint);color:var(--ink)}
 .recent-items{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.recent-item{min-width:0;display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:9px;text-align:left;border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:7px;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.recent-item:hover{transform:translateY(-2px);border-color:rgba(185,85,52,.35);box-shadow:0 12px 28px -24px rgba(84,44,24,.55)}.recent-item img{width:48px;height:48px;border-radius:10px;object-fit:cover}.recent-item span{min-width:0}.recent-item b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.78rem}.recent-item small{display:block;color:var(--muted);font-size:.7rem;margin-top:2px}.recent-item i{font-style:normal;color:var(--accent);font-size:.85rem}
-body.dark .recent-strip{background:rgba(33,24,20,.72);border-color:#49362d}body.dark .recent-item{background:#1b1411;border-color:#49362d}
+body.dark .recent-strip{background:rgba(58,50,46,.72);border-color:#64544b}body.dark .recent-item{background:#332b27;border-color:#64544b}
+.reviews-loading{margin-top:14px;padding:14px 16px;border:1px dashed var(--line);border-radius:16px;background:rgba(255,250,244,.58);color:var(--muted);font-size:.9rem}.reviews-loading strong{display:block;color:var(--ink);margin-bottom:4px}body.dark .reviews-loading{background:rgba(58,50,46,.66);border-color:#64544b;color:#d3c1b5}
 
 @media(max-width:820px){.spotlight-copy{left:16px;bottom:16px;max-width:calc(100% - 32px)}.recent-items{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-top{grid-template-columns:1fr}.detail-media{display:contents}.detail-img{order:0}.detail-reviews{order:1}.detail-content{order:2}.detail-top{display:flex;flex-direction:column}.detail-reviews{width:100%}}
 @media(max-width:560px){.spotlight-copy{left:12px;bottom:12px;max-width:calc(100% - 24px);padding:16px}.spotlight-cta{gap:7px}.spotlight-cta strong{font-size:.95rem;padding:7px 9px}.spotlight-cta button{font-size:.75rem;padding:8px 10px}.spotlight-mini-copy{width:calc(100% - 12px);margin:6px;padding:10px!important}.recent-strip{padding:12px;border-radius:18px}.recent-items{grid-template-columns:1fr 1fr}.recent-item{grid-template-columns:42px minmax(0,1fr)}.recent-item img{width:42px;height:42px}.recent-item i{display:none}.detail-reviews .rating-box{padding:13px}}
 @media(max-width:720px){.tabs,.spotlight-copy,.spotlight-mini-copy,.recent-strip,.detail-backdrop{backdrop-filter:none!important}.dish-card:hover,.tool-card:hover,.card:hover,.spotlight-main:hover,.spotlight-mini:hover{transform:none}.autumn-layer{contain:strict}}
+
+
+/* ===== 2026 V9 — warm dusk theme + faster details ===== */
+body.dark{
+  --bg:#2c2622;--paper:#3a322d;--ink:#f8eee5;--muted:#cebcae;--line:#5a4b42;
+  --accent:#d9774f;--accent-2:#b95d3e;--mint:#493d35;--gold:#dca850;--hot:#ffad82;
+  --clay:#d27a55;--sage:#9d9b79;--grid:rgba(243,207,166,.055);
+  --shadow:0 22px 56px -38px rgba(45,27,18,.72)
+}
+body.dark{
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+    radial-gradient(circle at 8% 3%,rgba(220,168,80,.16),transparent 27rem),
+    radial-gradient(circle at 95% 8%,rgba(217,119,79,.17),transparent 25rem),
+    radial-gradient(circle at 78% 82%,rgba(157,155,121,.10),transparent 31rem);
+}
+body.dark .status{color:#ffe8bd;background:#5a493b;border-color:#715d4d}
+body.dark .hero{background:linear-gradient(135deg,#744437 0%,#94523e 48%,#b36b47 100%)}
+body.dark .tabs,body.dark .catalog-search,body.dark .catalog-counter,body.dark .category-pill,body.dark .smart-search-hint,body.dark .footer-note{background:rgba(67,57,51,.92);border-color:#625147}
+body.dark .tool-card,body.dark .card,body.dark .dish-card,body.dark .budget-combo{background:#3e3631;border-color:#5d4e46}
+body.dark .tool-card:hover,body.dark .card:hover,body.dark .dish-card:hover{border-color:#88624f;box-shadow:0 24px 52px -40px rgba(33,20,14,.75)}
+body.dark .catalog-search input::placeholder{color:#c9b7aa}
+body.dark .icon-bubble{background:#55463d;border-color:#6d594d}
+body.dark .favorites-empty{background:#39312d;border-color:#5c4b43}
+body.dark .field,body.dark .controls input,body.dark .controls select,body.dark .review-textarea{background:#473c36;border-color:#66544a;color:var(--ink)}
+body.dark .theme-toggle,body.dark .quick-nav button{background:#443a34;border-color:#66544a}
+body.dark .review{background:#493e38;border-color:#66554c}
+body.dark .detail-backdrop{background:rgba(57,42,34,.38);backdrop-filter:none}
+body.dark .detail{background:#403732;border-color:#65554c;box-shadow:0 34px 82px -40px rgba(31,18,12,.74)}
+body.dark .detail-reviews .rating-box{background:#493e37;border-color:#67564c}
+body.dark .meta-box,body.dark .bju-item{background:#51443c;border-color:#6a584e}
+body.dark .info-strip{background:#504138;color:#f7e9df;border-color:#c9914b}
+body.dark .action{background:#493d36;border-color:#68564b}
+body.dark .action:hover{background:#55463e;border-color:#7b6355}
+body.dark .action.primary,body.dark .open-btn,body.dark .tab-btn.active,body.dark .category-pill.active{background:linear-gradient(135deg,#bd6546,#df825b);border-color:#d47855;color:#fff}
+body.dark .dish-price,body.dark .meta-box strong,body.dark .budget-combo-top strong{color:#ffc19d}
+body.dark .kicker{background:#65513d;color:#ffe6b0}
+body.dark .budget-combo-items button{background:#453a34;border-color:#625148}
+body.dark .recent-strip{background:rgba(64,54,49,.88);border-color:#5e4e45}
+body.dark .recent-item{background:#493e38;border-color:#66554b}
+body.dark .reviews-loading{background:#493e38;border-color:#69574d;color:#d8c6b8}
+body.dark .autumn-leaf{opacity:.23;filter:saturate(.9) drop-shadow(0 10px 18px rgba(49,29,19,.12))}
+
+/* Leaves are the rating language everywhere — no visual stars. */
+.stars{gap:6px}
+.star-btn{font-size:1.48rem;opacity:.32;filter:saturate(.72);transform-origin:50% 80%}
+.star-btn::before{content:'🍂'}
+.star-btn{font-size:0}
+.star-btn::before{font-size:1.48rem}
+.star-btn.active::before{content:'🍁'}
+.star-btn:hover{opacity:.9;transform:translateY(-2px) rotate(-5deg) scale(1.08)}
+.star-btn.active{opacity:1}
+.leaf-rating .leaf{filter:saturate(.88);transition:transform .15s ease,opacity .15s ease}
+.leaf-rating .leaf.active{transform:translateY(-1px)}
+
+/* Detail sheet opens immediately; reviews may hydrate afterwards. */
+#detailMount{transition:opacity .10s ease}
+.detail{transition:transform .12s cubic-bezier(.2,.8,.2,1),opacity .10s ease;will-change:transform,opacity}
+.detail-img{content-visibility:auto}
+@media(max-width:720px){body.dark .detail-backdrop{backdrop-filter:none}}
+
 </style>
 </head>
 <body>
@@ -1413,20 +1480,36 @@ function reviewErrorText(error){
 }
 function ratingKey(id){return `stolovkaRating_${id}`;}
 
-async function getRemoteRatings(id){
+const reviewCache=new Map();
+const reviewRequests=new Map();
+async function getRemoteRatings(id,{fresh=false}={}){
   if(!supabaseClient)return [];
-  await sessionReady;
-  const {data,error}=await supabaseClient
-    .from('reviews')
-    .select('*')
-    .eq('dish_id',id)
-    .order('created_at',{ascending:false})
-    .limit(50);
-  if(error){console.warn(error);return []}
-  return (data||[]).map(r=>({
-    id:r.id, stars:r.stars, text:r.text, author:r.author,
-    date:new Date(r.created_at).getTime(), userId:r.user_id
-  }));
+  if(!fresh&&reviewCache.has(id))return reviewCache.get(id);
+  if(!fresh&&reviewRequests.has(id))return reviewRequests.get(id);
+  const request=(async()=>{
+    const {data,error}=await supabaseClient
+      .from('reviews')
+      .select('id,dish_id,user_id,author,stars,text,created_at,updated_at')
+      .eq('dish_id',id)
+      .order('created_at',{ascending:false})
+      .limit(50);
+    if(error){console.warn(error);return []}
+    const mapped=(data||[]).map(r=>({
+      id:r.id, stars:r.stars, text:r.text, author:r.author,
+      date:new Date(r.created_at).getTime(), userId:r.user_id
+    }));
+    reviewCache.set(id,mapped);
+    return mapped;
+  })();
+  reviewRequests.set(id,request);
+  try{return await request;}finally{reviewRequests.delete(id);}
+}
+function warmDishDetail(id){
+  const dish=database.find(x=>x.id===Number(id));
+  if(!dish)return;
+  const src=dishImage(dish);
+  if(src){const img=new Image();img.decoding='async';img.src=src;}
+  getRemoteRatings(Number(id)).catch(()=>{});
 }
 
 function getRatings(id){
@@ -1442,12 +1525,12 @@ function ratingAverage(list){
 }
 
 function starsView(value){
-  const n=Math.round(value);
-  return Array.from({length:5},(_,i)=>`<span style="color:${i<n?'var(--gold)':'#c9bba5'}">★</span>`).join("");
+  const n=Math.round(Number(value)||0);
+  return `<span class="leaf-rating" aria-label="${n} из 5">${Array.from({length:5},(_,i)=>`<span class="leaf ${i<n?'active':''}">${i<n?'🍁':'🍂'}</span>`).join('')}</span>`;
 }
 
 function starsInteractive(id,value=0){
-  return `<div class="stars" data-starbox="${id}" data-value="${value}">${Array.from({length:5},(_,i)=>`<button class="star-btn ${i<value?'active':''}" type="button" data-star="${i+1}" data-star-id="${id}" aria-label="${i+1} звёзд">★</button>`).join("")}</div>`;
+  return `<div class="stars" data-starbox="${id}" data-value="${value}" aria-label="Оценка листочками">${Array.from({length:5},(_,i)=>`<button class="star-btn ${i<value?'active':''}" type="button" data-star="${i+1}" data-star-id="${id}" aria-label="${i+1} листочка">🍁</button>`).join("")}</div>`;
 }
 
 function escapeHtml(value){
@@ -1477,7 +1560,7 @@ function getUserReviewForDish(id){
 async function renderRatingBox(d){
   const list=await getRemoteRatings(d.id);
   const avg=ratingAverage(list);
-  const recent=list.slice(-5).reverse();
+  const recent=list.slice(0,5);
   const mine=getUserReviewForDish(d.id);
   const formHtml=`<div class="review-form">
     <input id="reviewName" class="field" maxlength="32" value="${escapeHtml(mine?.author||reviewName())}" placeholder="Твоё имя или никнейм (от 2 символов)">
@@ -1497,7 +1580,7 @@ async function renderRatingBox(d){
 async function submitRating(id){
   const box=document.querySelector(`[data-starbox="${id}"]`);
   const stars=Number(box?.dataset.value||0);
-  if(!stars){showToast("Сначала выбери звёзды ⭐");return;}
+  if(!stars){showToast("Сначала выбери листочки 🍁");return;}
   const author=document.getElementById('reviewName')?.value.trim()||'';
   const text=document.getElementById("reviewText")?.value.trim()||"";
   if(!/^[A-Za-zА-Яа-яЁё0-9][A-Za-zА-Яа-яЁё0-9 _-]{1,31}$/.test(author)){showToast('Имя: от 2 символов');return;}
@@ -1520,8 +1603,9 @@ async function submitRating(id){
     localStorage.setItem(ratingKey(id),JSON.stringify(list));
   }
   localStorage.setItem('stolovkaReviewName',author);
+  reviewCache.delete(id);
   await renderDetail(id,{scroll:false});
-  showToast('Спасибо за отзыв ⭐');
+  showToast('Спасибо за отзыв 🍁');
 }
 
 async function deleteRating(id){
@@ -1534,21 +1618,18 @@ async function deleteRating(id){
     const list=getRatings(id).filter(r=>r.userId!==userId);
     localStorage.setItem(ratingKey(id),JSON.stringify(list));
   }
+  reviewCache.delete(id);
   await renderDetail(id,{scroll:false});
   showToast('Отзыв удалён');
 }
 
 
-async function renderDetail(id,{scroll=false}={}){
-  const d=database.find(x=>x.id===id);if(!d)return;
-  state.selectedId=id;
-  rememberRecent(id);
-  const ratingHtml=await renderRatingBox(d);
+function detailMarkup(d,ratingHtml){
   const closeLabel=state.detailOrigin==='combo'?'← Вернуться к комбо':state.detailOrigin==='favorites'?'← Вернуться в избранное':'Закрыть';
-  els.detail.innerHTML=`<button class="detail-backdrop" type="button" data-close-detail aria-label="Закрыть карточку блюда"></button><section class="detail" role="dialog" aria-modal="true" aria-label="${d.name}">
+  return `<button class="detail-backdrop" type="button" data-close-detail aria-label="Закрыть карточку блюда"></button><section class="detail" role="dialog" aria-modal="true" aria-label="${d.name}">
     <div class="detail-top">
       <div class="detail-media">
-        <img class="detail-img" src="${dishImage(d)}" alt="${d.name}">
+        <img class="detail-img" src="${dishImage(d)}" alt="${d.name}" decoding="async" fetchpriority="high">
         <div class="detail-reviews">${ratingHtml}</div>
       </div>
       <div class="detail-content">
@@ -1573,9 +1654,29 @@ async function renderDetail(id,{scroll=false}={}){
       </div>
     </div>
   </section>`;
+}
+
+async function renderDetail(id,{scroll=false}={}){
+  const d=database.find(x=>x.id===id);if(!d)return;
+  state.selectedId=id;
+  rememberRecent(id);
+  const loadingHtml=`<div class="reviews-loading"><strong>Отзывы загружаются…</strong><span>Покажем оценки и комментарии через мгновение.</span></div>`;
+  els.detail.innerHTML=detailMarkup(d,loadingHtml);
   els.detail.classList.add('open');
   document.body.classList.add('detail-open');
-  if(scroll) els.detail.querySelector('.detail')?.scrollTo({top:0,behavior:'smooth'});
+  const detailBox=els.detail.querySelector('.detail');
+  if(scroll) detailBox?.scrollTo({top:0,behavior:'auto'});
+  try{
+    const ratingHtml=await renderRatingBox(d);
+    if(state.selectedId!==id)return;
+    const mount=els.detail.querySelector('.detail-reviews');
+    if(mount) mount.innerHTML=ratingHtml;
+  }catch(error){
+    console.warn(error);
+    if(state.selectedId!==id)return;
+    const mount=els.detail.querySelector('.detail-reviews');
+    if(mount) mount.innerHTML=`<div class="reviews-loading"><strong>Не удалось загрузить отзывы</strong><span>Попробуй открыть блюдо ещё раз чуть позже.</span></div>`;
+  }
 }
 
 function closeDetail(){
@@ -1714,6 +1815,18 @@ document.addEventListener('click',e=>{
   const bo=e.target.closest('[data-budget-open]');
   if(bo){state.detailOrigin='combo';renderDetail(Number(bo.dataset.budgetOpen));return;}
 });
+// Prefetch the exact dish image/reviews shortly before a click, without blocking UI.
+let warmTimer=null;
+function scheduleWarm(target){
+  const opener=target?.closest?.('[data-open],[data-random-open],[data-budget-open],[data-recent-open]');
+  if(!opener)return;
+  const id=opener.dataset.open||opener.dataset.randomOpen||opener.dataset.budgetOpen||opener.dataset.recentOpen;
+  clearTimeout(warmTimer);
+  warmTimer=setTimeout(()=>warmDishDetail(Number(id)),70);
+}
+document.addEventListener('pointerover',e=>scheduleWarm(e.target),{passive:true});
+document.addEventListener('focusin',e=>scheduleWarm(e.target));
+document.addEventListener('touchstart',e=>scheduleWarm(e.target),{passive:true});
 function runSearch(){
   const count=renderCatalog();
   els.searchStatus.textContent=els.search.value.trim()?`${count} найдено`:(els.category.value==='all'?`${count} блюд`:`${count} в категории`);
