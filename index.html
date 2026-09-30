@@ -9,7 +9,6 @@
 <meta name="theme-color" content="#f4efe6">
 <title>Столовка</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
   --bg:#edf0ea;--paper:#fff;--ink:#14201b;--muted:#5d6b64;--line:#d3dad2;
@@ -382,7 +381,7 @@ body.dark .action.primary{background:var(--accent);border-color:var(--accent);co
   <header class="topbar">
     <div class="brand">
       <div class="brand-icon">🍽️</div>
-      <div><h1>Столовка лицея</h1><p>Электронное меню МАОУ «Многопрофильный лицей» г. Муравленко</p></div>
+      <div><h1>Столовка лицея</h1><p>Электронное меню МАОУ «Многопрофильный лицей» • Муравленко</p></div>
     </div>
     <div class="header-actions">
       <div class="status">Покупка пока отключена</div>
@@ -402,12 +401,12 @@ body.dark .action.primary{background:var(--accent);border-color:var(--accent);co
   <main>
     <section id="home" class="panel active">
       <div class="hero">
-        <div><span class="kicker">СЕГОДНЯ В СТОЛОВОЙ</span><h2 id="todayTitle">Меню дня</h2><p id="todayText">Загрузка...</p></div>
+        <div><span class="kicker">ЭЛЕКТРОННОЕ МЕНЮ</span><h2 id="todayTitle">Меню лицея</h2><p id="todayText">Загрузка...</p></div>
         <div class="hero-art">🍽️</div>
       </div>
       <div class="tools-grid">
-        <article class="tool-card"><div class="icon-bubble">🍽️</div><h3>Блюда дня</h3><p id="todayList">Загрузка...</p></article>
-        <article class="tool-card"><div class="icon-bubble">⏱️</div><h3>Ближайшее питание</h3><p id="nextMeal">Загрузка...</p></article>
+        <article class="tool-card"><div class="icon-bubble">🍽️</div><h3>Что есть в каталоге</h3><p id="todayList">Загрузка...</p></article>
+        <article class="tool-card"><div class="icon-bubble">🏫</div><h3>О лицее</h3><p id="nextMeal">Загрузка...</p></article>
       </div>
       
       
@@ -443,7 +442,7 @@ body.dark .action.primary{background:var(--accent);border-color:var(--accent);co
         <article class="tool-card"><div class="icon-bubble">🔎</div><h3>Удобный каталог</h3><p>Ищи блюдо по названию или категории, открывай карточку с составом и БЖУ.</p></article>
         <article class="tool-card"><div class="icon-bubble">⭐</div><h3>Личный выбор</h3><p>Добавляй блюда в избранное — оно хранится только в браузере на твоём устройстве.</p></article>
       </div>
-      <div class="card" style="margin-top:16px"><h3>Важно</h3><p>Меню публикуется ответственным сотрудником. Уточняйте фактическое наличие блюд в столовой.</p></div>
+      <div class="card" style="margin-top:16px"><h3>Данные о лицее</h3><p>МАОУ «Многопрофильный лицей» находится по адресу: ЯНАО, г. Муравленко, ул. Пионерская, 4. Для официальной информации используйте <a href="https://murlicey.yanao.ru" target="_blank" rel="noopener noreferrer">сайт лицея</a>. Меню и наличие блюд на этом проекте зависят от данных, опубликованных администратором.</p></div>
     </section>
 
     <section id="favorites" class="panel">
@@ -463,10 +462,10 @@ body.dark .action.primary{background:var(--accent);border-color:var(--accent);co
 
       <div class="tools-grid">
         <article class="tool-card">
-          <div class="icon-bubble">🎲</div>
-          <h3>Случайное блюдо</h3>
-          <p>Не знаешь, что выбрать? Столовка предложит случайное блюдо из каталога.</p>
-          <button class="action primary" id="randomBtn" style="margin-top:14px">Выбрать блюдо</button>
+          <div class="icon-bubble">🍱</div>
+          <h3>Собрать комбо</h3>
+          <p>Не отдельное случайное блюдо, а нормальный набор: основное + гарнир + напиток. Например, котлета + макароны + компот.</p>
+          <button class="action primary" id="randomBtn" style="margin-top:14px">Собрать комбо</button>
           <div class="random-result" id="randomResult"></div>
         </article>
 
@@ -513,7 +512,7 @@ body.dark .action.primary{background:var(--accent);border-color:var(--accent);co
 
   </main>
 
-  <div class="footer-note">Столовка лицея • информационный сайт для обучающихся • изображения блюд иллюстративные</div>
+  <div class="footer-note">МАОУ «Многопрофильный лицей», г. Муравленко • информационный проект • изображения блюд иллюстративные (Unsplash)</div>
 </div>
 <div class="quick-nav">
   <button id="toTop" title="Наверх">↑</button>
@@ -529,8 +528,8 @@ const database = [
                 b: 7, j: 9, u: 14, kcal: 165,
                 desc: "Школьное блюдо из категории «soup». Пищевая ценность указана справочно.",
                 category: "soup", popularity: 72,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 2, name: "Щи из свежей капусты", price: 40,
@@ -538,8 +537,8 @@ const database = [
                 b: 5, j: 8, u: 13, kcal: 140,
                 desc: "Школьное блюдо из категории «soup». Пищевая ценность указана справочно.",
                 category: "soup", popularity: 89,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 3, name: "Суп с фрикадельками", price: 50,
@@ -547,8 +546,8 @@ const database = [
                 b: 9, j: 8, u: 12, kcal: 175,
                 desc: "Школьное блюдо из категории «soup». Пищевая ценность указана справочно.",
                 category: "soup", popularity: 61,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 4, name: "Куриный суп с лапшой", price: 55,
@@ -556,8 +555,8 @@ const database = [
                 b: 8, j: 7, u: 13, kcal: 155,
                 desc: "Школьное блюдо из категории «soup». Пищевая ценность указана справочно.",
                 category: "soup", popularity: 78,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 5, name: "Гречневая каша с молоком", price: 35,
@@ -565,8 +564,8 @@ const database = [
                 b: 6, j: 4, u: 18, kcal: 135,
                 desc: "Школьное блюдо из категории «porridge». Пищевая ценность указана справочно.",
                 category: "porridge", popularity: 95,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 6, name: "Овсяная каша с молоком", price: 35,
@@ -574,8 +573,8 @@ const database = [
                 b: 6, j: 4, u: 16, kcal: 125,
                 desc: "Школьное блюдо из категории «porridge». Пищевая ценность указана справочно.",
                 category: "porridge", popularity: 67,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 7, name: "Макароны с сыром", price: 60,
@@ -583,8 +582,8 @@ const database = [
                 b: 8, j: 9, u: 25, kcal: 225,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
                 category: "main", popularity: 84,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 8, name: "Картофельное пюре", price: 30,
@@ -592,8 +591,8 @@ const database = [
                 b: 3, j: 4, u: 15, kcal: 105,
                 desc: "Школьное блюдо из категории «garnish». Пищевая ценность указана справочно.",
                 category: "garnish", popularity: 56,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 9, name: "Рис отварной", price: 30,
@@ -601,8 +600,8 @@ const database = [
                 b: 3, j: 1, u: 17, kcal: 95,
                 desc: "Школьное блюдо из категории «garnish». Пищевая ценность указана справочно.",
                 category: "garnish", popularity: 73,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 10, name: "Гречка отварная", price: 30,
@@ -610,8 +609,8 @@ const database = [
                 b: 4, j: 2, u: 16, kcal: 105,
                 desc: "Школьное блюдо из категории «garnish». Пищевая ценность указана справочно.",
                 category: "garnish", popularity: 90,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 11, name: "Котлета куриная", price: 70,
@@ -619,8 +618,8 @@ const database = [
                 b: 17, j: 10, u: 7, kcal: 190,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
                 category: "main", popularity: 62,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 12, name: "Котлета рыбная", price: 75,
@@ -628,8 +627,8 @@ const database = [
                 b: 16, j: 9, u: 10, kcal: 205,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
                 category: "main", popularity: 79,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 13, name: "Гуляш из говядины", price: 90,
@@ -637,8 +636,8 @@ const database = [
                 b: 20, j: 12, u: 8, kcal: 225,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
                 category: "main", popularity: 96,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 14, name: "Курица запечённая", price: 85,
@@ -646,8 +645,8 @@ const database = [
                 b: 23, j: 9, u: 2, kcal: 185,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
                 category: "main", popularity: 68,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 15, name: "Рыба запечённая", price: 80,
@@ -655,8 +654,8 @@ const database = [
                 b: 21, j: 8, u: 3, kcal: 170,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
                 category: "main", popularity: 85,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 16, name: "Тефтели в соусе", price: 65,
@@ -664,8 +663,8 @@ const database = [
                 b: 17, j: 11, u: 8, kcal: 205,
                 desc: "Школьное блюдо из категории «main». Пищевая ценность указана справочно.",
                 category: "main", popularity: 57,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 17, name: "Омлет", price: 55,
@@ -673,8 +672,8 @@ const database = [
                 b: 9, j: 8, u: 3, kcal: 120,
                 desc: "Школьное блюдо из категории «breakfast». Пищевая ценность указана справочно.",
                 category: "breakfast", popularity: 74,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 18, name: "Запеканка творожная", price: 50,
@@ -682,8 +681,8 @@ const database = [
                 b: 14, j: 6, u: 22, kcal: 200,
                 desc: "Школьное блюдо из категории «dessert». Пищевая ценность указана справочно.",
                 category: "dessert", popularity: 91,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 19, name: "Салат из свежей капусты", price: 45,
@@ -691,8 +690,8 @@ const database = [
                 b: 2, j: 4, u: 7, kcal: 70,
                 desc: "Школьное блюдо из категории «salad». Пищевая ценность указана справочно.",
                 category: "salad", popularity: 63,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 20, name: "Винегрет", price: 35,
@@ -700,8 +699,8 @@ const database = [
                 b: 2, j: 5, u: 12, kcal: 105,
                 desc: "Школьное блюдо из категории «salad». Пищевая ценность указана справочно.",
                 category: "salad", popularity: 80,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 21, name: "Салат из огурцов и помидоров", price: 60,
@@ -709,8 +708,8 @@ const database = [
                 b: 2, j: 5, u: 8, kcal: 85,
                 desc: "Школьное блюдо из категории «salad». Пищевая ценность указана справочно.",
                 category: "salad", popularity: 97,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 22, name: "Компот из сухофруктов", price: 75,
@@ -718,8 +717,8 @@ const database = [
                 b: 0, j: 0, u: 24, kcal: 95,
                 desc: "Школьное блюдо из категории «drink». Пищевая ценность указана справочно.",
                 category: "drink", popularity: 69,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 23, name: "Кисель ягодный", price: 25,
@@ -727,8 +726,8 @@ const database = [
                 b: 0, j: 0, u: 22, kcal: 90,
                 desc: "Школьное блюдо из категории «drink». Пищевая ценность указана справочно.",
                 category: "drink", popularity: 86,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 24, name: "Чай с лимоном", price: 40,
@@ -736,8 +735,8 @@ const database = [
                 b: 0, j: 0, u: 8, kcal: 35,
                 desc: "Школьное блюдо из категории «drink». Пищевая ценность указана справочно.",
                 category: "drink", popularity: 58,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 25, name: "Булочка с сахаром", price: 30,
@@ -745,8 +744,8 @@ const database = [
                 b: 6, j: 7, u: 31, kcal: 205,
                 desc: "Школьное блюдо из категории «bakery». Пищевая ценность указана справочно.",
                 category: "bakery", popularity: 75,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 26, name: "Булочка с творогом", price: 20,
@@ -754,8 +753,8 @@ const database = [
                 b: 9, j: 7, u: 28, kcal: 210,
                 desc: "Школьное блюдо из категории «bakery». Пищевая ценность указана справочно.",
                 category: "bakery", popularity: 92,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 27, name: "Пирожок с капустой", price: 35,
@@ -763,8 +762,8 @@ const database = [
                 b: 5, j: 8, u: 25, kcal: 190,
                 desc: "Школьное блюдо из категории «bakery». Пищевая ценность указана справочно.",
                 category: "bakery", popularity: 64,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             },
             {                id: 28, name: "Пирожок с картофелем", price: 25,
@@ -772,8 +771,8 @@ const database = [
                 b: 5, j: 7, u: 27, kcal: 195,
                 desc: "Школьное блюдо из категории «bakery». Пищевая ценность указана справочно.",
                 category: "bakery", popularity: 81,
-                fun: "Информация о блюде показана в карточке товара вместе с его индивидуальной историей цены.",
-                fact: "📌 Это информационная карточка Столовка лицея: цена и история за 30 дней заданы отдельно именно для этого блюда.",
+                fun: "Фото блюда носит иллюстративный характер; состав и пищевая ценность указаны в карточке.",
+                fact: "📌 Это информационная карточка меню: цену и доступность публикует администратор проекта.",
                 history: []
             }
             ,
@@ -851,20 +850,32 @@ const defaultDatabase=database.map(copyDish);
 applyMenuOverrides(readJsonStorage(menuStorageKey,[]));
 
 const categoryImages={
-  soup:'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80',
-  porridge:'https://images.unsplash.com/photo-1517673132405-a56a62b18caf?auto=format&fit=crop&w=900&q=80',
-  main:'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=80',
-  garnish:'https://images.unsplash.com/photo-1515003197210-e0cd71810b11?auto=format&fit=crop&w=900&q=80',
-  breakfast:'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=900&q=80',
-  salad:'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=900&q=80',
-  dessert:'https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=900&q=80',
-  bakery:'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=80',
-  drink:'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=900&q=80'
+  soup:'https://images.unsplash.com/photo-1608949621308-c54d112c808a?auto=format&fit=crop&w=900&q=82',
+  porridge:'https://images.unsplash.com/photo-1711357193114-ba93da3e2f01?auto=format&fit=crop&w=900&q=82',
+  main:'https://images.unsplash.com/photo-1662197480393-2a82030b7b83?auto=format&fit=crop&w=900&q=82',
+  garnish:'https://images.unsplash.com/photo-1515003197210-e0cd71810b11?auto=format&fit=crop&w=900&q=82',
+  breakfast:'https://images.unsplash.com/photo-1729223921099-7a8a72955baa?auto=format&fit=crop&w=900&q=82',
+  salad:'https://images.unsplash.com/photo-1564185722618-ae3ffa1ac5aa?auto=format&fit=crop&w=900&q=82',
+  dessert:'https://images.unsplash.com/photo-1633352638067-fdf2c07561c7?auto=format&fit=crop&w=900&q=82',
+  bakery:'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=82',
+  drink:'https://images.unsplash.com/photo-1662675118868-431553cc27a0?auto=format&fit=crop&w=900&q=82'
 };
-function dishImage(d){return d.image_url||categoryImages[d.category]||d.img;}
+function suggestedDishPhoto(d){
+  const name=String(d?.name||'').toLowerCase();
+  if(/каша|овсян|гречнев.*молок/.test(name))return categoryImages.porridge;
+  if(/борщ|щи|суп/.test(name))return categoryImages.soup;
+  if(/макарон|паста/.test(name))return 'https://images.unsplash.com/photo-1662197480393-2a82030b7b83?auto=format&fit=crop&w=900&q=82';
+  if(/омлет|яич/.test(name))return categoryImages.breakfast;
+  if(/салат|винегрет/.test(name))return categoryImages.salad;
+  if(/компот|кисель|чай|вода/.test(name))return categoryImages.drink;
+  if(/булоч|пирож/.test(name))return categoryImages.bakery;
+  if(/запеканк|десерт/.test(name))return categoryImages.dessert;
+  return categoryImages[d.category];
+}
+function dishImage(d){return d.image_url||suggestedDishPhoto(d)||d.img;}
 
 const favoriteIds=readJsonStorage('stolovkaFavorites',[]);
-const state={selectedId:null, favorites:new Set(Array.isArray(favoriteIds)?favoriteIds.map(Number).filter(Number.isFinite):[]), chart:null, searchTimer:null};
+const state={selectedId:null, favorites:new Set(Array.isArray(favoriteIds)?favoriteIds.map(Number).filter(Number.isFinite):[]), searchTimer:null};
 const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 const els={tabs:$('#tabs'),search:$('#search'),category:$('#category'),catalog:$('#catalogGrid'),
@@ -1369,14 +1380,10 @@ async function deleteRating(id){
   showToast('Отзыв удалён');
 }
 
-function priceHistory(d){
-  return Array.isArray(d.history)?d.history:[];
-}
 
 async function renderDetail(id,{scroll=true}={}){
   const d=database.find(x=>x.id===id);if(!d)return;
   state.selectedId=id;
-  const history=priceHistory(d);
   els.detail.innerHTML=`<section class="detail">
     <div class="detail-top">
       <img class="detail-img" src="${dishImage(d)}" alt="${d.name}">
@@ -1403,26 +1410,8 @@ async function renderDetail(id,{scroll=true}={}){
         ${await renderRatingBox(d)}
       </div>
     </div>
-    <div class="chart-box">
-      <h3>📈 История цены именно этого блюда</h3>
-      <div class="chart-wrap">${history.length?'<canvas id="dishChart"></canvas>':'<div class="no-history">Для этого блюда пока нет опубликованной истории цены.<br>Сайт не подставляет выдуманные значения.</div>'}</div>
-    </div>
   </section>`;
   if(scroll) els.detail.scrollIntoView({behavior:'smooth',block:'start'});
-  if(history.length && typeof Chart!=='undefined'){
-    const ctx=$('#dishChart');
-    state.chart?.destroy();
-    state.chart=new Chart(ctx,{
-      type:'line',
-      data:{labels:history.map((_,i)=>`${i+1} день`),datasets:[{
-        label:'Цена, ₽',data:history,borderColor:'#1c6a49',backgroundColor:'rgba(28,106,73,.12)',
-        pointRadius:2,pointHoverRadius:5,tension:.35,fill:true
-      }]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#6a6258'}}},
-      scales:{x:{ticks:{color:'#8b8378'},grid:{color:'rgba(125,119,110,.10)'}},
-      y:{ticks:{color:'#8b8378'},grid:{color:'rgba(125,119,110,.10)'}}}}
-    });
-  }
 }
 
 function toggleFavorite(id){
@@ -1458,24 +1447,24 @@ function renderBudget(){
 }
 
 function renderToday(){
-  const now=new Date(), day=(now.getDay()+6)%7;
-  const sets=[
-    ['Понедельник',[0,1,4,5]],['Вторник',[2,6,7,8]],['Среда',[9,10,11,12]],
-    ['Четверг',[13,14,18,19]],['Пятница',[20,21,24,25]],['Выходной',[]],['Выходной',[]]
-  ];
-  const [name,ids]=sets[day],items=ids.map(i=>database[i]).filter(Boolean);
-  $('#todayTitle').textContent=name==='Выходной'?'Сегодня — выходной':`Сегодня • ${name}`;
-  $('#todayText').textContent=items.length?`Подборка из каталога: ${items.map(d=>d.name).join(', ')}.`:'В меню сайта на выходной не формируется.';
-  $('#todayList').textContent=items.length?items.map(d=>d.name).join(' • '):'Нет школьного меню на сегодня.';
-  const minutes=now.getHours()*60+now.getMinutes(),times=[505,565,625,685,745,805,865];
-  const next=times.find(t=>t>minutes);
-  $('#nextMeal').textContent=next?`Следующее окно примерно через ${next-minutes} мин.`:'Питание на сегодня уже завершилось.';
+  const available=database.filter(d=>d.price!=null).slice(0,4);
+  $('#todayTitle').textContent='Меню лицея';
+  $('#todayText').textContent='Каталог блюд МАОУ «Многопрофильный лицей» в Муравленко. Актуальность цен и наличия определяется последней публикацией администратора.';
+  $('#todayList').textContent=available.length?available.map(d=>d.name).join(' • '):'Каталог пока не опубликован.';
+  $('#nextMeal').innerHTML='МАОУ «Многопрофильный лицей»<br><span style="color:var(--muted)">ЯНАО, г. Муравленко, ул. Пионерская, 4</span>';
 }
 
 function randomDish(){
-  const d=database[Math.floor(Math.random()*database.length)];
+  const mains=database.filter(d=>d.category==='main'&&Number.isFinite(d.price));
+  const garnishes=database.filter(d=>d.category==='garnish'&&Number.isFinite(d.price));
+  const drinks=database.filter(d=>d.category==='drink'&&Number.isFinite(d.price));
+  const pick=list=>list[Math.floor(Math.random()*list.length)];
+  const main=pick(mains),garnish=pick(garnishes),drink=pick(drinks);
   const box=$('#randomResult');
-  box.innerHTML=`<strong>${d.name}</strong><br><span style="color:var(--muted)">${d.price==null?'Цена не опубликована':d.price+' ₽'} • ${d.kcal} ккал</span><br><button class="action primary" style="margin-top:10px" data-random-open="${d.id}">Открыть блюдо</button>`;
+  if(!main||!garnish||!drink){box.textContent='Для комбо пока не хватает блюд в одной из категорий.';box.classList.add('show');return;}
+  const total=[main,garnish,drink].reduce((sum,d)=>sum+(Number(d.price)||0),0);
+  const kcal=[main,garnish,drink].reduce((sum,d)=>sum+(Number(d.kcal)||0),0);
+  box.innerHTML=`<strong>🍱 ${main.name} + ${garnish.name} + ${drink.name}</strong><br><span style="color:var(--muted)">${total} ₽ за комбо • около ${kcal} ккал</span><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">${[main,garnish,drink].map(d=>`<button class="action" data-random-open="${d.id}">${d.name}</button>`).join('')}</div>`;
   box.classList.add('show');
 }
 
