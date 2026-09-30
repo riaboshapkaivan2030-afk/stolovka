@@ -374,6 +374,50 @@ body.dark .action.primary{background:var(--accent);border-color:var(--accent);co
   .detail{border-radius:22px;padding:15px}.bju{grid-template-columns:repeat(2,1fr)}.quick-nav{right:11px;bottom:11px}.quick-nav button{width:42px;height:42px}
 }
 
+
+/* ===== 2026 MODERN MESH + GRID / CATALOG V3 ===== */
+:root{
+  --bg:#f6f8f2;--paper:#ffffff;--ink:#15221b;--muted:#66736b;--line:#dce4dc;
+  --accent:#2f6b4f;--accent-2:#214d3a;--mint:#e5eee7;--gold:#e7b85d;--hot:#c95f48;
+  --clay:#d97858;--grid:rgba(47,107,79,.065);--shadow:0 22px 60px -44px rgba(25,60,43,.48);
+}
+body{
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+    radial-gradient(circle at 8% 3%,rgba(121,169,136,.23),transparent 27rem),
+    radial-gradient(circle at 94% 8%,rgba(217,120,88,.15),transparent 24rem),
+    radial-gradient(circle at 82% 72%,rgba(231,184,93,.11),transparent 28rem);
+  background-size:42px 42px,42px 42px,auto,auto,auto;
+  background-attachment:fixed;
+}
+body.dark{
+  --bg:#111914;--paper:#18231c;--ink:#f2f5f1;--muted:#a5b0a9;--line:#2c3b31;
+  --accent:#71b18c;--accent-2:#8bc7a2;--mint:#223329;--gold:#e9bb61;--hot:#ee8a70;--grid:rgba(140,190,158,.055)
+}
+body.dark{background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),radial-gradient(circle at 10% 4%,rgba(76,126,94,.2),transparent 27rem),radial-gradient(circle at 94% 8%,rgba(177,101,75,.12),transparent 24rem)}
+.brand-icon{background:var(--accent-2);transform:none;border-radius:16px}.tabs{background:rgba(255,255,255,.72);border-color:rgba(47,107,79,.13)}
+body.dark .tabs{background:rgba(24,35,28,.78)}.tab-btn.active{background:var(--accent-2);color:#fff}.tab-btn:hover{background:var(--mint)}
+.hero{background:linear-gradient(135deg,#214d3a,#2f6b4f 68%,#3f765c);box-shadow:0 32px 78px -52px rgba(21,64,45,.75)}
+.hero::before{background:var(--clay);opacity:.68}.kicker{background:#f4d38b}.action.primary,.open-btn{background:var(--accent-2);border-color:var(--accent-2)}
+.action.primary:hover,.open-btn:hover{background:var(--accent);border-color:var(--accent)}
+.catalog-page{position:relative}.catalog-heading{margin-bottom:18px}.eyebrow{display:inline-block;margin-bottom:8px;font-size:.7rem;font-weight:800;letter-spacing:.13em;color:var(--accent);text-transform:uppercase}
+.season-decor{position:absolute;z-index:-1;pointer-events:none;filter:saturate(.8);opacity:.28}.leaf-a{right:2%;top:58px;font-size:3rem;transform:rotate(18deg)}.leaf-b{left:-34px;top:390px;font-size:2.2rem;transform:rotate(-22deg);opacity:.18}
+.catalog-spotlight{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.7fr);gap:14px;margin-bottom:18px;transition:.2s}.catalog-spotlight.is-hidden{display:none}
+.spotlight-main{position:relative;min-height:330px;border-radius:30px;overflow:hidden;background-image:var(--spot-img);background-size:cover;background-position:center;cursor:pointer;box-shadow:var(--shadow);isolation:isolate}
+.spotlight-main:after{content:'🍂';position:absolute;right:22px;top:17px;font-size:2.1rem;transform:rotate(14deg);opacity:.78;z-index:2;filter:drop-shadow(0 6px 12px rgba(0,0,0,.2))}.spotlight-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,34,24,.92) 0,rgba(14,34,24,.72) 48%,rgba(14,34,24,.14) 100%)}
+.spotlight-copy{position:relative;z-index:1;color:#fff;padding:30px;display:flex;flex-direction:column;justify-content:flex-end;min-height:330px;max-width:66%}.spotlight-label{align-self:flex-start;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border-radius:999px;padding:6px 10px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.spotlight-copy h4{font-size:clamp(1.45rem,3vw,2.35rem);margin:13px 0 8px;letter-spacing:-.04em}.spotlight-copy p{color:rgba(255,255,255,.78);font-size:.88rem;line-height:1.55}.spotlight-copy>div{display:flex;align-items:center;gap:12px;margin-top:18px}.spotlight-copy strong{font-size:1.22rem}.spotlight-copy button{border:0;border-radius:999px;background:#fff;color:#183326;padding:9px 13px;font-weight:800;cursor:pointer}
+.spotlight-side{display:grid;gap:14px}.spotlight-mini{min-height:158px;border-radius:26px;overflow:hidden;position:relative;background-image:linear-gradient(90deg,rgba(16,38,28,.82),rgba(16,38,28,.18)),var(--mini-img);background-size:cover;background-position:center;cursor:pointer;box-shadow:var(--shadow);display:flex;align-items:flex-end}.spotlight-mini>div{color:#fff;padding:19px;position:relative;z-index:1}.spotlight-mini span{font-size:.7rem;opacity:.74;text-transform:uppercase;letter-spacing:.08em}.spotlight-mini h4{margin:5px 0 8px;font-size:1rem;max-width:16ch}.spotlight-mini strong{font-size:1.05rem}
+.catalog-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:22px}.catalog-search{height:58px;display:flex;align-items:center;gap:11px;padding:0 14px 0 17px;background:rgba(255,255,255,.82);border:1px solid var(--line);border-radius:19px;box-shadow:0 16px 38px -34px rgba(18,47,33,.65);backdrop-filter:blur(14px)}body.dark .catalog-search{background:rgba(24,35,28,.84)}.catalog-search>span{font-size:1.65rem;color:var(--accent);line-height:1;transform:rotate(-18deg)}.catalog-search input{flex:1;min-width:0;border:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;font-size:1rem}.catalog-search input:focus{outline:none}.catalog-search kbd{font-family:inherit;font-size:.69rem;color:var(--muted);border:1px solid var(--line);padding:5px 8px;border-radius:8px;background:var(--bg)}.catalog-counter{font-size:.82rem;font-weight:800;color:var(--muted);padding:10px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.66)}body.dark .catalog-counter{background:rgba(24,35,28,.72)}
+.category-pills{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 7px;scrollbar-width:none}.category-pills::-webkit-scrollbar{display:none}.category-pill{flex:none;border:1px solid var(--line);background:rgba(255,255,255,.7);color:var(--ink);padding:9px 13px;border-radius:999px;font-weight:750;cursor:pointer;transition:.18s}.category-pill:hover{transform:translateY(-1px);border-color:#b9c9bd}.category-pill.active{background:var(--accent-2);border-color:var(--accent-2);color:#fff;box-shadow:0 10px 23px -17px rgba(33,77,58,.75)}body.dark .category-pill{background:rgba(24,35,28,.82)}body.dark .category-pill.active{background:var(--accent);color:#102119}.visually-hidden-select{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}.smart-search-hint{display:flex;align-items:flex-start;gap:9px;margin:7px 0 14px;padding:10px 13px;border-left:3px solid var(--clay);border-radius:0 12px 12px 0;background:rgba(255,255,255,.52);font-size:.8rem;color:var(--muted)}body.dark .smart-search-hint{background:rgba(24,35,28,.55)}.smart-search-hint>span:first-child{color:var(--clay);font-weight:900}
+.catalog-grid{grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:15px}.dish-card{border-radius:22px;border-color:rgba(47,107,79,.13);box-shadow:0 22px 50px -42px rgba(20,55,38,.55)}.dish-card:hover{border-color:rgba(47,107,79,.38);box-shadow:0 28px 55px -38px rgba(20,55,38,.48)}.dish-card img,.dish-img{aspect-ratio:1.22/1}.dish-info{padding:15px 16px 16px}.dish-price{color:var(--accent-2)}.badge{background:#f0cb7b;color:#493512}.tool-card::after{background:var(--clay);opacity:.1}
+.random-dish-card{display:grid;grid-template-columns:92px 1fr;gap:13px;align-items:center}.random-dish-card img{width:92px;height:92px;object-fit:cover;border-radius:15px}.random-dish-card>div{display:grid;gap:5px}.random-dish-card span{font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em}.random-dish-card strong{font-size:1.02rem}.random-dish-card small{color:var(--muted)}.random-dish-card .action{justify-self:start;margin-top:3px;padding:8px 11px}
+.budget-summary{display:grid;gap:3px;margin-bottom:10px}.budget-summary span{color:var(--muted);font-size:.8rem}.budget-combo{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:9px}.budget-combo.best{border-color:rgba(47,107,79,.35);box-shadow:inset 3px 0 0 var(--accent)}.budget-combo-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.budget-combo-top span{font-size:.72rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.07em}.budget-combo-top strong{color:var(--accent-2)}.budget-combo-items{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px}.budget-combo-items button{flex:0 0 118px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:6px;text-align:left;cursor:pointer}.budget-combo-items img{width:100%;height:64px;object-fit:cover;border-radius:8px}.budget-combo-items span{display:block;margin-top:5px;font-size:.72rem;line-height:1.2}.budget-combo small{display:block;margin-top:8px;color:var(--muted)}
+.footer-note{background:rgba(255,255,255,.34);padding:16px;border:1px solid rgba(47,107,79,.08);border-radius:18px}.quick-nav button{border-color:rgba(47,107,79,.16)}
+@media(max-width:820px){.catalog-spotlight{grid-template-columns:1fr}.spotlight-side{grid-template-columns:1fr 1fr}.spotlight-main,.spotlight-copy{min-height:290px}.spotlight-copy{max-width:78%}.catalog-toolbar{grid-template-columns:1fr}.catalog-counter{justify-self:start}.leaf-b{display:none}}
+@media(max-width:560px){.catalog-spotlight{gap:10px}.spotlight-side{grid-template-columns:1fr 1fr;gap:10px}.spotlight-main,.spotlight-copy{min-height:255px}.spotlight-copy{max-width:90%;padding:21px}.spotlight-copy p{display:none}.spotlight-mini{min-height:132px}.spotlight-mini>div{padding:14px}.spotlight-mini h4{font-size:.86rem}.catalog-search{height:54px;border-radius:16px}.catalog-search kbd{display:none}.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.season-decor{display:none}.random-dish-card{grid-template-columns:76px 1fr}.random-dish-card img{width:76px;height:76px}}
+
 </style>
 </head>
 <body>
@@ -413,21 +457,55 @@ body.dark .action.primary{background:var(--accent);border-color:var(--accent);co
     </section>
 
     <section id="catalog" class="panel">
-      <div class="section-head"><div><h3>Каталог</h3><p>Результаты обновятся, когда вы сделаете короткую паузу во вводе.</p></div></div>
-      <div class="controls">
-        <input id="search" type="search" placeholder="🔎 Например: котлета, суп, каша...">
-        <select id="category">
+      <div class="catalog-page">
+        <span class="season-decor leaf-a" aria-hidden="true">🍂</span>
+        <span class="season-decor leaf-b" aria-hidden="true">🍁</span>
+        <div class="section-head catalog-heading">
+          <div>
+            <span class="eyebrow">МЕНЮ ЛИЦЕЯ</span>
+            <h3>Что сегодня хочется?</h3>
+            <p>Популярные позиции сверху, ниже — весь каталог с быстрыми категориями и умным поиском.</p>
+          </div>
+        </div>
+
+        <div class="catalog-spotlight" id="catalogSpotlight" aria-label="Рекомендации каталога"></div>
+
+        <div class="catalog-toolbar">
+          <label class="catalog-search" for="search">
+            <span aria-hidden="true">⌕</span>
+            <input id="search" type="search" autocomplete="off" placeholder="Котлета, сушняк, макороны…">
+            <kbd>Поиск</kbd>
+          </label>
+          <div class="catalog-counter" id="searchStatus" aria-live="polite">Все блюда</div>
+        </div>
+
+        <div class="category-pills" id="categoryPills" aria-label="Категории блюд">
+          <button class="category-pill active" type="button" data-cat="all">Все</button>
+          <button class="category-pill" type="button" data-cat="soup">🍲 Супы</button>
+          <button class="category-pill" type="button" data-cat="porridge">🥣 Каши</button>
+          <button class="category-pill" type="button" data-cat="main">🍗 Основное</button>
+          <button class="category-pill" type="button" data-cat="garnish">🍝 Гарниры</button>
+          <button class="category-pill" type="button" data-cat="breakfast">🍳 Завтраки</button>
+          <button class="category-pill" type="button" data-cat="salad">🥗 Салаты</button>
+          <button class="category-pill" type="button" data-cat="drink">🥤 Напитки</button>
+          <button class="category-pill" type="button" data-cat="dessert">🍮 Десерты</button>
+          <button class="category-pill" type="button" data-cat="bakery">🥐 Выпечка</button>
+        </div>
+        <select id="category" class="visually-hidden-select" tabindex="-1" aria-hidden="true">
           <option value="all">Все категории</option>
           <option value="soup">Супы</option><option value="porridge">Каши</option>
           <option value="main">Основные блюда</option><option value="garnish">Гарниры</option>
           <option value="breakfast">Завтраки</option><option value="salad">Салаты</option>
           <option value="dessert">Десерты</option><option value="bakery">Выпечка</option><option value="drink">Напитки</option>
         </select>
+
+        <div class="smart-search-hint" id="smartSearchHint">
+          <span>⌁</span><span>Можно по-человечески: <b>«сушняк»</b> → напитки, <b>«катлета»</b> → котлета, <b>«макороны»</b> → макароны.</span>
+        </div>
+
+        <div class="catalog-grid" id="catalogGrid"></div>
+        <div id="detailMount"></div>
       </div>
-      <div class="search-help">💡 Умный поиск: <b>«сушняк»</b> покажет напитки, <b>«котлетка»</b> — котлеты, <b>«пюрешка»</b> — пюре. Понимает разговорные слова, формы слов и небольшие опечатки.</div>
-      <div class="search-status" id="searchStatus" aria-live="polite"></div>
-      <div class="catalog-grid" id="catalogGrid"></div>
-      <div id="detailMount"></div>
     </section>
 
     <section id="today" class="panel">
@@ -462,20 +540,20 @@ body.dark .action.primary{background:var(--accent);border-color:var(--accent);co
 
       <div class="tools-grid">
         <article class="tool-card">
-          <div class="icon-bubble">🍱</div>
-          <h3>Собрать комбо</h3>
-          <p>Не отдельное случайное блюдо, а нормальный набор: основное + гарнир + напиток. Например, котлета + макароны + компот.</p>
-          <button class="action primary" id="randomBtn" style="margin-top:14px">Собрать комбо</button>
+          <div class="icon-bubble">🎲</div>
+          <h3>Случайное блюдо</h3>
+          <p>Не знаешь, что выбрать? Нажми — покажем одну случайную позицию из каталога, как было раньше.</p>
+          <button class="action primary" id="randomBtn" style="margin-top:14px">Мне повезёт</button>
           <div class="random-result" id="randomResult"></div>
         </article>
 
         <article class="tool-card">
           <div class="icon-bubble">💰</div>
-          <h3>Что взять по бюджету?</h3>
-          <p>Введи сумму — сайт покажет блюда, которые помещаются в этот бюджет. Цены публикует ответственный сотрудник.</p>
+          <h3>Собрать обед по бюджету</h3>
+          <p>Введи сумму — сайт соберёт полноценное комбо: основное + гарнир + напиток. Если денег хватает, добавит салат или десерт.</p>
           <div style="display:flex;gap:8px;margin-top:14px">
-            <input id="budgetInput" class="field" type="number" min="0" step="1" placeholder="Например, 150 ₽">
-            <button class="action primary" id="budgetBtn">Подобрать</button>
+            <input id="budgetInput" class="field" type="number" min="0" step="1" placeholder="Например, 180 ₽">
+            <button class="action primary" id="budgetBtn">Собрать комбо</button>
           </div>
           <div class="random-result" id="budgetResult"></div>
         </article>
@@ -934,6 +1012,13 @@ const searchSynonyms = {
   // Блюда
   "котлетка":["котлета","котлеты"],
   "котлетки":["котлета","котлеты"],
+  "катлета":["котлета","котлеты","котлетка"],
+  "катлеты":["котлета","котлеты"],
+  "катлетка":["котлета","котлетка"],
+  "макороны":["макароны","макароны с сыром","паста"],
+  "мокороны":["макароны","макароны с сыром","паста"],
+  "картошка":["картофель","картофельное пюре","пюре"],
+  "попить":["напиток","напитки","компот","чай","сок","вода","газировка"],
   "пюрешка":["картофельное пюре","пюре","картошка"],
   "пюре":["картофельное пюре","пюре","картошка"],
   "макарошки":["макароны с сыром","макароны","паста"],
@@ -964,6 +1049,9 @@ const searchCategoryIntents = {
   "чайок":"drink",
   "чаек":"drink",
   "сокик":"drink",
+  "пить":"drink",
+  "попить":"drink",
+  "водичка":"drink",
   "супы":"soup",
   "супчик":"soup"
 };
@@ -972,7 +1060,6 @@ function normalizeText(s){
   return String(s||"")
     .toLowerCase()
     .replace(/ё/g,"е")
-    .replace(/й/g,"и")
     .replace(/[^a-zа-я0-9\s-]/gi," ")
     .replace(/\s+/g," ")
     .trim();
@@ -1031,29 +1118,76 @@ function containsBadSearch(q){
   return BAD_SEARCH_WORDS.some(w=>x.includes(w));
 }
 
+function categoryLabel(category){
+  return ({soup:'супы',porridge:'каши',main:'основные блюда',garnish:'гарниры',breakfast:'завтраки',salad:'салаты',dessert:'десерты',bakery:'выпечка',drink:'напитки'})[category]||category||'';
+}
+
+function tokensOf(value){
+  return normalizeText(value).split(/\s+/).filter(Boolean);
+}
+
+function queryExpansions(word){
+  const base=normalizeText(word);
+  const out=new Set(wordVariants(base));
+  for(const synonym of (searchSynonyms[base]||[])){
+    tokensOf(synonym).filter(token=>token.length>=3).forEach(token=>out.add(token));
+  }
+  return [...out].filter(Boolean);
+}
+
+function tokenMatchScore(queryToken,targetToken){
+  if(!queryToken||!targetToken)return 0;
+  if(queryToken===targetToken)return 100;
+  if(Math.min(queryToken.length,targetToken.length)<=2)return 0;
+  if(targetToken.startsWith(queryToken)||queryToken.startsWith(targetToken))return 72;
+  const longest=Math.max(queryToken.length,targetToken.length);
+  const maxDistance=longest<=5?1:longest<=9?2:3;
+  const distance=editDistance(queryToken,targetToken);
+  if(distance<=maxDistance)return Math.max(34,66-distance*12);
+  return 0;
+}
+
+function resolveCategoryIntent(q){
+  const normalized=normalizeText(q);
+  if(searchCategoryIntents[normalized])return searchCategoryIntents[normalized];
+  for(const word of tokensOf(normalized)){
+    if(searchCategoryIntents[word])return searchCategoryIntents[word];
+  }
+  return null;
+}
+
 function searchScore(d,q){
   q=normalizeText(q);
-  if(!q) return 1;
-  if(containsBadSearch(q)) return -9999;
+  if(!q)return 1;
+  if(containsBadSearch(q))return -9999;
 
-  const fields=[
-    normalizeText(d.name),
-    normalizeText(d.desc),
-    normalizeText(d.category),
-    ...(d.aliases||[]).map(normalizeText)
-  ];
+  const name=normalizeText(d.name);
+  const desc=normalizeText(d.desc);
+  const aliases=(d.aliases||[]).map(normalizeText);
+  const nameTokens=tokensOf(name);
+  const descTokens=tokensOf(desc);
+  const aliasTokens=aliases.flatMap(tokensOf);
+  const categoryTokens=tokensOf(categoryLabel(d.category));
+  const queryTokens=tokensOf(q);
 
-  const words=q.split(/\s+/).filter(Boolean);
+  if(name===q)return 500;
+  if(name.includes(q))return 360;
+  if(aliases.some(a=>a===q))return 340;
 
-  if(fields.some(f=>f===q)) return 200;
-  if(fields.some(f=>f.includes(q))) return 120;
-
-  let hits=0;
-  for(const w of words){
-    if(fields.some(f=>f.includes(w) || fuzzySimilar(w,f))) hits++;
+  let total=0;
+  for(const qToken of queryTokens){
+    const variants=queryExpansions(qToken);
+    let best=0;
+    for(const variant of variants){
+      for(const target of nameTokens)best=Math.max(best,tokenMatchScore(variant,target)*2.4);
+      for(const target of aliasTokens)best=Math.max(best,tokenMatchScore(variant,target)*2.1);
+      for(const target of categoryTokens)best=Math.max(best,tokenMatchScore(variant,target)*1.6);
+      for(const target of descTokens)best=Math.max(best,tokenMatchScore(variant,target)*.55);
+    }
+    if(best<32)return 0;
+    total+=best;
   }
-
-  return hits===words.length ? 90 : hits ? 40 : 0;
+  return total+(Number(d.popularity)||0)*.08;
 }
 
 function renderCard(d,fromFavorites=false){
@@ -1070,18 +1204,65 @@ function renderCard(d,fromFavorites=false){
   </article>`;
 }
 
+function renderCatalogSpotlight(){
+  const mount=document.getElementById('catalogSpotlight');
+  if(!mount)return;
+  const priced=database.filter(d=>Number.isFinite(Number(d.price)));
+  const best=(filter)=>priced.filter(filter).sort((a,b)=>(b.popularity||0)-(a.popularity||0))[0];
+  const lead=best(d=>d.category==='main')||[...priced].sort((a,b)=>(b.popularity||0)-(a.popularity||0))[0];
+  const drink=best(d=>d.category==='drink');
+  const snack=best(d=>d.category==='bakery'||d.category==='dessert');
+  const secondary=[drink,snack].filter(Boolean);
+  if(!lead){mount.innerHTML='';return;}
+  mount.innerHTML=`
+    <article class="spotlight-main" data-open="${lead.id}" style="--spot-img:url('${dishImage(lead)}')">
+      <div class="spotlight-shade"></div>
+      <div class="spotlight-copy">
+        <span class="spotlight-label">Выбор каталога</span>
+        <h4>${lead.name}</h4>
+        <p>${lead.desc.slice(0,118)}</p>
+        <div><strong>${lead.price==null?'Цена не опубликована':lead.price+' ₽'}</strong><button type="button" data-open="${lead.id}">Посмотреть →</button></div>
+      </div>
+    </article>
+    <div class="spotlight-side">
+      ${secondary.map((d,i)=>`<article class="spotlight-mini" data-open="${d.id}" style="--mini-img:url('${dishImage(d)}')">
+        <div><span>${i===0?'К обеду':'Что-нибудь ещё'}</span><h4>${d.name}</h4><strong>${d.price==null?'—':d.price+' ₽'}</strong></div>
+      </article>`).join('')}
+    </div>`;
+}
+
+function renderCategoryPills(){
+  const current=els.category.value;
+  document.querySelectorAll('[data-cat]').forEach(btn=>btn.classList.toggle('active',btn.dataset.cat===current));
+}
+
 function renderCatalog(){
-  const q=normalizeText(els.search.value||"");
-  const cat=els.category.value;
-  const items=database
-    .map(d=>({d,score:searchScore(d,q)}))
-    .filter(x=>(!q||x.score>0)&&(cat==="all"||x.d.category===cat))
-    .sort((a,b)=>b.score-a.score)
-    .map(x=>x.d);
+  const rawQ=els.search.value||'';
+  const q=normalizeText(rawQ);
+  const selectedCat=els.category.value;
+  const intent=resolveCategoryIntent(q);
+  const effectiveCat=selectedCat==='all'&&intent?intent:selectedCat;
+  const scored=database
+    .map(d=>({d,score:intent&&selectedCat==='all'&&d.category===intent?220:searchScore(d,q)}))
+    .filter(x=>(!q||x.score>0)&&(effectiveCat==='all'||x.d.category===effectiveCat))
+    .sort((a,b)=>b.score-a.score||((b.d.popularity||0)-(a.d.popularity||0)));
+  const items=scored.map(x=>x.d);
 
   els.catalog.innerHTML=items.length
-    ?items.map(renderCard).join("")
-    :'<div class="favorites-empty">Ничего не найдено. Попробуй «сушняк», «газява», «котлетка» или другое слово.</div>';
+    ?items.map(renderCard).join('')
+    :'<div class="favorites-empty"><strong>Ничего похожего не нашли</strong><br>Попробуй короче: «котлета», «сушняк», «пюре» или выбери категорию выше.</div>';
+
+  const spotlight=document.getElementById('catalogSpotlight');
+  if(spotlight)spotlight.classList.toggle('is-hidden',Boolean(q)||selectedCat!=='all');
+  const hint=document.getElementById('smartSearchHint');
+  if(hint){
+    if(q&&intent&&selectedCat==='all')hint.innerHTML=`<span>↳</span><span>По запросу <b>«${rawQ.trim()}»</b> показываю категорию <b>${categoryLabel(intent)}</b>.</span>`;
+    else if(q&&items.length){
+      const first=items[0];
+      hint.innerHTML=`<span>↳</span><span>Лучшее совпадение: <b>${first.name}</b>. Поиск учитывает опечатки и разговорные слова.</span>`;
+    }else hint.innerHTML='<span>⌁</span><span>Можно по-человечески: <b>«сушняк»</b> → напитки, <b>«катлета»</b> → котлета, <b>«макороны»</b> → макароны.</span>';
+  }
+  renderCategoryPills();
   return items.length;
 }
 
@@ -1199,7 +1380,7 @@ async function saveAdminChanges(){
     showToast('Не удалось опубликовать');
     return;
   }
-  renderCatalog();renderFavorites();renderToday();renderAdmin();
+  renderCatalogSpotlight();renderCatalog();renderFavorites();renderToday();renderAdmin();
   if(state.selectedId)renderDetail(state.selectedId,{scroll:false});
   if(els.adminStatus)els.adminStatus.textContent='Опубликовано для всех посетителей.';
   showToast('Меню опубликовано');
@@ -1423,27 +1604,64 @@ function toggleFavorite(id){
   showToast(state.favorites.has(id)?'Добавлено в избранное ⭐':'Удалено из избранного');
 }
 
+function buildBudgetCombos(amount){
+  const mains=database.filter(d=>d.category==='main'&&Number.isFinite(Number(d.price)));
+  const garnishes=database.filter(d=>d.category==='garnish'&&Number.isFinite(Number(d.price)));
+  const drinks=database.filter(d=>d.category==='drink'&&Number.isFinite(Number(d.price)));
+  const extras=database.filter(d=>(d.category==='salad'||d.category==='dessert')&&Number.isFinite(Number(d.price)));
+  const combos=[];
+  for(const main of mains)for(const garnish of garnishes)for(const drink of drinks){
+    const core=[main,garnish,drink];
+    const base=core.reduce((sum,d)=>sum+Number(d.price),0);
+    if(base>amount)continue;
+    combos.push({items:core,total:base,bonus:0});
+    for(const extra of extras){
+      const total=base+Number(extra.price);
+      if(total<=amount)combos.push({items:[...core,extra],total,bonus:1});
+    }
+  }
+  return combos.sort((a,b)=>
+    b.bonus-a.bonus ||
+    b.total-a.total ||
+    b.items.reduce((s,d)=>s+(d.popularity||0),0)-a.items.reduce((s,d)=>s+(d.popularity||0),0)
+  );
+}
+
+function comboMarkup(combo,index){
+  const kcal=combo.items.reduce((sum,d)=>sum+(Number(d.kcal)||0),0);
+  return `<article class="budget-combo ${index===0?'best':''}">
+    <div class="budget-combo-top"><span>${index===0?'Лучший вариант':'Ещё вариант'}</span><strong>${combo.total} ₽</strong></div>
+    <div class="budget-combo-items">${combo.items.map(d=>`<button type="button" data-budget-open="${d.id}"><img src="${dishImage(d)}" alt=""><span>${d.name}</span></button>`).join('')}</div>
+    <small>${combo.items.length} позиции • около ${kcal} ккал</small>
+  </article>`;
+}
+
 function renderBudget(){
-  const amount=Number($("#budgetInput")?.value||0);
-  const box=$("#budgetResult");
+  const amount=Number($('#budgetInput')?.value||0);
+  const box=$('#budgetResult');
   if(!box)return;
-  if(!amount||amount<0){
-    box.innerHTML="Введи сумму, например 150.";
-    box.classList.add("show");
+  if(!Number.isFinite(amount)||amount<=0){
+    box.innerHTML='Введи бюджет, например 180 ₽.';
+    box.classList.add('show');
     return;
   }
-  const available=database
-    .filter(d=>Number.isFinite(d.price)&&d.price>=0&&d.price<=amount)
-    .sort((a,b)=>a.price-b.price);
-
-  if(!available.length){
-    box.innerHTML="Для этих блюд пока не опубликованы цены.";
+  const combos=buildBudgetCombos(amount);
+  if(!combos.length){
+    const cheapestMain=Math.min(...database.filter(d=>d.category==='main'&&Number.isFinite(Number(d.price))).map(d=>Number(d.price)),Infinity);
+    const cheapestGarnish=Math.min(...database.filter(d=>d.category==='garnish'&&Number.isFinite(Number(d.price))).map(d=>Number(d.price)),Infinity);
+    const cheapestDrink=Math.min(...database.filter(d=>d.category==='drink'&&Number.isFinite(Number(d.price))).map(d=>Number(d.price)),Infinity);
+    const minimum=cheapestMain+cheapestGarnish+cheapestDrink;
+    box.innerHTML=Number.isFinite(minimum)?`На полноценное комбо пока не хватает. Минимальный набор из основного, гарнира и напитка получается примерно от <b>${minimum} ₽</b>.`:'Для комбо пока не хватает опубликованных цен.';
   }else{
-    box.innerHTML="<strong>Подойдут:</strong><br>"+available.slice(0,8)
-      .map(d=>`<button class="action" style="margin:7px 5px 0 0" data-budget-open="${d.id}">${d.name} — ${d.price} ₽</button>`)
-      .join("");
+    const unique=[]; const seen=new Set();
+    for(const combo of combos){
+      const key=combo.items.map(d=>d.id).join('-');
+      if(!seen.has(key)){seen.add(key);unique.push(combo)}
+      if(unique.length===3)break;
+    }
+    box.innerHTML=`<div class="budget-summary"><b>Комбо до ${amount} ₽</b><span>Сначала показываю самый полный и близкий к бюджету набор.</span></div>${unique.map(comboMarkup).join('')}`;
   }
-  box.classList.add("show");
+  box.classList.add('show');
 }
 
 function renderToday(){
@@ -1455,16 +1673,11 @@ function renderToday(){
 }
 
 function randomDish(){
-  const mains=database.filter(d=>d.category==='main'&&Number.isFinite(d.price));
-  const garnishes=database.filter(d=>d.category==='garnish'&&Number.isFinite(d.price));
-  const drinks=database.filter(d=>d.category==='drink'&&Number.isFinite(d.price));
-  const pick=list=>list[Math.floor(Math.random()*list.length)];
-  const main=pick(mains),garnish=pick(garnishes),drink=pick(drinks);
+  const available=database.filter(d=>Number.isFinite(Number(d.price)));
   const box=$('#randomResult');
-  if(!main||!garnish||!drink){box.textContent='Для комбо пока не хватает блюд в одной из категорий.';box.classList.add('show');return;}
-  const total=[main,garnish,drink].reduce((sum,d)=>sum+(Number(d.price)||0),0);
-  const kcal=[main,garnish,drink].reduce((sum,d)=>sum+(Number(d.kcal)||0),0);
-  box.innerHTML=`<strong>🍱 ${main.name} + ${garnish.name} + ${drink.name}</strong><br><span style="color:var(--muted)">${total} ₽ за комбо • около ${kcal} ккал</span><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">${[main,garnish,drink].map(d=>`<button class="action" data-random-open="${d.id}">${d.name}</button>`).join('')}</div>`;
+  if(!available.length){box.textContent='Пока нет блюд с опубликованной ценой.';box.classList.add('show');return;}
+  const dish=available[Math.floor(Math.random()*available.length)];
+  box.innerHTML=`<div class="random-dish-card"><img src="${dishImage(dish)}" alt=""><div><span>🎲 Выпало</span><strong>${dish.name}</strong><small>${dish.price} ₽ • около ${Number(dish.kcal)||0} ккал</small><button class="action" data-random-open="${dish.id}">Открыть блюдо</button></div></div>`;
   box.classList.add('show');
 }
 
@@ -1508,7 +1721,7 @@ document.addEventListener('click',e=>{
 });
 function runSearch(){
   const count=renderCatalog();
-  els.searchStatus.textContent=els.search.value.trim()?`Найдено: ${count}`:'';
+  els.searchStatus.textContent=els.search.value.trim()?`${count} найдено`:(els.category.value==='all'?`${count} блюд`:`${count} в категории`);
   els.catalog.animate(
     [{opacity:.72,transform:"translateY(3px)"},{opacity:1,transform:"none"}],
     {duration:180,easing:"ease-out"}
@@ -1525,6 +1738,7 @@ function scheduleSearch(){
 }
 els.search.addEventListener("input",scheduleSearch);
 els.category.addEventListener('change',runSearch);
+document.getElementById('categoryPills')?.addEventListener('click',e=>{const btn=e.target.closest('[data-cat]');if(!btn)return;els.category.value=btn.dataset.cat;runSearch();});
 $('#randomBtn').addEventListener('click',randomDish);
 $('#budgetBtn').addEventListener('click',renderBudget);
 els.themeToggle.addEventListener('click',toggleTheme);
@@ -1549,7 +1763,7 @@ if(supabaseClient){
   });
 }
 
-renderCatalog();renderFavorites();renderToday();renderAdmin();
+renderCatalogSpotlight();renderCatalog();renderFavorites();renderToday();renderAdmin();
 setAdminLoggedIn(false);
 refreshAdminAuth();
 loadRemoteMenu();
